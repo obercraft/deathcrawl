@@ -12,8 +12,10 @@ public class CardHolder extends ScrollPane {
 
     HBox container = new HBox();
     List<CardTile> cards = new LinkedList<>();
+    private int index;
 
-    public CardHolder() {
+    public CardHolder(int index) {
+        this.index = index;
         setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
         setVbarPolicy(ScrollBarPolicy.NEVER);
         setBorder(new Border(new BorderStroke(Color.BLACK,
@@ -25,14 +27,23 @@ public class CardHolder extends ScrollPane {
     }
 
     public void addCard(String name) {
-        CardTile cardTile = CardTile.createCardTile(cards.size(), new Card(name), this);
+        Card card = new Card(name, new CardPosition(this.getIndex(), cards.size()));
+        CardTile cardTile = CardTile.createCardTile(cards.size(), card, this);
         cards.add(cardTile);
         container.getChildren().add(cardTile);
     }
 
 
-    public void remove(int index, CardTile cardTile) {
-        container.getChildren().remove(cardTile);
-        cards.remove(cardTile);
+    public void remove(int index) {
+        container.getChildren().remove(index);
+        cards.remove(index);
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
