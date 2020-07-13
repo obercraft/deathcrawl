@@ -1,4 +1,4 @@
-package sample;
+package net.sachau.deathcrawl.gui;
 
 import javafx.scene.Parent;
 import javafx.scene.input.*;
@@ -6,6 +6,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import net.sachau.deathcrawl.Deathcrawl;
+import net.sachau.deathcrawl.cards.Card;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class CardTile extends StackPane {
         setHeight(200);
         setCardHolder(cardHolder);
         setCard(card);
+
 
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.setFill(Color.ANTIQUEWHITE);
@@ -79,7 +82,7 @@ public class CardTile extends StackPane {
             Card source = (Card) db.getContent(cardFormat);
 
             System.out.println(source + " -> " + this.getCard());
-            Game.getInstance().getCardHolders().get(this.getCard().getPosition().getHolderIndex()).remove(this.getCard().getPosition().getCardIndex());
+            // Deathcrawl.getInstance().getCardHolders().get(this.getCard().getPosition().getHolderIndex()).remove(this.getCard().getPosition().getCardIndex());
             event.consume();
         });
 

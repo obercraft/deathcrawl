@@ -1,9 +1,10 @@
-package sample;
+package net.sachau.deathcrawl.gui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import net.sachau.deathcrawl.Deathcrawl;
 
 public class Main extends Application {
 
@@ -12,7 +13,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Game game = Game.getInstance();
+        Deathcrawl game = Deathcrawl.getInstance();
         VBox tileMap = new VBox();
         Scene content = new Scene(tileMap, WINDOW_WIDTH, WINDOW_HEIGHT);
         primaryStage.setScene(content);

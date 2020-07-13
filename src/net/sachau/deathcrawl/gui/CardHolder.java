@@ -1,9 +1,12 @@
-package sample;
+package net.sachau.deathcrawl.gui;
 
-import javafx.geometry.Pos;
-import javafx.scene.control.ScrollPane;
+import javafx.geometry.*;
+
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.cards.Knife;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +18,7 @@ public class CardHolder extends ScrollPane {
     private int index;
 
     public CardHolder(int index) {
+    	super();
         this.index = index;
         setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
         setVbarPolicy(ScrollBarPolicy.NEVER);
@@ -24,11 +28,12 @@ public class CardHolder extends ScrollPane {
         setMaxWidth(800);
         container.setAlignment(Pos.CENTER);
         setContent(container);
+
     }
 
     public void addCard(String name) {
-        Card card = new Card(name, new CardPosition(this.getIndex(), cards.size()));
-        CardTile cardTile = CardTile.createCardTile(cards.size(), card, this);
+        Knife knife = new Knife();
+        CardTile cardTile = CardTile.createCardTile(cards.size(), knife, this);
         cards.add(cardTile);
         container.getChildren().add(cardTile);
     }
