@@ -1,5 +1,7 @@
 package net.sachau.deathcrawl.effects;
 
+import net.sachau.deathcrawl.cards.Card;
+
 public class Damage extends Effect {
 
 	public Damage(int amount) {
@@ -7,8 +9,8 @@ public class Damage extends Effect {
 	}
 
 	@Override
-	public void trigger(Target target) {
-		target.damage(amount);		
+	public void trigger(Card target) {
+		target.damage(amount);
 	}
 
 }

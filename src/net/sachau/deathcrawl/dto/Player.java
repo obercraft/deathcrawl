@@ -1,47 +1,60 @@
 package net.sachau.deathcrawl.dto;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.effects.Target;
+import net.sachau.deathcrawl.gui.CardHolder;
+import net.sachau.deathcrawl.gui.DrawPile;
 
-public class Player implements Target {
 
-	private List<Card> permanent;
+public class Player implements Serializable {
+
+	private Deck permanent;
 	
-	private List<Card> hand;
-	
+	private Deck hand;
+
 	private Deck discard;
 	
 	private Deck draw;
-	
+
 	private int moves;
 
 	public Player() {
 		super();
-		permanent = new LinkedList<>();
-		// TODO Auto-generated constructor stub
+
+		permanent = new Deck();
+		permanent.setVisible(true);
+
+		draw = new Deck();
+		draw.setVisible(false);
+
+		hand = new Deck();
+		hand.setVisible(true);
+
+		discard = new Deck();
+		discard.setVisible(true);
 	}
 
 	public void addPermanent(Card card) {
 		permanent.add(card);
 	}
 	
-	public List<Card> getPermanent() {
+	public Deck getPermanent() {
 		return permanent;
 	}
 
-	public void setPermanent(List<Card> permanent) {
+	public void setPermanent(Deck permanent) {
 		this.permanent = permanent;
 	}
 
-	public List<Card> getHand() {
+	public Deck getHand() {
 		return hand;
 	}
 
-	public void setHand(List<Card> hand) {
+	public void setHand(Deck hand) {
 		this.hand = hand;
 	}
 
@@ -69,6 +82,7 @@ public class Player implements Target {
 		this.moves = moves;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Player [permanent=" + permanent + ", hand=" + hand
@@ -76,18 +90,12 @@ public class Player implements Target {
 				+ moves + "]";
 	}
 
-	@Override
-	public void damage(int amount) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void addToDeck(Card card) {
 		draw.add(card);
 		// TODO Auto-generated method stub
 		
 	}
-
+/*
 	public List<Card> drawCards(int numberOfCards) {
 		List<Card> cards = new LinkedList<>();
 		for (int i = 0; i< numberOfCards; i++) {
@@ -109,5 +117,5 @@ public class Player implements Target {
 		return cards;
 		
 	}
-	
+*/
 }

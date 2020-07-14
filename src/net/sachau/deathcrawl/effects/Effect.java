@@ -1,7 +1,12 @@
 package net.sachau.deathcrawl.effects;
 
 
-public abstract class Effect {
+import net.sachau.deathcrawl.cards.Card;
+
+import java.io.Serializable;
+import java.util.Set;
+
+public abstract class Effect implements Serializable {
 
 	public enum Phase {
 		PREPARE,
@@ -11,7 +16,7 @@ public abstract class Effect {
 		PLAY,
 		HAZARD,
 	}
-	
+
 	private String text;
 	
 	int amount = 1;
@@ -22,7 +27,16 @@ public abstract class Effect {
 		super();
 	}
 
-	abstract public void trigger(Target target);
+	abstract public void trigger(Card targetCard);
+
+	public void triggerMany(Set<Card> cards) {
+		if (cards != null) {
+			for (Card card : cards) {
+				trigger(card);
+			}
+		}
+
+	}
 
 	public String getText() {
 		return text;

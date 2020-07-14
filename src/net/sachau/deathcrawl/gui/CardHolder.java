@@ -2,53 +2,72 @@ package net.sachau.deathcrawl.gui;
 
 import javafx.geometry.*;
 
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import net.sachau.deathcrawl.GameState;
+import net.sachau.deathcrawl.GuiState;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.Knife;
-
-import java.util.LinkedList;
-import java.util.List;
+import net.sachau.deathcrawl.cards.Deck;
 
 public class CardHolder extends ScrollPane {
 
     HBox container = new HBox();
-    List<CardTile> cards = new LinkedList<>();
-    private int index;
+    Deck deck;
 
-    public CardHolder(int index) {
+    public CardHolder(int length) {
     	super();
-        this.index = index;
+
         setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
         setVbarPolicy(ScrollBarPolicy.NEVER);
         setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        setMaxHeight(250);
-        setMaxWidth(800);
-        container.setAlignment(Pos.CENTER);
+        setHeight(CardTile.HEIGHT +20);
+        setMaxHeight(CardTile.HEIGHT +20);
+        setMaxWidth(CardTile.WIDTH * length);
+        setFitToHeight(true);
+        setFitToWidth(true);
+        container.setAlignment(Pos.TOP_LEFT);
         setContent(container);
 
     }
 
-    public void addCard(String name) {
-        Knife knife = new Knife();
-        CardTile cardTile = CardTile.createCardTile(cards.size(), knife, this);
-        cards.add(cardTile);
+    public void add(Card card) {
+        CardTile cardTile = GuiState.getInstance()
+                .getCardTile(card);
         container.getChildren().add(cardTile);
+        setContent(container);
     }
 
-
-    public void remove(int index) {
-        container.getChildren().remove(index);
-        cards.remove(index);
+    public void remove(Card source) {
+        CardTile targetCardTile = null;
+        for (Node node : container.getChildren()) {
+            if (node instanceof CardTile) {
+                CardTile ct = (CardTile) node;
+                if (ct.getCard().getId() == source.getId()) {
+                    targetCardTile = ct;
+                }
+            }
+            if (targetCardTile != null) {
+                container.getChildren().remove(targetCardTile);
+            }
+        }
     }
 
-    public int getIndex() {
-        return index;
+    public Deck getDeck() {
+        return deck;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+        if (this.deck != null && deck.size() > 0) {
+
+            for(Card card : deck.getAll()) {
+                container.getChildren()
+                        .add(GuiState.getInstance().getCardTile(card));
+            }
+        }
+
     }
 }

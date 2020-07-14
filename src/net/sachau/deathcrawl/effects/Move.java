@@ -1,5 +1,7 @@
 package net.sachau.deathcrawl.effects;
 
+import net.sachau.deathcrawl.GameState;
+import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.dto.Player;
 
 public class Move extends Effect {
@@ -13,8 +15,8 @@ public class Move extends Effect {
 	}
 
 	@Override
-	public void trigger(Target target) {
-		Player player = (Player) target;
+	public void trigger(Card target) {
+		Player player = GameState.getInstance().getPlayer();
 		int currentMoves = player.getMoves() + amount;
 		player.setMoves(currentMoves);
 		

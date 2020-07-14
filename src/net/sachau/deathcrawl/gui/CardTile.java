@@ -1,71 +1,88 @@
 package net.sachau.deathcrawl.gui;
 
-import javafx.scene.Parent;
-import javafx.scene.input.*;
+import javafx.scene.Node;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.Deathcrawl;
+import net.sachau.deathcrawl.GameState;
+import net.sachau.deathcrawl.GuiState;
 import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.cards.Deck;
+import net.sachau.deathcrawl.gui.images.TileSet;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CardTile extends StackPane {
 
-    private static final DataFormat cardFormat = new DataFormat("card");
-
-    private static final double HEIGHT = 200;
-    private static final double WIDTH = 150;
-    private CardHolder cardHolder;
+    public static final DataFormat cardFormat = new DataFormat("card");
+    public static final double HEIGHT = 200;
+    public static final double WIDTH = 150;
     private Card card;
 
-    public static CardTile createCardTile(int index, Card card, CardHolder cardHolder) {
-        return new CardTile(cardHolder, card, index * WIDTH, 0, WIDTH, HEIGHT);
-    }
+    public CardTile(Card card) {
+        super();
+        this.card = card;
+        setWidth(WIDTH);
+        setHeight(HEIGHT);
 
-    private CardTile(CardHolder cardHolder, Card card, double x, double y, double width, double height) {
-        setWidth(150);
-        setHeight(200);
-        setCardHolder(cardHolder);
-        setCard(card);
+        if (!card.isVisible()) {
+            Rectangle rectangle = new Rectangle(WIDTH, HEIGHT);
+            rectangle.setFill(Color.ANTIQUEWHITE);
+            rectangle.setStyle("-fx-fill: red; -fx-stroke: black; -fx-stroke-width: 5;");
 
-
-        Rectangle rectangle = new Rectangle(width, height);
-        rectangle.setFill(Color.ANTIQUEWHITE);
-        rectangle.setStyle("-fx-fill: red; -fx-stroke: black; -fx-stroke-width: 5;");
-
-        Text h = new Text(card.getName());
-        h.setFill(Color.BLACK);
-        this.getChildren()
-                .addAll(rectangle, h);
+            ImageView imageView = TileSet.getInstance()
+                    .getTile(TileSet.Tile.DEATHCRAWL);
+            this.getChildren()
+                    .addAll(rectangle, imageView);
+        } else {
+            Rectangle rectangle = new Rectangle(WIDTH, HEIGHT);
+            rectangle.setFill(Color.ANTIQUEWHITE);
+            Text h = new Text(card.getName() + "\n" + card.getId());
+            h.setFill(Color.BLACK);
+            this.getChildren()
+                    .addAll(rectangle, h);
+        }
 
         setOnMouseClicked(event -> {
-            if (event.getButton()
-                    .equals(MouseButton.PRIMARY)) {
-                if (event.getClickCount() == 2) {
-                    System.out.println("play " + this.getCard());
-                    //this.getCardHolder()
-                    //        .remove(this.getCard().getPosition().getCardIndex(), this);
-                    event.consume();
-                } else if (event.getClickCount() == 1) {
-                    System.out.println("select " + this.getCard());
-                    event.consume();
+                if (event.getButton()
+                        .equals(MouseButton.PRIMARY)) {
+                    if (event.getClickCount() == 2 && card.isPlayable()) {
+                        System.out.println("play " + card);
+                    }
+
+                    if (event.getClickCount() == 2 && card.isDrawable()) {
+
+                        GuiState.getInstance().getDrawPile().remove(card);
+                        GameState.getInstance().getPlayer().getDraw().remove(card);
+
+                        card.setVisible(true);
+                        GuiState.getInstance().getHandHolder().add(card);
+                        GameState.getInstance().getPlayer().getHand().add(card);
+
+                    }
                 }
-            }
+
+            event.consume();
         });
 
         setOnDragDetected(event -> {
             /* drag was detected, start a drag-and-drop gesture*/
             /* allow any transfer mode */
-            System.out.println("drag");
-            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
+            if (card.isPlayable()) {
+                Dragboard db = this.startDragAndDrop(TransferMode.ANY);
 
-            /* Put a string on a dragboard */
-            Map<DataFormat, Object> dbContent = new HashMap<>();
-            dbContent.put(cardFormat, this.getCard());
-            db.setContent(dbContent);
+                /* Put a string on a dragboard */
+                Map<DataFormat, Object> dbContent = new HashMap<>();
+                dbContent.put(cardFormat, card);
+                db.setContent(dbContent);
+            }
             event.consume();
         });
 
@@ -81,26 +98,25 @@ public class CardTile extends StackPane {
 
             Card source = (Card) db.getContent(cardFormat);
 
-            System.out.println(source + " -> " + this.getCard());
-            // Deathcrawl.getInstance().getCardHolders().get(this.getCard().getPosition().getHolderIndex()).remove(this.getCard().getPosition().getCardIndex());
+            if (card.isDiscarded()) {
+                GameState.getInstance().getPlayer().getHand().remove(source);
+                GameState.getInstance().getPlayer().getDiscard().add(source);
+                GuiState.getInstance().getDiscardPile().add(source);
+                GuiState.getInstance()
+                        .getHandHolder()
+                        .remove(source);
+
+
+
+
+            }
             event.consume();
         });
 
-    }
-
-    public CardHolder getCardHolder() {
-        return cardHolder;
-    }
-
-    public void setCardHolder(CardHolder cardHolder) {
-        this.cardHolder = cardHolder;
     }
 
     public Card getCard() {
         return card;
     }
 
-    public void setCard(Card card) {
-        this.card = card;
-    }
 }
