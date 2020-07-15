@@ -1,26 +1,55 @@
 package net.sachau.deathcrawl.gui;
 
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.GameState;
-import net.sachau.deathcrawl.GuiState;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
-
-import java.util.HashSet;
-import java.util.Set;
+import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.gui.card.CardTile;
+import net.sachau.deathcrawl.gui.card.CardTileCache;
 
 public class DiscardPile extends StackPane {
-    private Deck cards;
+    private Player player;
+    private Deck deck;
 
-    public DiscardPile() {
+    public DiscardPile(Player player) {
         super();
+        this.player = player;
+        this.deck = player.getDiscard();
+
+
+
+        Button button = new Button(getDiscardText(player.getDiscard().size()));
+        button.setDisable(player.getDraw().size() != 0);
+
+        deck.getCards()
+                .addListener(new ListChangeListener<Card>() {
+                    @Override
+                    public void onChanged(Change<? extends Card> change) {
+                        while (change.next()) {
+                            if (player.getDraw().size() ==  0) {
+                                button.setText(getDiscardText(player.getDiscard().size()));
+                                button.setDisable(false);
+                            } else {
+                                button.setText(getDiscardText(player.getDiscard().size()));
+                                button.setDisable(true);
+                            }
+                        }
+                    }
+                });
+
+        button.setOnMouseClicked(event -> {
+            player.getDiscard().moveAll(player.getDraw());
+            player.getDraw().shuffe();
+            player.endTurn();
+        });
 
 
         setBorder(new Border(new BorderStroke(Color.BLACK,
@@ -33,10 +62,8 @@ public class DiscardPile extends StackPane {
 
         Rectangle rectangle = new Rectangle(CardTile.WIDTH, CardTile.HEIGHT);
         rectangle.setFill(Color.ANTIQUEWHITE);
-        Text h = new Text("DISCARD");
-        h.setFill(Color.BLACK);
         this.getChildren()
-                .addAll(rectangle, h);
+                .addAll(rectangle, button);
 
         setOnDragOver(event -> {
             if (event.getDragboard().hasContent(CardTile.cardFormat)) {
@@ -48,66 +75,28 @@ public class DiscardPile extends StackPane {
         setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
 
-            Card source = (Card) db.getContent(CardTile.cardFormat);
+            CardTile cardTile = CardTileCache.getTile((Long) db.getContent(CardTile.cardFormat));
 
 
+            Card card = cardTile.getCard();
 
-            GameState.getInstance().getPlayer().getHand().discard(GameState.getInstance().getPlayer().getDiscard());
-            add(source);
-            GuiState.getInstance()
-                    .getHandHolder().remove(source);
+            card.getDeck().discard(player.getDiscard());
 
-
-
-            // Deathcrawl.getInstance().getCardHolders().get(this.getCard().getPosition().getHolderIndex()).remove(this.getCard().getPosition().getCardIndex());
+            System.out.println(player.getDiscard());
             event.consume();
         });
 
     }
 
-    public void add(Card card) {
-        CardTile cardTile = GuiState.getInstance().getCardTile(card);
-        getChildren().add(cardTile);
-    }
-
-
-    public void remove(Card card) {
-        CardTile targetCardTile = null;
-        for (Node node : getChildren()) {
-            if (node instanceof CardTile) {
-                CardTile ct = (CardTile) node;
-                if (ct.getCard().getId() == card.getId()) {
-                    targetCardTile = ct;
-                }
-            }
-            if (targetCardTile != null) {
-                getChildren().remove(targetCardTile);
-            }
-        }
-    }
-
-    public void removeAll() {
-        Set<Node> childs = new HashSet<>();
-        if (cards.size() != 0) {
-            for (Card c : cards.getAll()) {
-                for (Node node : getChildren()) {
-                    if (node instanceof CardTile) {
-                        CardTile ct = (CardTile) node;
-                        if (ct.getCard().getId() == c.getId()) {
-                            childs.add(ct);
-                        }
-                    }
-                }
-            }
-        }
-        getChildren().removeAll(childs);
-    }
-
     public Deck getCards() {
-        return cards;
+        return deck;
     }
 
     public void setCards(Deck cards) {
-        this.cards = cards;
+        this.deck = cards;
+    }
+
+    public String getDiscardText(int size) {
+            return "DISCARD [" +size + "]";
     }
 }

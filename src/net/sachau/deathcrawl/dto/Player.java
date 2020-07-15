@@ -1,16 +1,14 @@
 package net.sachau.deathcrawl.dto;
 
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.gui.CardHolder;
-import net.sachau.deathcrawl.gui.DrawPile;
+import net.sachau.deathcrawl.cards.Hazard;
+import net.sachau.deathcrawl.commands.CommandParser;
 
 
-public class Player implements Serializable {
+public class Player implements Creature {
+
+	private Card classCard;
 
 	private Deck permanent;
 	
@@ -20,10 +18,18 @@ public class Player implements Serializable {
 	
 	private Deck draw;
 
+	private Deck hazard;
+
+	private Turn turn;
+
 	private int moves;
 
-	public Player() {
+	public Player(Card classCard) {
 		super();
+
+		this.classCard = classCard;
+		this.classCard.setVisible(true);
+		this.classCard.setOwner(this);
 
 		permanent = new Deck();
 		permanent.setVisible(true);
@@ -36,6 +42,8 @@ public class Player implements Serializable {
 
 		discard = new Deck();
 		discard.setVisible(true);
+
+		turn = new Turn();
 	}
 
 	public void addPermanent(Card card) {
@@ -95,6 +103,44 @@ public class Player implements Serializable {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Turn getTurn() {
+		return turn;
+	}
+
+	public void setTurn(Turn turn) {
+		this.turn = turn;
+	}
+
+	@Override
+	public int getAttackBonus() {
+		return 0;
+	}
+
+	public void endTurn() {
+
+		if (hazard != null) {
+			for (Card card : hazard.getCards()) {
+				CommandParser.executeCommand(card, classCard);
+			}
+		}
+	}
+
+	public Deck getHazard() {
+		return hazard;
+	}
+
+	public void setHazard(Deck hazard) {
+		this.hazard = hazard;
+	}
+
+	public Card getClassCard() {
+		return classCard;
+	}
+
+	public void setClassCard(Card classCard) {
+		this.classCard = classCard;
+	}
 /*
 	public List<Card> drawCards(int numberOfCards) {
 		List<Card> cards = new LinkedList<>();
@@ -118,4 +164,6 @@ public class Player implements Serializable {
 		
 	}
 */
+
+
 }

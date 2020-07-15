@@ -1,28 +1,33 @@
 package net.sachau.deathcrawl.cards;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import net.sachau.deathcrawl.effects.Effect;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Deck implements Serializable {
 
-	List<Card> cards;
-	private boolean visible;
+	private ListProperty<Card> cards;
+
+	private SimpleBooleanProperty visible = new SimpleBooleanProperty();
 		
 	public Deck() {
 		super();
-		cards = new LinkedList<>();
+		ObservableList<Card> observableList = FXCollections.observableArrayList(new ArrayList<>());
+		this.cards = new SimpleListProperty<>(observableList);
 	}
 
 	public void add(Card card) {
-		if (visible) {
+		if (isVisible()) {
 			card.setVisible(true);
 		}
+		card.setDeck(this);
 		cards.add(card);
 	}
 	
@@ -84,7 +89,7 @@ public class Deck implements Serializable {
 	}
 
 	public void clean() {
-		cards = new LinkedList<>(); 
+		cards.remove(0, cards.size());
 
 	}
 
@@ -94,19 +99,39 @@ public class Deck implements Serializable {
 	}
 
 
-	public boolean isVisible() {
-		return visible;
-	}
-
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-
 	public void moveAll(Deck drawPile) {
 		for (Card card : getAll()) {
 			card.setVisible(drawPile.isVisible());
 			drawPile.add(card);
 		}
 		cards.removeAll(cards);
+	}
+
+	public ObservableList<Card> getCards() {
+		return cards.get();
+	}
+
+	public ListProperty<Card> cardsProperty() {
+		return cards;
+	}
+
+	public void setCards(ObservableList<Card> cards) {
+		this.cards.set(cards);
+	}
+
+	public boolean isVisible() {
+		return visible.get();
+	}
+
+	public SimpleBooleanProperty visibleProperty() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible.set(visible);
+	}
+
+	public void destroy(Card card) {
+		cards.remove(card);
 	}
 }

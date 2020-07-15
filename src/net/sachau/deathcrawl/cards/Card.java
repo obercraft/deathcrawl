@@ -1,6 +1,9 @@
 package net.sachau.deathcrawl.cards;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import net.sachau.deathcrawl.GameState;
+import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.effects.Effect;
 
 import java.io.Serializable;
@@ -18,18 +21,32 @@ public abstract class Card implements Serializable {
 
 	private String text;
 
-	private int hits;
 
-	private boolean visible;
+	private SimpleIntegerProperty hits = new SimpleIntegerProperty(1);
 
+	private SimpleBooleanProperty visible = new SimpleBooleanProperty();
+
+	private Creature owner;
+
+	private Deck deck;
 
 	public Card(String name) {
 		super();
 		this.name = name;
-		this.id = GameState.getInstance().createId();
-		effects = new HashMap<>();
+		this.id = GameState.createId();
+		this.effects = new HashMap<>();
 
 	}
+
+	public Card(String name, Creature owner) {
+		super();
+		this.name = name;
+		this.id = GameState.createId();
+		this.effects = new HashMap<>();
+		this.owner = owner;
+
+	}
+
 
 	private Map<Effect.Phase, List<Effect>> getEffects() {
 		return effects;
@@ -69,31 +86,12 @@ public abstract class Card implements Serializable {
 		this.text = text;
 	}
 
-	public int getHits() {
-		return hits;
-	}
-
-
-
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setHits(int hits) {
-		this.hits = hits;
-	}
-
-	public void damage(int amount) {
-		if (amount > 0) {
-			int hits = this.getHits();
-			hits -= amount;
-			this.setHits(hits);
-		}
-
 	}
 
 	public String getCommand() {
@@ -113,11 +111,23 @@ public abstract class Card implements Serializable {
 	}
 
 	public boolean isVisible() {
+		return visible.get();
+	}
+
+	public SimpleBooleanProperty visibleProperty() {
 		return visible;
 	}
 
 	public void setVisible(boolean visible) {
-		this.visible = visible;
+		this.visible.set(visible);
+	}
+
+	public Creature getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Creature owner) {
+		this.owner = owner;
 	}
 
 	@Override
@@ -125,53 +135,57 @@ public abstract class Card implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Card card = (Card) o;
-		return id == card.id &&
-				hits == card.hits &&
-				visible == card.visible &&
-				Objects.equals(name, card.name) &&
-				Objects.equals(effects, card.effects) &&
-				Objects.equals(command, card.command) &&
-				Objects.equals(text, card.text);
+		return id == card.id;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, effects, command, text, hits, visible);
+		return Objects.hash(id);
 	}
 
-	public boolean isPlayable() {
-		Deck cards = GameState.getInstance()
-				.getPlayer()
-				.getHand();
-		for (Card card : cards.getAll()) {
-			if (card.getId() == getId()) {
-				return true;
-			}
-		}
-		return false;
+	@Override
+	public String toString() {
+		return "Card{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				'}';
 	}
 
-	public boolean isDrawable() {
-		Deck cards = GameState.getInstance()
-				.getPlayer()
-				.getDraw();
-		for (Card card : cards.getAll()) {
-			if (card.getId() == getId()) {
-				return true;
-			}
-		}
-		return false;
+	public int getHits() {
+		return hits.get();
 	}
 
-	public boolean isDiscarded() {
-		Deck cards = GameState.getInstance()
-				.getPlayer()
-				.getDiscard();
-		for (Card card : cards.getAll()) {
-			if (card.getId() == getId()) {
-				return true;
-			}
+	public SimpleIntegerProperty hitsProperty() {
+		return hits;
+	}
+
+	public void setHits(int hits) {
+		this.hits.set(hits);
+	}
+
+	public void attack(Card target, int attack) {
+
+		if (owner != null) {
+			attack += owner.getAttackBonus();
 		}
-		return false;
+
+		int hits = target.getHits();
+		if (attack > 0) {
+			hits -= attack;
+		}
+
+		target.setHits(hits);
+		if (hits <= 0) {
+			target.getDeck().remove(target);
+		}
+
+	}
+
+	public Deck getDeck() {
+		return deck;
+	}
+
+	public void setDeck(Deck deck) {
+		this.deck = deck;
 	}
 }

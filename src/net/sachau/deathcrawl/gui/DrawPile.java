@@ -1,22 +1,44 @@
 package net.sachau.deathcrawl.gui;
 
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import net.sachau.deathcrawl.GameState;
-import net.sachau.deathcrawl.GuiState;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
+import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.gui.card.CardTile;
 
 public class DrawPile extends StackPane {
-    private Deck cards;
+    private Player player;
+    private Deck deck;
 
-    public DrawPile() {
+    public DrawPile(Player player) {
         super();
+        this.player = player;
+        this.deck = player.getDraw();
+
+        Button button = new Button(getDrawText());
+
+        deck.getCards()
+                .addListener(new ListChangeListener<Card>() {
+                    @Override
+                    public void onChanged(Change<? extends Card> change) {
+                        while (change.next()) {
+                            if (deck.size() > 0) {
+                                button.setText(getDrawText());
+                                button.setDisable(false);
+                            } else {
+                                button.setText(getDrawText());
+                                button.setDisable(true);
+                            }
+                        }
+                    }
+                });
+
         setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         setMinHeight(CardTile.HEIGHT);
@@ -27,41 +49,28 @@ public class DrawPile extends StackPane {
 
         Rectangle rectangle = new Rectangle(CardTile.WIDTH, CardTile.HEIGHT);
         rectangle.setFill(Color.ANTIQUEWHITE);
-        Text h = new Text("DRAW");
-        h.setFill(Color.BLACK);
+
         this.getChildren()
-                .addAll(rectangle, h);
+                .addAll(rectangle, button);
 
-        setOnMouseClicked(event -> {
-            if (event.getButton()
-                    .equals(MouseButton.PRIMARY)) {
-                if (event.getClickCount() == 2) {
-                    GameState.getInstance().getPlayer().getDiscard().moveAll(GameState.getInstance().getPlayer().getDraw());
-                    GameState.getInstance().getPlayer().getDraw().shuffe();
-                }
 
+        button.setOnMouseClicked(event -> {
+
+            if (deck.size() > 0) {
+                deck.draw(player.getHand());
             }
+
+
         });
-
-
     }
 
-    public Deck getCards() {
-        return cards;
-    }
-
-    public void setCards(Deck cards) {
-        this.cards = cards;
-        for (Card card : cards.getAll()) {
-            getChildren().add(GuiState.getInstance().getCardTile(card));
+    private String getDrawText() {
+        if (deck == null || deck.size() == 0) {
+            return "DRAW";
+        } else {
+            return "DRAW [" + deck.size() + "]";
         }
+
     }
 
-    public void remove(Card card) {
-        getChildren().remove(GuiState.getInstance().getCardTile(card));
-    }
-
-    public void add(Card card) {
-        getChildren().add(GuiState.getInstance().getCardTile(card));
-    }
 }
