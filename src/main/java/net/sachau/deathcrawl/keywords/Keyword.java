@@ -14,6 +14,6 @@ public enum Keyword {
     ITEM,
     WEAPON,
     POTION,
-    SPELL, MONSTER, CREATURE;
+    SPELL, MONSTER, CREATURE, ACTION, MOMENTUM;
 
 }

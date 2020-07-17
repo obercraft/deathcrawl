@@ -17,42 +17,50 @@ public class PlayArea extends ScrollPane {
     private Deck hazards;
     private Player player;
 
-    public PlayArea(Player player, Deck hazards, int length) {
-    	super();
-    	this.player = player;
-    	this.hazards = hazards;
+    public PlayArea(Player player, int length) {
+        super();
+        this.player = player;
+        this.hazards = player.getHazard();
 
-    	this.setMinHeight(CardTile.HEIGHT);
+        this.setMinHeight(CardTile.HEIGHT);
 
-        hazards.getCards().addListener(new ListChangeListener<Card>() {
-            @Override
-            public void onChanged(Change<? extends Card> change) {
-                while (change.next()) {
-                    int added = change.getAddedSize();
-                    if (added > 0) {
-                        for (Card c : change.getAddedSubList()) {
-                            container.getChildren()
-                                    .add(CardTileCache.getTile(c));
+
+        for (Card hazard : hazards.getCards()) {
+            container.getChildren()
+                    .add(CardTileCache.getTile(hazard));
+        }
+
+        hazards.getCards()
+                .addListener(new ListChangeListener<Card>() {
+                    @Override
+                    public void onChanged(Change<? extends Card> change) {
+                        while (change.next()) {
+                            int added = change.getAddedSize();
+                            if (added > 0) {
+                                for (Card c : change.getAddedSubList()) {
+                                    container.getChildren()
+                                            .add(CardTileCache.getTile(c));
+                                }
+                            }
+
+                            int removed = change.getRemovedSize();
+                            if (removed > 0) {
+                                for (Card c : change.getRemoved()) {
+                                    container.getChildren()
+                                            .remove(CardTileCache.getTile(c));
+
+                                }
+                            }
                         }
                     }
-
-                    int removed = change.getRemovedSize();
-                    if (removed > 0) {
-                        for (Card c : change.getRemoved()) {
-                            container.getChildren().remove(CardTileCache.getTile(c));
-
-                        }
-                    }
-                }
-            }
-        });
+                });
 
         setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
         setVbarPolicy(ScrollBarPolicy.NEVER);
         setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        setHeight(CardTile.HEIGHT +20);
-        setMaxHeight(CardTile.HEIGHT +20);
+        setHeight(CardTile.HEIGHT + 20);
+        setMaxHeight(CardTile.HEIGHT + 20);
         setMaxWidth(CardTile.WIDTH * length);
         setFitToHeight(true);
         setFitToWidth(true);

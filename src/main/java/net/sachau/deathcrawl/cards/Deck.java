@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.keywords.Keyword;
 
 import javax.swing.*;
@@ -12,11 +13,9 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Deck implements Serializable {
+public class Deck {
 
 	private ListProperty<Card> cards;
-
-
 	private SimpleBooleanProperty visible = new SimpleBooleanProperty();
 		
 	public Deck() {
@@ -165,5 +164,15 @@ public class Deck implements Serializable {
 			return cards.get(randomNum);
 		}
 
+	}
+
+	public void addAll(Deck startingCards, Creature owner) {
+		if (startingCards == null) {
+			return;
+		}
+		for (Card card : startingCards.getCards()) {
+			card.setOwner(owner);
+			this.add(card);
+		}
 	}
 }

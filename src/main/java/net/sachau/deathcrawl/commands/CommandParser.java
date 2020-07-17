@@ -20,6 +20,7 @@ public class CommandParser {
         SHIELD,
         HEAL,
         POISON_ITEM,
+        MOMENTUM,
     }
 
     public static boolean executeCommand(Card source, Card target) {
@@ -39,9 +40,19 @@ public class CommandParser {
 
         switch (command) {
             case ATTACK:
+                if (target == null) {
+                    return false;
+                }
+                if (target.getOwner() instanceof Player) {
+                    return false;
+                }
                 return source.attack(target, source.getDamage());
             case RANDOM_ATTACK_MANY: {
                 if (target != null) {
+                    if (target.getOwner() instanceof Player) {
+                        return false;
+                    }
+
                     Deck targetDeck = target.getDeck();
                     int count = new Integer(args[1]);
                     int amount = source.getDamage();
@@ -82,6 +93,14 @@ public class CommandParser {
                 }
                 return false;
 
+            case MOMENTUM:
+                if (source.getOwner() instanceof Player) {
+                    Player player = (Player) source.getOwner();
+                    int m = player.getMomentum() + new Integer(args[1]);
+                    player.setMomentum(m);
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }

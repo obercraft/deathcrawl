@@ -22,4 +22,7 @@ public class CardTileCache {
         return tileCache.get(id);
     }
 
+    public static void put(CardTile cardTile) {
+        tileCache.put(cardTile.getCard().getId(), cardTile);
+    }
 }

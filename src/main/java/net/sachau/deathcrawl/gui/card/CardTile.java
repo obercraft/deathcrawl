@@ -4,16 +4,16 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.GameState;
+import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.Deck;
+import net.sachau.deathcrawl.cards.CardCache;
 import net.sachau.deathcrawl.commands.CommandParser;
-import net.sachau.deathcrawl.conditions.Condition;
 import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.keywords.Keyword;
@@ -24,6 +24,7 @@ import java.util.Map;
 public class CardTile extends StackPane {
 
     public static final DataFormat cardFormat = new DataFormat("card");
+    public static final DataFormat momentumFormat = new DataFormat("momentum");
     public static final double HEIGHT = 200;
     public static final double WIDTH = 150;
     private Card card;
@@ -60,7 +61,7 @@ public class CardTile extends StackPane {
 
         Rectangle rectangle = new Rectangle(WIDTH, HEIGHT);
         rectangle.setFill(Color.ANTIQUEWHITE);
-        Text name = new Text(card.getName());
+        Text name = new Text(card.getName() + "@" + card.getId());
         name.setFill(Color.BLACK);
 
 
@@ -85,9 +86,19 @@ public class CardTile extends StackPane {
         }
 
         setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                if (event.getClickCount() == 2) {
+                    if (card.getKeywords()
+                            .contains(Keyword.ACTION)) {
+                        executeCommand(card);
+                    }
+                }
+            }
+            event.consume();
         });
 
         setOnDragDetected(event -> {
+
             if (!card.isPlayable()) {
                 return;
             }
@@ -104,25 +115,38 @@ public class CardTile extends StackPane {
                     .hasContent(cardFormat)) {
                 event.acceptTransferModes(TransferMode.ANY);
             }
+
+            if (event.getDragboard()
+                    .hasContent(momentumFormat)) {
+                event.acceptTransferModes(TransferMode.ANY);
+            }
             event.consume();
         });
 
         setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
 
-            CardTile sourceTile = CardTileCache.getTile((Long) db.getContent(cardFormat));
-            Card sourceCard = sourceTile.getCard();
+            if (db.getContent(cardFormat) != null) {
 
-            boolean commandSuccessful = CommandParser.executeCommand(sourceCard, getCard());
+                CardTile sourceTile = CardTileCache.getTile((Long) db.getContent(cardFormat));
+                Card sourceCard = sourceTile.getCard();
 
-            if (commandSuccessful) {
-                Creature owner = sourceCard.getOwner();
-                if (owner != null && owner instanceof Player) {
-                    Player player = (Player) owner;
-                    sourceCard.getDeck()
-                            .discard(sourceCard, player.getDiscard());
-                }
+                executeCommand(sourceCard);
+            } else if (db.getContent(momentumFormat) != null) {
+                Card sourceCard = CardCache.get((Long) db.getContent(momentumFormat));
+                executeCommand(sourceCard);
+
             }
+//
+//            boolean commandSuccessful = CommandParser.executeCommand(sourceCard, getCard());
+//            if (commandSuccessful) {
+//                Creature owner = sourceCard.getOwner();
+//                if (owner != null && owner instanceof Player) {
+//                    Player player = (Player) owner;
+//                    sourceCard.getDeck()
+//                            .discard(sourceCard, player.getDiscard());
+//                }
+//            }
 
             event.consume();
         });
@@ -133,4 +157,20 @@ public class CardTile extends StackPane {
         return card;
     }
 
+    private void executeCommand(Card sourceCard) {
+        boolean commandSuccessful = CommandParser.executeCommand(sourceCard, getCard());
+        if (commandSuccessful) {
+            Creature owner = sourceCard.getOwner();
+            if (owner != null && owner instanceof Player) {
+                Player player = (Player) owner;
+                if (sourceCard.getDeck() != null) {
+                    sourceCard.getDeck()
+                            .discard(sourceCard, player.getDiscard());
+                }
+            }
+        }
+    }
+
+
 }
+

@@ -1,7 +1,9 @@
 package net.sachau.deathcrawl.cards;
 
-import com.sun.java.accessibility.util.GUIInitializedListener;
-import javafx.beans.property.*;
+import javafx.beans.property.SetProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import net.sachau.deathcrawl.GameState;
@@ -13,6 +15,9 @@ import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.keywords.Keywords;
+import net.sachau.deathcrawl.momentum.MomentumAction;
+import net.sachau.deathcrawl.momentum.MomentumActions;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -41,10 +46,41 @@ public abstract class Card {
 
     private Deck deck;
 
+    private Deck startingCards;
+
     private SetProperty<Condition> conditions;
+    private String uniqueId;
+
+    private MomentumActions momentumActions = new MomentumActions();
 
     public Card(String name, int initialHits, int initialDamage) {
         super();
+
+        Character characterAnnotation = this.getClass()
+                .getAnnotation(Character.class);
+
+        if (characterAnnotation != null) {
+            if (!StringUtils.isEmpty(characterAnnotation.uniqueId())) {
+                this.setUniqueId(characterAnnotation.uniqueId());
+            }
+
+
+            Class<? extends Card>[] clazzes = characterAnnotation.startingDeck();
+            if (clazzes.length > 0) {
+                this.startingCards = new Deck();
+                for (Class<? extends Card> clazz : clazzes) {
+                    try {
+                        this.startingCards.add(clazz.newInstance());
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+
         this.name = name;
         initHits(initialHits);
         initDamage(initialDamage);
@@ -208,12 +244,12 @@ public abstract class Card {
 
         int hits = target.getHits();
 
-         for (Condition c : getConditions()) {
-             if (c instanceof Poisonous) {
-                 attack += c.getAmount();
-                 conditions.remove(c);
-             }
-         }
+        for (Condition c : getConditions()) {
+            if (c instanceof Poisonous) {
+                attack += c.getAmount();
+                conditions.remove(c);
+            }
+        }
 
         if (attack > 0) {
             hits -= attack;
@@ -284,12 +320,12 @@ public abstract class Card {
     public boolean heal(int amount) {
         int h = amount + getHits();
         if (getHits() + h <= getMaxHits()) {
-			setHits(h);
-			return true;
-		} else {
-        	setHits(getMaxHits());
-        	return false;
-		}
+            setHits(h);
+            return true;
+        } else {
+            setHits(getMaxHits());
+            return false;
+        }
     }
 
     public int getMaxHits() {
@@ -374,5 +410,34 @@ public abstract class Card {
     }
 
 
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public Deck getStartingCards() {
+        return startingCards;
+    }
+
+    public void setStartingCards(Deck startingCards) {
+        this.startingCards = startingCards;
+    }
+
+    public MomentumActions getMomentumActions() {
+        return momentumActions;
+    }
+
+    public void setMomentumActions(MomentumActions momentumActions) {
+        this.momentumActions = momentumActions;
+    }
+
+    public void addMomentum(MomentumAction action) {
+        if (action != null) {
+            getMomentumActions().add(action);
+        }
+    }
 
 }

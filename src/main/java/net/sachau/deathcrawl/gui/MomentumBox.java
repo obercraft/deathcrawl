@@ -5,42 +5,40 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.GameState;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardTile;
+import net.sachau.deathcrawl.momentum.MomentumAction;
 
-public class DrawPile extends StackPane {
+public class MomentumBox extends ScrollPane {
     private Player player;
     private Deck deck;
 
-    public DrawPile(Player player) {
+
+    public MomentumBox(Player player) {
         super();
+
+        VBox container = new VBox();
+        setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setHeight(CardTile.HEIGHT + 20);
+        setMaxHeight(CardTile.HEIGHT + 20);
+        setMaxWidth(CardTile.WIDTH);
+        setFitToHeight(true);
+        setFitToWidth(true);
+        container.setAlignment(Pos.TOP_LEFT);
         this.player = player;
-        this.deck = player.getDraw();
+        this.deck = player.getParty();
 
-        Button button = new Button(getDrawText());
 
-        deck.getCards()
-                .addListener(new ListChangeListener<Card>() {
-                    @Override
-                    public void onChanged(Change<? extends Card> change) {
-                        while (change.next()) {
-                            if (deck.size() > 0) {
-                                button.setText(getDrawText());
-                                button.setDisable(false);
-                            } else {
-                                button.setText(getDrawText());
-                                button.setDisable(true);
-                            }
-                        }
-                    }
-                });
 
         setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -48,30 +46,30 @@ public class DrawPile extends StackPane {
         setMinWidth(CardTile.WIDTH);
         setMaxHeight(CardTile.HEIGHT);
         setMaxWidth(CardTile.WIDTH);
-        setAlignment(Pos.CENTER);
+//setAlignment(Pos.CENTER);
 
-        Rectangle rectangle = new Rectangle(CardTile.WIDTH, CardTile.HEIGHT);
-        rectangle.setFill(Color.ANTIQUEWHITE);
 
         HBox momentum = new HBox();
         Text momentumText = new Text(getMomentum());
         momentum.setAlignment(Pos.TOP_LEFT);
         momentum.getChildren().add(momentumText);
 
-
-        this.getChildren()
-                .addAll(rectangle,  momentum, button);
-
+        container.getChildren()
+                .add(momentum);
 
 
-        button.setOnMouseClicked(event -> {
-
-            if (deck.size() > 0) {
-                deck.draw(player.getHand());
+        for (Card card : deck.getCards()) {
+            if (card.getMomentumActions().size() > 0) {
+                for (MomentumAction action : card.getMomentumActions()) {
+                    MomentumActionLine momentumActionLine = new MomentumActionLine(player, card, action);
+                    container.getChildren()
+                            .add(momentumActionLine);
+                }
             }
+        }
 
+        setContent(container);
 
-        });
 
         player.momentumProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -81,14 +79,6 @@ public class DrawPile extends StackPane {
         });
     }
 
-    private String getDrawText() {
-        if (deck == null || deck.size() == 0) {
-            return "DRAW";
-        } else {
-            return "DRAW [" + deck.size() + "]";
-        }
-
-    }
 
     private String getMomentum() {
         return "Momentum : " + player.getMomentum();

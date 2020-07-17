@@ -1,5 +1,6 @@
 package net.sachau.deathcrawl.dto;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.cards.Hazard;
@@ -26,6 +27,8 @@ public class Player extends Creature {
 	private Turn turn;
 
 	private int moves;
+
+	private SimpleIntegerProperty momentum = new SimpleIntegerProperty(0);
 
 
 	public Player() {
@@ -156,4 +159,16 @@ public class Player extends Creature {
 		return false;
 	}
 
+
+	public int getMomentum() {
+		return momentum.get();
+	}
+
+	public SimpleIntegerProperty momentumProperty() {
+		return momentum;
+	}
+
+	public void setMomentum(int momentum) {
+		this.momentum.set(momentum);
+	}
 }
