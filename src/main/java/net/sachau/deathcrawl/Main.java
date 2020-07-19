@@ -20,70 +20,70 @@ import java.util.Set;
 public class Main extends Application {
 
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Player player = new Player();
-        Scene content = new Scene(new GameScreen(), GameScreen.WINDOW_WIDTH, GameScreen.WINDOW_HEIGHT);
-        primaryStage.setScene(content);
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    Player player = new Player();
+    Scene content = new Scene(new GameScreen(), GameScreen.WINDOW_WIDTH, GameScreen.WINDOW_HEIGHT);
+    content.getStylesheets().add(this.getClass().getResource("/application.css").toExternalForm());
+    primaryStage.setScene(content);
 
-        //for (Card c : player.getParty().getCards()) {
-        //    c.triggerPhaseEffects(CardEffect.Phase.PREPARE);
-        // }
+    //for (Card c : player.getParty().getCards()) {
+    //    c.triggerPhaseEffects(CardEffect.Phase.PREPARE);
+    // }
 
 
-        primaryStage.show();
+    primaryStage.show();
 
+  }
+
+  //@Override
+  public void startOld(Stage primaryStage) throws Exception {
+
+
+    Player player = new Player();
+
+    Reflections reflections = new Reflections("net.sachau.deathcrawl.cards");
+    Set<Class<?>> basic = reflections.getTypesAnnotatedWith(Basic.class);
+
+    for (Class b : basic) {
+      for (int i = 0; i < 2; i++) {
+        Card card = (Card) b.newInstance();
+        card.setOwner(player);
+        player
+          .getDraw()
+          .add(card);
+
+      }
+    }
+    player.getDraw()
+      .shuffe();
+
+
+    DrawPile drawPile = new DrawPile(player);
+    DiscardPile discardPile = new DiscardPile(player);
+    HandHold hand = new HandHold(player, 5);
+
+    Deck hazards = new Deck();
+
+    for (int i = 0; i < 3; i++) {
+      Goblin goblin = new Goblin();
+      goblin.setVisible(true);
+      if (i == 0) {
+        goblin.getConditions().add(new Armor());
+      } else if (i == 1) {
+        goblin.getConditions().add(new Guard());
+        goblin.getConditions().add(new Armor());
+      }
+      hazards.add(goblin);
     }
 
-    //@Override
-    public void startOld(Stage primaryStage) throws Exception {
+    player.setHazard(hazards);
 
+    player.getParty().add(new Warrior());
+    player.getParty().add(new Wizard());
+    player.getParty().add(new Thief());
 
-
-        Player player = new Player();
-
-        Reflections reflections = new Reflections("net.sachau.deathcrawl.cards");
-        Set<Class<?>> basic = reflections.getTypesAnnotatedWith(Basic.class);
-
-        for (Class b : basic) {
-            for (int i = 0; i < 2; i++) {
-                Card card = (Card) b.newInstance();
-                card.setOwner(player);
-                player
-                        .getDraw()
-                        .add(card);
-
-            }
-        }
-        player.getDraw()
-                .shuffe();
-
-
-        DrawPile drawPile = new DrawPile(player);
-        DiscardPile discardPile = new DiscardPile(player);
-        HandHold hand = new HandHold(player, 5);
-
-        Deck hazards = new Deck();
-
-        for (int i = 0; i < 3; i++) {
-            Goblin goblin = new Goblin();
-            goblin.setVisible(true);
-            if (i == 0) {
-                goblin.getConditions().add(new Armor());
-            } else if (i == 1) {
-                goblin.getConditions().add(new Guard());
-                goblin.getConditions().add(new Armor());
-            }
-            hazards.add(goblin);
-        }
-
-        player.setHazard(hazards);
-
-        player.getParty().add(new Warrior());
-        player.getParty().add(new Wizard());
-        player.getParty().add(new Thief());
-
-        // PlayArea playArea = new PlayArea(player, 5);
+    // PlayArea playArea = new PlayArea(player, 5);
 //
 //
 //        PartyArea partyArea = new PartyArea(player, 5);
@@ -101,26 +101,23 @@ public class Main extends Application {
 //        row3.getChildren().addAll(partyArea);
 //        rows.getChildren().addAll(row1, row2, row3);
 
-        Scene content = new Scene(new CardBoard(player), GameScreen.WINDOW_WIDTH, GameScreen.WINDOW_HEIGHT);
-        primaryStage.setScene(content);
+    Scene content = new Scene(new CardBoard(player), GameScreen.WINDOW_WIDTH, GameScreen.WINDOW_HEIGHT);
+    primaryStage.setScene(content);
 
-        for (Card c : player.getParty().getCards()) {
-            c.triggerPhaseEffects(CardEffect.Phase.PREPARE);
-        }
-
-
-        primaryStage.show();
-
-
-
-
-
+    for (Card c : player.getParty().getCards()) {
+      c.triggerPhaseEffects(CardEffect.Phase.PREPARE);
     }
 
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    primaryStage.show();
+
+
+  }
+
+
+  public static void main(String[] args) {
+    launch(args);
+  }
 }
 
 

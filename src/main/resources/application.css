@@ -1,0 +1,51 @@
+
+
+.card {
+
+  width: 252;
+  height: 352;
+  -fx-min-width: width;
+  -fx-max-width: width;
+  -fx-min-height: height;
+  -fx-max-height: height;
+
+  -fx-background-size: height width;
+/*  -fx-background-color: #FFFFFF; */
+  -fx-background-radius: 10;
+  -fx-border-radius: 10;
+  -fx-border-color: #000000;
+  -fx-border-width:1;
+
+  /* top-left, top-right, bottom-right, and bottom-left corners, in that order. */
+}
+
+.card-cover {
+-fx-background-color: #000000;
+}
+
+.hits-layer {
+  -fx-alignment: bottom-right;
+}
+
+.card-corner {
+  width: 50;
+  height: 20;
+  -fx-min-width: width;
+  -fx-max-width: width;
+  -fx-min-height: height;
+  -fx-max-height: height;
+
+  -fx-background-size: height width;
+  -fx-background-color: #ff0000;
+  -fx-background-radius: 10;
+  -fx-border-radius: 10;
+  -fx-border-width:1;
+    -fx-text-fill: #FFFFFF;
+    -fx-alignment: center;
+}
+
+.card-corner-text{
+
+  -fx-fill: #FFFFFF;
+}
+
