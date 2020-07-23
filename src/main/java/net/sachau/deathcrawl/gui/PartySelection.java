@@ -1,34 +1,38 @@
 package net.sachau.deathcrawl.gui;
 
-import javafx.collections.ListChangeListener;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.cards.Basic;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import net.sachau.deathcrawl.GameEvent;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.Character;
+import net.sachau.deathcrawl.cards.CharacterCard;
 import net.sachau.deathcrawl.cards.Deck;
+import net.sachau.deathcrawl.cards.classes.StartingCharacter;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardSelect;
 import net.sachau.deathcrawl.gui.card.CardTile;
-import net.sachau.deathcrawl.gui.card.CardTileCache;
 import net.sachau.deathcrawl.keywords.Keyword;
 import org.reflections.Reflections;
 
 import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
-public class PartySelection extends VBox {
+public class PartySelection extends VBox implements Observer {
+
+
+    public final static int PARTY_SIZE = 4;
 
     private Player player;
 
     private Set<String> uniqueIds = new HashSet<>();
 
-    public PartySelection(Player player, Button partyDone, Button partyClear, int length) {
+    Deck availableCharacters = new Deck();
+
+    public PartySelection(Player player, int length) {
         super();
+        GameEvent.events().addObserver(this);
         this.player = player;
 
 
@@ -42,19 +46,18 @@ public class PartySelection extends VBox {
 
         Reflections reflections = new Reflections("net.sachau.deathcrawl.cards");
 
-        PartyArea partyArea = new PartyArea(player, length);
+        DeckPane partyArea = new DeckPane(player.getParty(), length);
 
-        Set<Class<?>> basic = reflections.getTypesAnnotatedWith(Character.class);
+        Set<Class<?>> basic = reflections.getTypesAnnotatedWith(StartingCharacter.class);
 
         for (Class b : basic) {
-            Card card = null;
+            CharacterCard card = null;
             try {
-                card = (Card) b.newInstance();
-                if (card.getKeywords().contains(Keyword.BASIC)) {
-                    card.setVisible(true);
-                    available.getChildren().add(new CardSelect(this, card, player.getParty(), partyDone));
-                }
-                Logger.log("Test");
+                card = (CharacterCard) b.newInstance();
+
+                card.setVisible(true);
+                available.getChildren().add(new CardSelect(this, card, player.getParty()));
+                availableCharacters.add(card);
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -62,10 +65,6 @@ public class PartySelection extends VBox {
             }
 
         }
-
-
-
-
         getChildren().addAll(available, partyArea);
 
 
@@ -81,5 +80,21 @@ public class PartySelection extends VBox {
 
     public Player getPlayer() {
         return player;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        switch (GameEvent.get(arg)) {
+            case RANDOMPARTY:
+                for (int i = 0; i < PARTY_SIZE; i++) {
+                    availableCharacters.drawRandom(player.getParty());
+                }
+
+                GameEvent.events().send(GameEvent.Type.PARTYDONE);
+                GameEvent.events().send(GameEvent.Type.STARTTURN);
+                return;
+            default:
+                return;
+        }
     }
 }

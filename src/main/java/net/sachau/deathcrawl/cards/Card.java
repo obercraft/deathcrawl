@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
-import net.sachau.deathcrawl.GameState;
+import net.sachau.deathcrawl.GameEvent;
 import net.sachau.deathcrawl.conditions.Armor;
 import net.sachau.deathcrawl.conditions.Condition;
 import net.sachau.deathcrawl.conditions.Guard;
@@ -15,8 +15,6 @@ import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.keywords.Keywords;
-import net.sachau.deathcrawl.momentum.MomentumAction;
-import net.sachau.deathcrawl.momentum.MomentumActions;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -24,70 +22,34 @@ import java.util.*;
 public abstract class Card {
 
     private long id;
-
     private String name;
-
     private Map<CardEffect.Phase, List<CardEffect>> effects;
-
     private Keywords keywords = new Keywords();
-
     private String command;
-
     private String text;
 
     private SimpleIntegerProperty damage = new SimpleIntegerProperty(1);
     private SimpleIntegerProperty maxDamage = new SimpleIntegerProperty(1);
     private SimpleIntegerProperty hits = new SimpleIntegerProperty(1);
     private SimpleIntegerProperty maxHits = new SimpleIntegerProperty(1);
-
     private SimpleBooleanProperty visible = new SimpleBooleanProperty();
 
     private Creature owner;
-
     private Deck deck;
-
-    private Deck startingCards;
-
     private SetProperty<Condition> conditions;
-    private String uniqueId;
-
-    private MomentumActions momentumActions = new MomentumActions();
 
     public Card(String name, int initialHits, int initialDamage) {
         super();
 
-        Character characterAnnotation = this.getClass()
-                .getAnnotation(Character.class);
-
-        if (characterAnnotation != null) {
-            if (!StringUtils.isEmpty(characterAnnotation.uniqueId())) {
-                this.setUniqueId(characterAnnotation.uniqueId());
-            }
-
-
-            Class<? extends Card>[] clazzes = characterAnnotation.startingDeck();
-            if (clazzes.length > 0) {
-                this.startingCards = new Deck();
-                for (Class<? extends Card> clazz : clazzes) {
-                    try {
-                        this.startingCards.add(clazz.newInstance());
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
 
 
         this.name = name;
         initHits(initialHits);
         initDamage(initialDamage);
-        this.id = GameState.createId();
+        this.id = GameEvent.createId();
         this.effects = new HashMap<>();
 
-        ObservableSet<Condition> observableSet = FXCollections.observableSet(new HashSet<Condition>());
+        ObservableSet<Condition> observableSet = FXCollections.observableSet(new HashSet<>());
         this.conditions = new SimpleSetProperty<>(observableSet);
 
     }
@@ -95,7 +57,7 @@ public abstract class Card {
     public Card(String name, Creature owner) {
         super();
         this.name = name;
-        this.id = GameState.createId();
+        this.id = GameEvent.createId();
         this.effects = new HashMap<>();
         this.owner = owner;
 
@@ -226,15 +188,16 @@ public abstract class Card {
 
         Deck targetDeck = target.getDeck();
         for (Card card : targetDeck.getCards()) {
-            for (Condition condition : card.getConditions()) {
-                if (condition instanceof Guard && card.getId() != target.getId()) {
-                    return false;
+            if (card.isAlive()) {
+                for (Condition condition : card.getConditions()) {
+                    if (condition instanceof Guard && card.getId() != target.getId()) {
+                        return false;
+                    }
                 }
             }
         }
 
         if (target.attackArmor()) {
-
             return true;
         }
 
@@ -257,8 +220,15 @@ public abstract class Card {
 
         target.setHits(hits);
         if (hits <= 0) {
-            target.getDeck()
-                    .remove(target);
+
+            if (target instanceof MonsterCard && owner != null) {
+                MonsterCard mc = (MonsterCard) target;
+                int gold = mc.getGold() + owner.getGold();
+                owner.setGold(gold);
+                int xp = mc.getXp() + owner.getXp();
+                owner.setXp(xp);
+
+            }
         }
         return true;
 
@@ -409,35 +379,34 @@ public abstract class Card {
         return false;
     }
 
-
-    public void setUniqueId(String uniqueId) {
-        this.uniqueId = uniqueId;
-    }
-
-    public String getUniqueId() {
-        return uniqueId;
-    }
-
-    public Deck getStartingCards() {
-        return startingCards;
-    }
-
-    public void setStartingCards(Deck startingCards) {
-        this.startingCards = startingCards;
-    }
-
-    public MomentumActions getMomentumActions() {
-        return momentumActions;
-    }
-
-    public void setMomentumActions(MomentumActions momentumActions) {
-        this.momentumActions = momentumActions;
-    }
-
-    public void addMomentum(MomentumAction action) {
-        if (action != null) {
-            getMomentumActions().add(action);
+    public String getCardKeyWords() {
+        if (this.getKeywords() == null) {
+            return "";
         }
+        Set<String> words = new TreeSet<>();
+        for (Keyword k : this.getKeywords()) {
+            if (k.isOnCard()) {
+                words.add(k.name());
+            }
+        }
+
+        return StringUtils.join(words, " \u00b7 ");
     }
 
+    public boolean isRanged() {
+        return  keywords.contains(Keyword.RANGED);
+    }
+
+    public boolean hasCondition(Class<? extends Condition> clazz) {
+        for (Condition c : this.conditions) {
+            if (c.getClass().equals(clazz)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAlive() {
+        return getHits() > 0;
+    }
 }

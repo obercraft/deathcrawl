@@ -1,19 +1,21 @@
 package net.sachau.deathcrawl.cards.classes;
 
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.Character;
+import net.sachau.deathcrawl.cards.CharacterCard;
+import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.cards.items.Knife;
 import net.sachau.deathcrawl.cards.spells.HealingTouch;
 import net.sachau.deathcrawl.keywords.Keyword;
+import net.sachau.deathcrawl.momentum.MomentumActions;
 
-@Character (uniqueId = "Cleric", startingDeck = {Knife.class, Knife.class, HealingTouch.class})
-public class Cleric extends Card {
+@StartingCharacter
+public class Cleric extends CharacterCard {
 
-	public Cleric() {
-		super("Cleric", 7, 0);
-		addKeywords(Keyword.BASIC, Keyword.CREATURE, Keyword.CASTER, Keyword.CLERIC);
+    public Cleric() {
+        super("Cleric", 7, 0, "Cleric",
+				Deck.builder().add(Knife.class, Knife.class, HealingTouch.class), MomentumActions.builder());
+        addKeywords(Keyword.CREATURE, Keyword.CASTER, Keyword.CLERIC);
 
-	}
+    }
 
 
 }

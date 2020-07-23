@@ -42,6 +42,11 @@ public class TileSet {
         return imageView;
     }
 
+    public WritableImage writeableImage(Tile tile) {
+        return readImage(tile.getX(), tile.getY());
+    }
+
+
     private WritableImage readImage(int x, int y) {
         final String key = x +"," + y;
         WritableImage image = cache.get(key);

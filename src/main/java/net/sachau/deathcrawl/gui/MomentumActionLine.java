@@ -39,7 +39,7 @@ public class MomentumActionLine extends HBox {
                 action.getCard().setOwner(player);
                 CardCache.put(action.getCard());
                 map.put(CardTile.momentumFormat, action.getCard()
-                        .getId());
+                        .getId() + "," +  action.getCost());
                 db.setContent(map);
             }
             event.consume();

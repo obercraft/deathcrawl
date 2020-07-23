@@ -9,7 +9,7 @@ public class HealingPotion extends Card {
 
 	public HealingPotion() {
 		super("Healing Potion", 1, 0);
-		addKeywords(Keyword.BASIC, Keyword.SIMPLE, Keyword.POTION, Keyword.ITEM);
+		addKeywords(Keyword.SIMPLE, Keyword.POTION, Keyword.ITEM);
 		setText("Healing Potion");
 		setCommand("heal 1");
 	}

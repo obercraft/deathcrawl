@@ -13,12 +13,10 @@ import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.conditions.Condition;
 import net.sachau.deathcrawl.gui.images.TileSet;
 
-public class ConditionItem extends StackPane {
+public class ConditionItem extends HBox {
 
     public ConditionItem(Condition condition) {
-
-        setAlignment(Pos.TOP_LEFT);
-
+        super();
         getChildren().add(TileSet.getInstance().getTile(condition.getTile()));
         if (condition.getAmount() > 1) {
             Text h = new Text("" + condition.getAmount());

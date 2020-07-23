@@ -5,12 +5,11 @@ import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.keywords.Keyword;
 
 @Basic
-public class Knife extends Card {
+public class ThrowingKnife extends Card {
 
-	public Knife() {
-		super("Knife", 1, 1);
-		addKeywords(Keyword.SIMPLE, Keyword.WEAPON, Keyword.ITEM);
-		setText("Knife");
+	public ThrowingKnife() {
+		super("Throwing Knife", 1, 1);
+		addKeywords(Keyword.SIMPLE, Keyword.WEAPON, Keyword.ITEM, Keyword.RANGED);
 		setCommand("attack 1");
 	}
 

@@ -7,16 +7,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.conditions.Condition;
 import net.sachau.deathcrawl.gui.images.TileSet;
 
-public class ConditionBox extends HBox {
+public class ConditionBox extends StackPane {
 
     public ConditionBox(Card card) {
+        super();
+        getStyleClass().add("card");
+        getStyleClass().add("conditions");
 
-        setAlignment(Pos.TOP_LEFT);
 
         for (Condition condition : card.getConditions()) {
             getChildren().add(new ConditionItem(condition));

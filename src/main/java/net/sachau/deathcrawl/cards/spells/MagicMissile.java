@@ -11,7 +11,7 @@ public class MagicMissile extends Card {
 		super("Magic Missile", 0, 1);
 		setText("Magic Missile");
 		setCommand("random_attack_many 3 1");
-		addKeywords(Keyword.WIZARD, Keyword.BASIC);
+		addKeywords(Keyword.WIZARD);
 
 	}
 

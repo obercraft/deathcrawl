@@ -9,17 +9,17 @@ import net.sachau.deathcrawl.gui.images.TileSet;
 
 public class CardCover extends StackPane {
 
-    public CardCover() {
-        super();
+  public CardCover() {
+    super();
 
-        Rectangle rectangle = new Rectangle(CardTile.WIDTH, CardTile.HEIGHT);
-        rectangle.setFill(Color.ANTIQUEWHITE);
-        rectangle.setStyle("-fx-fill: red; -fx-stroke: black; -fx-stroke-width: 5;");
+    getStyleClass().add("card");
+    getStyleClass().add("card-cover");
 
-        ImageView imageView = TileSet.getInstance()
-                .getTile(Tile.DEATHCRAWL);
 
-        this.getChildren()
-                .addAll(rectangle, imageView);
-    }
+    ImageView imageView = TileSet.getInstance()
+      .getTile(Tile.DEATHCRAWL);
+
+    this.getChildren()
+      .addAll(imageView);
+  }
 }

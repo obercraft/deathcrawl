@@ -1,41 +1,66 @@
 package net.sachau.deathcrawl.gui.card;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.cards.CharacterCard;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.gui.PartySelection;
 
 import java.util.HashSet;
+import java.util.Observable;
 import java.util.Set;
 
-public class CardSelect extends VBox {
+public class CardSelect extends CardView {
 
 
+    public CardSelect(PartySelection partySelection, CharacterCard card, Deck target) {
+        super(card);
 
-    public CardSelect(PartySelection partySelection, Card card, Deck target, Button partyDone) {
 
-        Button action = new Button();
-        action.setText("SELECT");
+        if (card.getStartingCards() != null) {
+            Tooltip tooltip = new Tooltip();
+            HBox tooltipBar = new HBox();
+            for (Card c : card.getStartingCards()
+                    .getCards()) {
+                c.setVisible(true);
+                CardView cardView = new CardView(c) {
+                    @Override
+                    public void update(Observable o, Object arg) {
 
-        getChildren().addAll(new CardTile(card), action);
+                    }
 
-        action.setOnMouseClicked(event -> {
+                    @Override
+                    public Card getCard() {
+                        return super.getCard();
+                    }
+                };
+
+                tooltipBar.getChildren()
+                        .add(cardView);
+            }
+            tooltip.setGraphic(tooltipBar);
+            Tooltip.install(this, tooltip);
+
+        }
+
+        setOnMouseClicked(event -> {
             try {
-                if (partySelection.getUniqueIds().contains(card.getUniqueId())) {
-                    Logger.log("deck already contains a " +card.getUniqueId()  + " card");
+                if (partySelection.getUniqueIds()
+                        .contains(card.getUniqueId())) {
+                    Logger.log("deck already contains a " + card.getUniqueId() + " card");
                     return;
                 }
 
 
-
-
                 if (target.size() < 4) {
                     if (target.size() == 3) {
-                        partyDone.setDisable(false);
+                        //partyDone.setDisable(false);
                     } else {
-                        partyDone.setDisable(true);
+                        //partyDone.setDisable(true);
                     }
                     partySelection.getUniqueIds()
                             .add(card.getUniqueId());
@@ -43,7 +68,7 @@ public class CardSelect extends VBox {
                             .newInstance();
                     cardtToAdd.setOwner(partySelection.getPlayer());
                     target.add(cardtToAdd);
-                }  else {
+                } else {
                     Logger.log("party already has four members");
                 }
             } catch (InstantiationException e) {
@@ -52,6 +77,11 @@ public class CardSelect extends VBox {
                 e.printStackTrace();
             }
         });
+
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
 
     }
 }

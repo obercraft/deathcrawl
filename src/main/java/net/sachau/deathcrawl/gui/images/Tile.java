@@ -7,6 +7,7 @@ public enum Tile {
     GUARD(2, 6),
     STEALTH(2,0),
     POISONOUS(1, 0),
+    PARTY(3,4)
 
     ;
 

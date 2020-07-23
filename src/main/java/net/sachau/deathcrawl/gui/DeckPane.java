@@ -11,26 +11,32 @@ import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardTile;
 import net.sachau.deathcrawl.gui.card.CardTileCache;
 
-public class PlayArea extends ScrollPane {
+public class DeckPane extends ScrollPane {
 
     private HBox container = new HBox();
-    private Deck hazards;
-    private Player player;
+    private Deck deck;
 
-    public PlayArea(Player player, int length) {
+    public DeckPane(Deck deck, int length) {
         super();
-        this.player = player;
-        this.hazards = player.getHazard();
 
-        this.setMinHeight(CardTile.HEIGHT);
+        container.setMinHeight(CardTile.HEIGHT);
+        setMinHeight(CardTile.HEIGHT+20);
+
+        setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setMaxWidth(CardTile.WIDTH * length);
+        container.setAlignment(Pos.TOP_LEFT);
+        setContent(container);
 
 
-        for (Card hazard : hazards.getCards()) {
+        for (Card card : deck.getCards()) {
             container.getChildren()
-                    .add(CardTileCache.getTile(hazard));
+                    .add(CardTileCache.getTile(card));
         }
 
-        hazards.getCards()
+        deck.getCards()
                 .addListener(new ListChangeListener<Card>() {
                     @Override
                     public void onChanged(Change<? extends Card> change) {
@@ -54,18 +60,6 @@ public class PlayArea extends ScrollPane {
                         }
                     }
                 });
-
-        setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
-        setVbarPolicy(ScrollBarPolicy.NEVER);
-        setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        setHeight(CardTile.HEIGHT + 20);
-        setMaxHeight(CardTile.HEIGHT + 20);
-        setMaxWidth(CardTile.WIDTH * length);
-        setFitToHeight(true);
-        setFitToWidth(true);
-        container.setAlignment(Pos.TOP_LEFT);
-        setContent(container);
 
     }
 

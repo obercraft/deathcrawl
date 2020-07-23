@@ -4,22 +4,30 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.cards.CardCache;
 
-public class HitsBox extends HBox {
+public class HitsBox extends StackPane {
 
     Card card;
 
 
     public HitsBox(Card card) {
 
+      super();
+      getStyleClass().add("card");
+      getStyleClass().add("hits-layer");
         this.card = card;
 
-        setAlignment(Pos.BOTTOM_RIGHT);
+        HBox textBox = new HBox();
+      textBox.getStyleClass().add("card-corner");
         Text hits = new Text(getHitString());
-
-        getChildren().add(hits);
+        hits.getStyleClass().add("card-corner-text");
+        //hits.setFont(CardCache.get("card", 12));
+        textBox.getChildren().add(hits);
+        getChildren().add(textBox);
 
         card.hitsProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -39,6 +47,7 @@ public class HitsBox extends HBox {
     }
 
     private String getHitString() {
-        return "" + card.getHits() + "/" + card.getMaxHits();
+        return "ABC";
+        // return "" + card.getHits() + "/" + card.getMaxHits();
     }
 }

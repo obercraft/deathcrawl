@@ -7,7 +7,7 @@ public class Momentum extends Card {
 
     public Momentum() {
         super("Momentum", 0 ,0);
-        addKeywords(Keyword.BASIC, Keyword.ACTION);
+        addKeywords(Keyword.ACTION);
         setCommand("momentum 1");
     }
 }

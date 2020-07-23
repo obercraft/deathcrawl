@@ -1,19 +1,18 @@
 package net.sachau.deathcrawl.cards.classes;
 
-import net.sachau.deathcrawl.cards.Basic;
-import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.CardEffect;
-import net.sachau.deathcrawl.cards.Character;
+import net.sachau.deathcrawl.cards.CharacterCard;
+import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.effects.Armored;
 import net.sachau.deathcrawl.keywords.Keyword;
+import net.sachau.deathcrawl.momentum.MomentumActions;
 
-@Character (uniqueId = "Paladin")
-public class Paladin extends Card {
+@StartingCharacter
+public class Paladin extends CharacterCard {
 
 	public Paladin() {
-		super("Paladin", 8, 0);
-		setText("Warrior");
-		addKeywords(Keyword.BASIC, Keyword.CREATURE, Keyword.PALADIN, Keyword.CASTER);
+		super("Paladin", 8, 0, "Paladin", Deck.builder(), MomentumActions.builder());
+		addKeywords(Keyword.CREATURE, Keyword.PALADIN, Keyword.CASTER);
 		addEffect(CardEffect.Phase.PREPARE, new Armored());
 	}
 

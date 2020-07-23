@@ -12,7 +12,7 @@ public class Shield extends Card {
 		setHits(10);
 		setText("Shield");
 		setCommand("shield 1");
-		addKeywords(Keyword.WIZARD, Keyword.BASIC, Keyword.SPELL);
+		addKeywords(Keyword.WIZARD, Keyword.SPELL);
 
 	}
 

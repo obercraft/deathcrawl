@@ -11,7 +11,7 @@ public class HealingTouch extends Card {
 		super("Healing Touch", 0, 0);
 		setText("Healing Touch");
 		setCommand("heal 2");
-		addKeywords(Keyword.CLERIC, Keyword.BASIC);
+		addKeywords(Keyword.CLERIC);
 
 	}
 
