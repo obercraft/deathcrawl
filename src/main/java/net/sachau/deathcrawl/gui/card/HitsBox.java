@@ -7,7 +7,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CardCache;
 
 public class HitsBox extends StackPane {
 
@@ -25,7 +24,6 @@ public class HitsBox extends StackPane {
       textBox.getStyleClass().add("card-corner");
         Text hits = new Text(getHitString());
         hits.getStyleClass().add("card-corner-text");
-        //hits.setFont(CardCache.get("card", 12));
         textBox.getChildren().add(hits);
         getChildren().add(textBox);
 
@@ -47,7 +45,6 @@ public class HitsBox extends StackPane {
     }
 
     private String getHitString() {
-        return "ABC";
-        // return "" + card.getHits() + "/" + card.getMaxHits();
+        return "" + card.getHits() + "/" + card.getMaxHits();
     }
 }
