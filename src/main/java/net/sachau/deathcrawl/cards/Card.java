@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
+import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.conditions.Armor;
 import net.sachau.deathcrawl.conditions.Condition;
@@ -23,7 +24,7 @@ public abstract class Card {
 
     private long id;
     private String name;
-    private Map<CardEffect.Phase, List<CardEffect>> effects;
+    private Map<Event, List<CardEffect>> effects;
     private Keywords keywords = new Keywords();
     private String command;
     private String text;
@@ -40,40 +41,22 @@ public abstract class Card {
 
     public Card(String name, int initialHits, int initialDamage) {
         super();
-
-
-
         this.name = name;
         initHits(initialHits);
         initDamage(initialDamage);
         this.id = Game.createId();
         this.effects = new HashMap<>();
-
         ObservableSet<Condition> observableSet = FXCollections.observableSet(new HashSet<>());
         this.conditions = new SimpleSetProperty<>(observableSet);
 
     }
 
-    public Card(String name, Creature owner) {
-        super();
-        this.name = name;
-        this.id = Game.createId();
-        this.effects = new HashMap<>();
-        this.owner = owner;
-
+    private List<CardEffect> getPhaseEffects(Event event) {
+        return effects.get(event) != null ? effects.get(event) : new LinkedList<>();
     }
 
-
-    private Map<CardEffect.Phase, List<CardEffect>> getEffects() {
-        return effects;
-    }
-
-    private List<CardEffect> getPhaseEffects(CardEffect.Phase phase) {
-        return effects.get(phase) != null ? effects.get(phase) : new LinkedList<>();
-    }
-
-    public void triggerPhaseEffects(CardEffect.Phase phase) {
-        List<CardEffect> phaseCardEffects = getPhaseEffects(phase);
+    public void triggerPhaseEffects(Event event) {
+        List<CardEffect> phaseCardEffects = getPhaseEffects(event);
         if (phaseCardEffects != null) {
             for (CardEffect e : phaseCardEffects) {
                 e.trigger(this);
@@ -82,16 +65,16 @@ public abstract class Card {
     }
 
 
-    public void addEffect(CardEffect.Phase phase, CardEffect cardEffect) {
-        if (effects.get(phase) == null) {
-            effects.put(phase, new LinkedList<>());
+    public void addEffect(Event event, CardEffect cardEffect) {
+        if (effects.get(event) == null) {
+            effects.put(event, new LinkedList<>());
         }
-        effects.get(phase)
+        effects.get(event)
                 .add(cardEffect);
 
     }
 
-    public void setEffects(Map<CardEffect.Phase, List<CardEffect>> effects) {
+    public void setEffects(Map<Event, List<CardEffect>> effects) {
         this.effects = effects;
     }
 
@@ -409,4 +392,13 @@ public abstract class Card {
     public boolean isAlive() {
         return getHits() > 0;
     }
+
+    public Player getPlayer() {
+        if (getOwner() != null && getOwner() instanceof Player) {
+            return  (Player) getOwner();
+        }
+        return null;
+    }
+
+
 }

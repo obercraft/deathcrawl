@@ -206,6 +206,12 @@ public class Player extends Creature implements Observer {
 		switch(Game.get(arg)) {
 			case STARTTURN:
 				setMoves(1);
+
+				// trigger events
+				for (Card card : getParty().getCards()) {
+					card.triggerPhaseEffects(Event.STARTTURN);
+				}
+
 				return;
 			case STARTENCOUNTER:
 				Deck hazards = new Deck();
@@ -238,7 +244,7 @@ public class Player extends Creature implements Observer {
 					}
 				}
 
-				getDraw().draw(getHand(), getHandSize());
+				initHand();
 				return;
 			case ENDCARDPHASE:
 				getDraw().draw(getHand(), getHandSize() - getHand().size());
@@ -279,11 +285,41 @@ public class Player extends Creature implements Observer {
 		}
 	}
 
+	private void initHand() {
+		getDraw().draw(getHand(), getHandSize());
+	}
+
 	public MapCoord getMapCoord() {
 		return mapCoord;
 	}
 
 	public void setMapCoord(MapCoord mapCoord) {
 		this.mapCoord = mapCoord;
+	}
+
+	public void draw(int amount) {
+		if (amount < 1) {
+			amount = 1;
+		}
+		int limit = Math.min(amount, getHandSize() - getHand().size());
+
+		if (limit < getDraw().size()) {
+
+			getDraw().draw(getHand(), limit);
+
+		} else {
+			getDraw().draw(getHand(), getDraw().size());
+			limit = limit - getDraw().size();
+
+			if (limit > 0) {
+				// put discard to draw pile and shuffle
+				getDiscard().moveAll(getDraw());
+				getDraw().shuffe();
+				getDraw().draw(getHand(), getHandSize() - getHand().size());
+
+				// draw again
+				getDraw().draw(getHand(), limit);
+			}
+		}
 	}
 }

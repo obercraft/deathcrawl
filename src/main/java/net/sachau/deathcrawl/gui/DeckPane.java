@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.dto.Player;
@@ -18,6 +19,7 @@ public class DeckPane extends ScrollPane {
 
     public DeckPane(Deck deck, int length) {
         super();
+        this.deck = deck;
 
         container.setMinHeight(CardTile.HEIGHT);
         setMinHeight(CardTile.HEIGHT+20);
@@ -26,7 +28,7 @@ public class DeckPane extends ScrollPane {
         setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
         setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        setMaxWidth(CardTile.WIDTH * length);
+        setMinWidth(CardTile.WIDTH * length);
         container.setAlignment(Pos.TOP_LEFT);
         setContent(container);
 
@@ -46,6 +48,7 @@ public class DeckPane extends ScrollPane {
                                 for (Card c : change.getAddedSubList()) {
                                     container.getChildren()
                                             .add(CardTileCache.getTile(c));
+                                    Logger.debug("" + container.getChildren().size());
                                 }
                             }
 

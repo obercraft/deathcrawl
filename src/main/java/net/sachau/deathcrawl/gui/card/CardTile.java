@@ -31,8 +31,8 @@ public class CardTile extends CardView {
                     .equals(MouseButton.PRIMARY)) {
                 if (event.getClickCount() == 2) {
                     if (card.getKeywords()
-                            .contains(Keyword.ACTION)) {
-                        executeCommand(card, 0);
+                            .contains(Keyword.ACTION) || card.getKeywords().contains(Keyword.PERMANENT)) {
+                        executeCommand(card, 0, !card.getKeywords().contains(Keyword.PERMANENT));
                     }
                 }
             }
@@ -73,11 +73,11 @@ public class CardTile extends CardView {
                 CardTile sourceTile = CardTileCache.getTile((Long) db.getContent(cardFormat));
                 Card sourceCard = sourceTile.getCard();
 
-                executeCommand(sourceCard, 0);
+                executeCommand(sourceCard, 0, true);
             } else if (db.getContent(momentumFormat) != null) {
                 String[] args = ((String) db.getContent(momentumFormat)).split(",", -1);
                 Card sourceCard = CardCache.get(new Long(args[0]));
-                executeCommand(sourceCard, new Integer(args[1]));
+                executeCommand(sourceCard, new Integer(args[1]), true);
 
 
             }
@@ -101,13 +101,13 @@ public class CardTile extends CardView {
         return card;
     }
 
-    private void executeCommand(Card sourceCard, int cost) {
+    private void executeCommand(Card sourceCard, int cost, boolean discard) {
         boolean commandSuccessful = CommandParser.executeCommand(sourceCard, getCard());
         if (commandSuccessful) {
             Creature owner = sourceCard.getOwner();
             if (owner != null && owner instanceof Player) {
                 Player player = (Player) owner;
-                if (sourceCard.getDeck() != null) {
+                if (discard && sourceCard.getDeck() != null) {
                     sourceCard.getDeck()
                             .discard(sourceCard, player.getDiscard());
                 }

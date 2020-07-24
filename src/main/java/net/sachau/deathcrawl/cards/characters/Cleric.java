@@ -1,4 +1,4 @@
-package net.sachau.deathcrawl.cards.classes;
+package net.sachau.deathcrawl.cards.characters;
 
 import net.sachau.deathcrawl.cards.CharacterCard;
 import net.sachau.deathcrawl.cards.Deck;

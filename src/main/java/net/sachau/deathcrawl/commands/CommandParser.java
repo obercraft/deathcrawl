@@ -14,32 +14,51 @@ import java.util.Set;
 
 public class CommandParser {
 
-    enum Commands {
-        ATTACK,
-        RANDOM_ATTACK_MANY,
-        SHIELD,
-        HEAL,
-        POISON_ITEM,
-        MOMENTUM,
-    }
-
     public static boolean executeCommand(Card source, Card target) {
         if (source == null || source.getCommand() == null) {
             return false;
         }
 
-        String[] args = source.getCommand()
-                .split("\\ +", -1);
+        String[] commands = source.getCommand()
+                .split(";", -1);
+
+        if (commands == null || commands.length == 0) {
+            return false;
+        }
+        boolean result = false;
+        for (String c : commands) {
+            result = executeCommand(c.trim(), source, target);
+            if (result == false) {
+                return false;
+            }
+        }
+        return result;
+    }
+
+    private static boolean executeCommand(String commandString, Card source, Card target) {
+
+        String[] args = commandString.split("\\ +", -1);
 
         if (args == null || args.length < 1) {
             return false;
         }
 
-        Commands command = Commands.valueOf(args[0].toUpperCase()
+        Command command = Command.valueOf(args[0].toUpperCase()
                 .trim());
 
         switch (command) {
-            case ATTACK:
+            case DRAW: {
+                int amount = 1;
+                if (args.length > 1) {
+                    amount = Integer.parseInt(args[1]);
+                }
+                Player p = source.getPlayer();
+                if (p != null) {
+                    p.draw(amount);
+                }
+                return true;
+            }
+            case ATTACK: {
                 if (target == null) {
                     return false;
                 }
@@ -47,6 +66,7 @@ public class CommandParser {
                     return false;
                 }
                 return source.attack(target, source.getDamage());
+            }
             case RANDOM_ATTACK_MANY: {
                 if (target != null) {
                     if (target.getOwner() instanceof Player) {
@@ -65,21 +85,21 @@ public class CommandParser {
                 }
                 return true;
             }
-            case HEAL:
+            case HEAL: {
                 if (target != null) {
                     return target.heal(new Integer(args[1]));
                 }
                 return false;
-
-            case SHIELD:
+            }
+            case SHIELD: {
                 if (target != null && target.getKeywords()
                         .contains(Keyword.CREATURE)) {
                     target.getConditions()
                             .add(new Armor());
                 }
                 return true;
-
-            case POISON_ITEM:
+            }
+            case POISON_ITEM: {
                 int amount = new Integer(args[1]);
                 Set<Keyword> keywords = new HashSet<>();
                 for (int i = 2; i < args.length; i++) {
@@ -88,12 +108,13 @@ public class CommandParser {
 
 
                 if (target.hasAllKeywords(keywords)) {
-                    target.getConditions().add(new Poisonous(amount));
+                    target.getConditions()
+                            .add(new Poisonous(amount));
                     return true;
                 }
                 return false;
-
-            case MOMENTUM:
+            }
+            case MOMENTUM: {
                 if (source.getOwner() instanceof Player) {
                     Player player = (Player) source.getOwner();
                     int m = player.getMomentum() + new Integer(args[1]);
@@ -101,8 +122,30 @@ public class CommandParser {
                     return true;
                 }
                 return false;
+            }
             default:
                 return false;
+
+            case PLAY_TO_PARTY: {
+                Player p = source.getPlayer();
+                if (p != null) {
+                    p.getParty()
+                            .add(source);
+                    //source.getDeck().remove(source);
+                    return true;
+                }
+                return false;
+
+            }
+            case GOLD: {
+                Player p = source.getPlayer();
+                if (p != null) {
+                    int g = p.getGold() + 1;
+                    p.setGold(g);
+                }
+                return true;
+            }
+
         }
 
 

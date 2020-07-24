@@ -7,7 +7,7 @@ import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.CharacterCard;
 import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.cards.classes.StartingCharacter;
+import net.sachau.deathcrawl.cards.characters.StartingCharacter;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardSelect;
 import net.sachau.deathcrawl.gui.card.CardTile;

@@ -78,7 +78,7 @@ public class Deck {
         Collections.shuffle(cards);
     }
 
-    public Card draw(Deck targetDeck) {
+    private Card draw(Deck targetDeck) {
         return draw(0, targetDeck);
     }
 
@@ -116,10 +116,6 @@ public class Deck {
 
     private Card draw(int topIndex, Deck targetDeck) {
         Card drawedCard = cards.size() > topIndex ? cards.get(topIndex) : null;
-        if (drawedCard != null) {
-            drawedCard.triggerPhaseEffects(CardEffect.Phase.DRAW);
-
-        }
         targetDeck.add(drawedCard);
         remove(drawedCard);
         return drawedCard;
@@ -127,10 +123,6 @@ public class Deck {
 
     private Card discard(int topIndex, Deck targetDeck) {
         Card discardCard = cards.size() > topIndex ? cards.get(topIndex) : null;
-        if (discardCard != null) {
-            discardCard.triggerPhaseEffects(CardEffect.Phase.DISCARD);
-
-        }
         targetDeck.add(discardCard);
         remove(discardCard);
         return discardCard;
@@ -216,6 +208,5 @@ public class Deck {
         }
 
     }
-
 
 }

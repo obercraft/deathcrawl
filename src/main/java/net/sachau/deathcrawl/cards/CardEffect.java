@@ -8,17 +8,6 @@ import java.util.Set;
 
 public abstract class CardEffect implements Serializable {
 
-	public enum Phase {
-		ALL,
-		TURNSTART,
-		PREPARE,
-		DRAW,
-		DISCARD,
-		DESTROY,
-		PLAY,
-		HAZARD,
-	}
-
 	private String text;
 	
 	int amount = 1;
