@@ -10,7 +10,7 @@ public class Knife extends Card {
 	public Knife() {
 		super("Knife", 1, 1);
 		addKeywords(Keyword.SIMPLE, Keyword.WEAPON, Keyword.ITEM);
-		setText("Knife");
+		setText("attack target for 1 damage");
 		setCommand("attack 1");
 	}
 
