@@ -5,11 +5,9 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import net.sachau.deathcrawl.GameEvent;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.dto.Player;
-import net.sachau.deathcrawl.gui.card.CardTile;
-import net.sachau.deathcrawl.gui.card.CardView;
 import net.sachau.deathcrawl.gui.images.Tile;
 import net.sachau.deathcrawl.gui.images.TileSet;
 
@@ -34,7 +32,7 @@ public class HexMap extends AnchorPane implements Observer {
 
     public HexMap(Player player) {
         super();
-        GameEvent.events()
+        Game.events()
                 .addObserver(this);
         this.player = player;
 
@@ -112,7 +110,7 @@ public class HexMap extends AnchorPane implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        switch (GameEvent.get(arg)) {
+        switch (Game.get(arg)) {
             case PARTYMOVE:
                 getChildren().remove(partyCounter);
                 partyCounter.setX(player.getMapCoord()

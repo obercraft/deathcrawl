@@ -2,7 +2,8 @@ package net.sachau.deathcrawl.gui.screens;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import net.sachau.deathcrawl.GameEvent;
+import net.sachau.deathcrawl.Event;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.dto.Player;
 
@@ -24,7 +25,7 @@ public class SideRegion extends VBox implements Observer {
     public SideRegion(Player player) {
         super();
         this.player = player;
-        GameEvent.events().addObserver(this);
+        Game.events().addObserver(this);
 
         setMaxWidth(200);
         buttons.setMinHeight(400);
@@ -54,19 +55,19 @@ public class SideRegion extends VBox implements Observer {
 
 
         newGame.setOnMouseClicked(event -> {
-            GameEvent.events().send(GameEvent.Type.NEWGAME);
+            Game.events().send(Event.NEWGAME);
         });
 
         randomParty.setOnMouseClicked(event -> {
-            GameEvent.events().send(GameEvent.Type.RANDOMPARTY);
+            Game.events().send(Event.RANDOMPARTY);
         });
 
         encounter.setOnMouseClicked(event -> {
-            GameEvent.events().send(GameEvent.Type.STARTENCOUNTER);
+            Game.events().send(Event.STARTENCOUNTER);
         });
 
         endCardPhase.setOnMouseClicked(event -> {
-            GameEvent.events().send(GameEvent.Type.ENDCARDPHASE);
+            Game.events().send(Event.ENDCARDPHASE);
         });
 
 /*
@@ -151,7 +152,7 @@ public class SideRegion extends VBox implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        switch (GameEvent.get(arg)) {
+        switch (Game.get(arg)) {
             case NEWGAME:
                 buttons.getChildren().remove(newGame);
                 buttons.getChildren().addAll(partyClear, partyDone, randomParty);

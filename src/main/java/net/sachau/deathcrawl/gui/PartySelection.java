@@ -3,15 +3,14 @@ package net.sachau.deathcrawl.gui;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import net.sachau.deathcrawl.GameEvent;
-import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.Event;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.CharacterCard;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.cards.classes.StartingCharacter;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardSelect;
 import net.sachau.deathcrawl.gui.card.CardTile;
-import net.sachau.deathcrawl.keywords.Keyword;
 import org.reflections.Reflections;
 
 import java.util.HashSet;
@@ -32,7 +31,7 @@ public class PartySelection extends VBox implements Observer {
 
     public PartySelection(Player player, int length) {
         super();
-        GameEvent.events().addObserver(this);
+        Game.events().addObserver(this);
         this.player = player;
 
 
@@ -84,14 +83,14 @@ public class PartySelection extends VBox implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        switch (GameEvent.get(arg)) {
+        switch (Game.get(arg)) {
             case RANDOMPARTY:
                 for (int i = 0; i < PARTY_SIZE; i++) {
                     availableCharacters.drawRandom(player.getParty());
                 }
 
-                GameEvent.events().send(GameEvent.Type.PARTYDONE);
-                GameEvent.events().send(GameEvent.Type.STARTTURN);
+                Game.events().send(Event.PARTYDONE);
+                Game.events().send(Event.STARTTURN);
                 return;
             default:
                 return;

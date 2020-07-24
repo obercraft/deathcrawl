@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
-import net.sachau.deathcrawl.GameEvent;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.conditions.Armor;
 import net.sachau.deathcrawl.conditions.Condition;
 import net.sachau.deathcrawl.conditions.Guard;
@@ -46,7 +46,7 @@ public abstract class Card {
         this.name = name;
         initHits(initialHits);
         initDamage(initialDamage);
-        this.id = GameEvent.createId();
+        this.id = Game.createId();
         this.effects = new HashMap<>();
 
         ObservableSet<Condition> observableSet = FXCollections.observableSet(new HashSet<>());
@@ -57,7 +57,7 @@ public abstract class Card {
     public Card(String name, Creature owner) {
         super();
         this.name = name;
-        this.id = GameEvent.createId();
+        this.id = Game.createId();
         this.effects = new HashMap<>();
         this.owner = owner;
 

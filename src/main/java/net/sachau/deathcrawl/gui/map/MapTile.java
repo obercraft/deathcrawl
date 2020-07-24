@@ -5,10 +5,9 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import net.sachau.deathcrawl.GameEvent;
-import net.sachau.deathcrawl.Logger;
+import net.sachau.deathcrawl.Event;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.dto.Player;
-import net.sachau.deathcrawl.gui.card.CardTile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,8 +75,8 @@ public class MapTile extends Polygon {
                 player.setMapCoord(mapCoord);
                 int moves = player.getMoves() -1;
                 player.setMoves(moves);
-                GameEvent.events()
-                        .send(GameEvent.Type.PARTYMOVE);
+                Game.events()
+                        .send(Event.PARTYMOVE);
             }
 
             event.consume();

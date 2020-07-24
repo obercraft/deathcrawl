@@ -1,12 +1,7 @@
 package net.sachau.deathcrawl.gui.screens;
 
 import javafx.scene.layout.VBox;
-import net.sachau.deathcrawl.GameEvent;
-import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.cards.monsters.Goblin;
-import net.sachau.deathcrawl.conditions.Armor;
-import net.sachau.deathcrawl.conditions.Guard;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.CardBoard;
 import net.sachau.deathcrawl.gui.PartySelection;
@@ -31,7 +26,7 @@ public class MainRegion extends VBox implements Observer {
     public MainRegion(Player player) {
         super();
         this.player =  player;
-        GameEvent.events().addObserver(this);
+        Game.events().addObserver(this);
         setMinHeight(GAME_HEIGHT);
         setMinWidth(GAME_WIDTH);
 
@@ -46,7 +41,7 @@ public class MainRegion extends VBox implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        switch (GameEvent.get(arg)) {
+        switch (Game.get(arg)) {
             case NEWGAME:
                 getChildren().remove(welcomeScreen);
                 getChildren().add(partySelection);

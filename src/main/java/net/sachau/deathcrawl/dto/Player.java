@@ -1,8 +1,9 @@
 package net.sachau.deathcrawl.dto;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.GameAI;
-import net.sachau.deathcrawl.GameEvent;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.CharacterCard;
 import net.sachau.deathcrawl.cards.Deck;
@@ -43,7 +44,7 @@ public class Player extends Creature implements Observer {
 
 	public Player() {
 		super();
-		GameEvent.events().addObserver(this);
+		Game.events().addObserver(this);
 
 		party = new Deck();
 		party.setVisible(true);
@@ -202,7 +203,7 @@ public class Player extends Creature implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		switch(GameEvent.get(arg)) {
+		switch(Game.get(arg)) {
 			case STARTTURN:
 				setMoves(1);
 				return;
@@ -224,8 +225,8 @@ public class Player extends Creature implements Observer {
 					hazards.add(goblin);
 				}
 				setHazard(hazards);
-				GameEvent.events().send(GameEvent.Type.STARTENCOUNTERVIEW);
-				GameEvent.events().send(GameEvent.Type.STARTCARDPHASE);
+				Game.events().send(Event.STARTENCOUNTERVIEW);
+				Game.events().send(Event.STARTCARDPHASE);
 				return;
 
 			case PARTYDONE:
@@ -255,12 +256,12 @@ public class Player extends Creature implements Observer {
 				}
 				if (getHazard().size() > 0) {
 					GameAI.execute(this);
-					GameEvent.events()
-							.send(GameEvent.Type.STARTCARDPHASE);
+					Game.events()
+							.send(Event.STARTCARDPHASE);
 				} else {
 					//GameEvent.events()
 					//		.send(GameEvent.Type.EXPERIENCEPHASE);
-					GameEvent.events().send(GameEvent.Type.STARTTURN);
+					Game.events().send(Event.STARTTURN);
 				}
 				return;
 			case CHARACTERDEATH:
@@ -272,7 +273,7 @@ public class Player extends Creature implements Observer {
 				}
 				// ALL DEAD
 				if (totalHealth <= 0) {
-					GameEvent.events().send(GameEvent.Type.GAMEOVER);
+					Game.events().send(Event.GAMEOVER);
 				}
 				return;
 		}

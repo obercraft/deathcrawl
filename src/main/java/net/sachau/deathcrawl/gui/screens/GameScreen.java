@@ -1,8 +1,7 @@
 package net.sachau.deathcrawl.gui.screens;
 
 import javafx.scene.layout.HBox;
-import net.sachau.deathcrawl.GameEvent;
-import net.sachau.deathcrawl.Logger;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.dto.Player;
 
 import java.util.Observable;
@@ -19,7 +18,7 @@ public class GameScreen extends HBox implements Observer {
     public GameScreen() {
         super();
         player = new Player();
-        GameEvent.events().addObserver(this);
+        Game.events().addObserver(this);
         MainRegion mainRegion = new MainRegion(player);
         SideRegion sideRegion = new SideRegion(player);
         getChildren().addAll(mainRegion, sideRegion);
@@ -28,7 +27,7 @@ public class GameScreen extends HBox implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        switch (GameEvent.get(arg)) {
+        switch (Game.get(arg)) {
             case GAMEOVER:
                 player = new Player();
                 return;

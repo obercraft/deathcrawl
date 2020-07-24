@@ -2,15 +2,12 @@ package net.sachau.deathcrawl.gui.card;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Pos;
-import javafx.scene.input.DataFormat;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.GameEvent;
+import net.sachau.deathcrawl.Event;
+import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CardCache;
 import net.sachau.deathcrawl.cards.CharacterCard;
 import net.sachau.deathcrawl.keywords.Keyword;
 
@@ -24,7 +21,7 @@ public abstract class CardView extends StackPane implements Observer {
 
   public CardView(Card card) {
     super();
-    GameEvent.events().addObserver(this);
+    Game.events().addObserver(this);
     this.getStyleClass().add("card");
     this.getStyleClass().add("card-background");
     this.card = card;
@@ -74,7 +71,7 @@ public abstract class CardView extends StackPane implements Observer {
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         if (card.getHits() <= 0) {
           if (card instanceof CharacterCard) {
-            GameEvent.events().send(GameEvent.Type.CHARACTERDEATH);
+            Game.events().send(Event.CHARACTERDEATH);
           } else {
             card.getDeck()
                     .remove(card);
