@@ -9,6 +9,6 @@ public class PlayCardObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Logger.log("play card :" + o + "," + arg);
+        Logger.info("play card :" + o + "," + arg);
     }
 }

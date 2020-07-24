@@ -46,7 +46,7 @@ public class HexMap extends AnchorPane implements Observer {
                 double xCoord = x * TILE_WIDTH + (y % 2) * n + xStartOffset;
                 double yCoord = y * TILE_HEIGHT * 0.75 + yStartOffset;
 
-                Logger.log(xCoord + ", " + yCoord);
+                Logger.info(xCoord + ", " + yCoord);
                 MapTile tile = new MapTile(player, new MapCoord(x, y, xCoord, yCoord, MapCoord.Type.VALLEY));
                 getChildren().add(tile);
                 tilesSet.add(tile);

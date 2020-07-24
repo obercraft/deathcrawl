@@ -1,18 +1,14 @@
 package net.sachau.deathcrawl.gui.card;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.CharacterCard;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.gui.PartySelection;
 
-import java.util.HashSet;
 import java.util.Observable;
-import java.util.Set;
 
 public class CardSelect extends CardView {
 
@@ -51,7 +47,7 @@ public class CardSelect extends CardView {
             try {
                 if (partySelection.getUniqueIds()
                         .contains(card.getUniqueId())) {
-                    Logger.log("deck already contains a " + card.getUniqueId() + " card");
+                    Logger.info("deck already contains a " + card.getUniqueId() + " card");
                     return;
                 }
 
@@ -69,7 +65,7 @@ public class CardSelect extends CardView {
                     cardtToAdd.setOwner(partySelection.getPlayer());
                     target.add(cardtToAdd);
                 } else {
-                    Logger.log("party already has four members");
+                    Logger.info("party already has four members");
                 }
             } catch (InstantiationException e) {
                 e.printStackTrace();
