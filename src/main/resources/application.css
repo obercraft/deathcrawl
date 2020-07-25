@@ -33,7 +33,7 @@
 
 .card-nameband {
     -fx-alignment: center;
-    height: 40px;
+    height: 20px;
     width: -fx-card-width;
     -fx-min-width: width;
     -fx-max-width: width;
@@ -47,10 +47,14 @@
     -fx-font-weight: bold;
 }
 
-
 .value-bottom-right {
     -fx-alignment: bottom-right;
 }
+
+.value-bottom-center {
+    -fx-alignment: center;
+}
+
 
 .value-box-bottom-right {
     width: 50px;
@@ -96,6 +100,20 @@
     -fx-font-weight: bold;
 }
 
+.card-text {
+    -fx-fill: #000000;
+    -fx-opacity: 1.0;
+    height: 100px;
+    -fx-min-height: height;
+    -fx-max-height: height;
+    -fx-padding: 5px;
+}
+.card-text-bold  {
+    -fx-font-weight: bold;
+}
+
+
 .conditions {
     -fx-alignment: top-right;
+
 }

@@ -8,7 +8,7 @@ import net.sachau.deathcrawl.keywords.Keyword;
 public class Gold extends Card {
 
 	public Gold() {
-		super("Knife", 1, 0);
+		super( 1, 0);
 		addKeywords(Keyword.SIMPLE, Keyword.ITEM);
 		setCommand("gold 1");
 	}

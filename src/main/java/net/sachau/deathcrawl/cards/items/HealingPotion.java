@@ -8,9 +8,8 @@ import net.sachau.deathcrawl.keywords.Keyword;
 public class HealingPotion extends Card {
 
 	public HealingPotion() {
-		super("Healing Potion", 1, 0);
+		super( 1, 0);
 		addKeywords(Keyword.SIMPLE, Keyword.POTION, Keyword.ITEM);
-		setText("Healing Potion");
 		setCommand("heal 1");
 	}
 

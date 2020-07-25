@@ -21,7 +21,7 @@ public class MomentumActionLine extends HBox {
 
     public MomentumActionLine(Player player, Card card, MomentumAction action) {
 
-        Text text = new Text("[" +  action.getCost() + "] " + action.getCard().getName());
+        Text text = new Text("[" +  action.getCost() + "] " + action.getCard().getClass().getSimpleName());
 
 
         getChildren().add(text);

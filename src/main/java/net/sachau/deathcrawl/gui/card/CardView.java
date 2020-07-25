@@ -21,25 +21,24 @@ public abstract class CardView extends StackPane implements Observer {
 
   public CardView(Card card) {
     super();
+    this.card = card;
+
     Game.events().addObserver(this);
     this.getStyleClass().add("card");
     this.getStyleClass().add("card-background");
-    this.card = card;
+
 
     CardCover cardCover = new CardCover();
 
-    VBox textband = new VBox();
-    textband.getStyleClass().add("card-nameband");
-    Text name = new Text(card.getName());
-    name.getStyleClass().add("card-nameband-text");
-    Text keywords = new Text(card.getCardKeyWords());
-    keywords.getStyleClass().add("card-nameband-text");
-    textband.getChildren().addAll(name, keywords);
+
 
     ConditionBox conditionBox = new ConditionBox(card);
 
+    CardDesignPane cardDesignPane = new CardDesignPane(card);
+
+
     this.getChildren()
-      .addAll(textband, conditionBox);
+      .addAll(cardDesignPane, new CenterConditionBox(card));
 
     if (card.getKeywords().contains(Keyword.CREATURE)) {
       CornerValueBox cornerValueBox = new CornerValueBox(card.hitsProperty(), card.maxHitsProperty(), "bottom-right");
@@ -54,6 +53,8 @@ public abstract class CardView extends StackPane implements Observer {
     if (!card.isVisible()) {
       this.getChildren().add(cardCover);
     }
+
+
 
     card.visibleProperty().addListener(new ChangeListener<Boolean>() {
       @Override

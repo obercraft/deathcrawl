@@ -8,8 +8,7 @@ import net.sachau.deathcrawl.keywords.Keyword;
 public class HealingTouch extends Card {
 
 	public HealingTouch() {
-		super("Healing Touch", 0, 0);
-		setText("Healing Touch");
+		super(0, 0);
 		setCommand("heal 2");
 		addKeywords(Keyword.CLERIC);
 

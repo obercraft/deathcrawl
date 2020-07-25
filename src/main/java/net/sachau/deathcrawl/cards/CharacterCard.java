@@ -11,7 +11,7 @@ public abstract class CharacterCard extends Card {
     private MomentumActions momentumActions = new MomentumActions();
 
     public CharacterCard(String name, int initialHits, int initialDamage, String uniqueId, Deck startingCards, MomentumActions momentumActions) {
-        super(name, initialHits, initialDamage);;
+        super(initialHits, initialDamage);;
 
         this.uniqueId = uniqueId;
         this.momentumActions = momentumActions;

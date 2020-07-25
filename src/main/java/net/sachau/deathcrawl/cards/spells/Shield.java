@@ -8,7 +8,7 @@ import net.sachau.deathcrawl.keywords.Keyword;
 public class Shield extends Card {
 
 	public Shield() {
-		super("Shield", 0, 0);
+		super(0, 0);
 		setHits(10);
 		setCommand("shield 1");
 		addKeywords(Keyword.WIZARD, Keyword.SPELL);

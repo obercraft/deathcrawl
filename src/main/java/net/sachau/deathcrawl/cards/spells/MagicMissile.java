@@ -8,8 +8,7 @@ import net.sachau.deathcrawl.keywords.Keyword;
 public class MagicMissile extends Card {
 
 	public MagicMissile() {
-		super("Magic Missile", 0, 1);
-		setText("Magic Missile");
+		super( 0, 1);
 		setCommand("random_attack_many 3 1");
 		addKeywords(Keyword.WIZARD);
 

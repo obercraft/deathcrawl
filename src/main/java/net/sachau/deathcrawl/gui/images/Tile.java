@@ -3,6 +3,7 @@ package net.sachau.deathcrawl.gui.images;
 public enum Tile {
 
     DEATHCRAWL(0, 0, 100, 100),
+    DEATHCRAWL_SMALL(0, 0),
     ARMOR(1, 7),
     GUARD(2, 6),
     STEALTH(2,0),

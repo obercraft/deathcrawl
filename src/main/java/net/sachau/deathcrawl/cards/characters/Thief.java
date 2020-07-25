@@ -16,6 +16,7 @@ public class Thief extends CharacterCard {
 	public Thief() {
 		super("Thief", 7, 0, "Thief", Deck.builder().add(Knife.class, ThrowingKnife.class, Momentum.class), MomentumActions.builder());
 		addKeywords(Keyword.CREATURE, Keyword.ROGUE);
+
 		addEffect(Event.STARTTURN, new Stealthy());
 	}
 

@@ -7,7 +7,7 @@ import net.sachau.deathcrawl.keywords.Keyword;
 public class Goblin extends MonsterCard {
 
 	public Goblin() {
-		super("Goblin", 3, 1, 1, 1);
+		super(3, 1, 1, 1);
 		setCommand("attack 1");
 		addKeywords(Keyword.CREATURE, Keyword.MONSTER);
 		this.setHits(3);

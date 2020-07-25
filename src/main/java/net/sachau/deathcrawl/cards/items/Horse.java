@@ -12,7 +12,7 @@ import net.sachau.deathcrawl.keywords.Keyword;
 public class Horse extends Card {
 
 	public Horse() {
-		super("Horse", 0, 1);
+		super( 0, 1);
 		addKeywords(Keyword.SIMPLE, Keyword.ITEM, Keyword.PERMANENT);
 
 		setCommand("play_to_party");

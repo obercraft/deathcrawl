@@ -5,8 +5,8 @@ public abstract class MonsterCard extends Card {
     private int xp;
     private int gold;
 
-    public MonsterCard(String name, int initialHits, int initialDamage, int exp, int gold) {
-        super(name, initialHits, initialDamage);
+    public MonsterCard(int initialHits, int initialDamage, int exp, int gold) {
+        super(initialHits, initialDamage);
         this.gold = gold;
         this.xp = exp;
     }

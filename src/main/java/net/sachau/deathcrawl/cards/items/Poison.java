@@ -8,7 +8,7 @@ import net.sachau.deathcrawl.keywords.Keyword;
 public class Poison extends Card {
 
 	public Poison() {
-		super("Poison", 1, 1);
+		super( 1, 1);
 		addKeywords(Keyword.ROGUE, Keyword.SIMPLE, Keyword.ITEM);
 		setCommand("poison_item 2 SIMPLE WEAPON");
 	}

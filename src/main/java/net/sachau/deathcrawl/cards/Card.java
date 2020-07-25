@@ -23,11 +23,9 @@ import java.util.*;
 public abstract class Card {
 
     private long id;
-    private String name;
     private Map<Event, List<CardEffect>> effects;
     private Keywords keywords = new Keywords();
     private String command;
-    private String text;
 
     private SimpleIntegerProperty damage = new SimpleIntegerProperty(1);
     private SimpleIntegerProperty maxDamage = new SimpleIntegerProperty(1);
@@ -39,9 +37,8 @@ public abstract class Card {
     private Deck deck;
     private SetProperty<Condition> conditions;
 
-    public Card(String name, int initialHits, int initialDamage) {
+    public Card(int initialHits, int initialDamage) {
         super();
-        this.name = name;
         initHits(initialHits);
         initDamage(initialDamage);
         this.id = Game.createId();
@@ -76,22 +73,6 @@ public abstract class Card {
 
     public void setEffects(Map<Event, List<CardEffect>> effects) {
         this.effects = effects;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getCommand() {
@@ -147,7 +128,6 @@ public abstract class Card {
     public String toString() {
         return "Card{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
                 '}';
     }
 

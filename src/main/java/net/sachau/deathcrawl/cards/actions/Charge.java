@@ -5,7 +5,7 @@ import net.sachau.deathcrawl.keywords.Keyword;
 
 public class Charge extends Card {
         public Charge() {
-            super("Charge", 0 ,3);
+            super(0 ,3);
             addKeywords(Keyword.MOMENTUM, Keyword.ACTION);
             setCommand("attack");
         }

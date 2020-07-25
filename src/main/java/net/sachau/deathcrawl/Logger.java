@@ -36,6 +36,10 @@ public class Logger {
         log(Level.DEBUG, text);
     }
 
+    public static boolean isDebugEnabled() {
+        return logLevel.getPriority() >= Level.DEBUG.getPriority();
+    }
+
 
     public static Console getConsole() {
         return console;

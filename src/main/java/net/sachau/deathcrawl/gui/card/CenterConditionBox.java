@@ -1,27 +1,25 @@
 package net.sachau.deathcrawl.gui.card;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableSet;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.conditions.Condition;
-import net.sachau.deathcrawl.gui.images.TileSet;
 
-public class ConditionBox extends HBox {
+public class CenterConditionBox extends StackPane {
 
-    public ConditionBox(Card card) {
+    public CenterConditionBox(Card card) {
+
         super();
         getStyleClass().add("card");
-        setAlignment(Pos.BOTTOM_CENTER);
+
 
         HBox items = new HBox();
-
+        items.getStyleClass().add("value-bottom-center");
         for (Condition condition : card.getConditions()) {
             items.getChildren().add(new ConditionItem(condition));
         }
@@ -42,6 +40,5 @@ public class ConditionBox extends HBox {
 
             }
         });
-
     }
 }
