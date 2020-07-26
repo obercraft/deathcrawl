@@ -5,18 +5,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
-import net.sachau.deathcrawl.cards.CharacterCard;
+import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.cards.CardFactory;
+import net.sachau.deathcrawl.cards.types.Character;
 import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.cards.characters.StartingCharacter;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardSelect;
 import net.sachau.deathcrawl.gui.card.CardTile;
 import org.reflections.Reflections;
 
-import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
+import java.util.*;
 
 public class PartySelection extends VBox implements Observer {
 
@@ -38,7 +36,7 @@ public class PartySelection extends VBox implements Observer {
         this.setMinHeight(2 * CardTile.HEIGHT);
 
         ScrollPane availableScroll = new ScrollPane();
-        availableScroll.setMinHeight(CardTile.HEIGHT +50);
+        availableScroll.setMinHeight(CardTile.HEIGHT + 50);
         availableScroll.setMinWidth(CardTile.WIDTH);
         HBox available = new HBox();
         availableScroll.setContent(available);
@@ -47,24 +45,18 @@ public class PartySelection extends VBox implements Observer {
 
         DeckPane partyArea = new DeckPane(player.getParty(), length);
 
-        Set<Class<?>> basic = reflections.getTypesAnnotatedWith(StartingCharacter.class);
-
-        for (Class b : basic) {
-            CharacterCard card = null;
-            try {
-                card = (CharacterCard) b.newInstance();
-
+        try {
+            List<Card> basic = CardFactory.createCards("/cards/characters/starting");
+            for (Card b : basic) {
+                Character card = (Character) b;
                 card.setVisible(true);
                 available.getChildren().add(new CardSelect(this, card, player.getParty()));
                 availableCharacters.add(card);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
             }
-
+            getChildren().addAll(available, partyArea);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        getChildren().addAll(available, partyArea);
 
 
     }

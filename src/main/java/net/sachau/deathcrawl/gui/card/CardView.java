@@ -3,12 +3,10 @@ package net.sachau.deathcrawl.gui.card;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CharacterCard;
+import net.sachau.deathcrawl.cards.types.Character;
 import net.sachau.deathcrawl.keywords.Keyword;
 
 import java.util.Observer;
@@ -71,7 +69,7 @@ public abstract class CardView extends StackPane implements Observer {
       @Override
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         if (card.getHits() <= 0) {
-          if (card instanceof CharacterCard) {
+          if (card instanceof Character) {
             Game.events().send(Event.CHARACTERDEATH);
           } else {
             card.getDeck()

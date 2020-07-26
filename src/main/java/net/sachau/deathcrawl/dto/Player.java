@@ -5,7 +5,7 @@ import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.GameAI;
 import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CharacterCard;
+import net.sachau.deathcrawl.cards.types.Character;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.cards.monsters.Goblin;
 import net.sachau.deathcrawl.conditions.Armor;
@@ -161,9 +161,9 @@ public class Player extends Creature implements Observer {
 		for (Keyword k : keywords) {
 
 			for (Card card : getParty().getCards()) {
-				if (card instanceof CharacterCard) {
-					CharacterCard characterCard = (CharacterCard) card;
-					if (characterCard.getKeywords()
+				if (card instanceof Character) {
+					Character character = (Character) card;
+					if (character.getKeywords()
 							.contains(k)) {
 						foundKeywords.add(k);
 						if (keywords.size() == foundKeywords.size()) {
@@ -237,8 +237,8 @@ public class Player extends Creature implements Observer {
 
 			case PARTYDONE:
 				for (Card c : getParty().getCards()) {
-					CharacterCard characterCard = (CharacterCard) c;
-					for (Card startingCard : characterCard.getStartingCards().getCards()) {
+					Character character = (Character) c;
+					for (Card startingCard : character.getStartingCards().getCards()) {
 						startingCard.setOwner(this);
 						getDraw().add(startingCard);
 					}
@@ -273,7 +273,7 @@ public class Player extends Creature implements Observer {
 			case CHARACTERDEATH:
 				int totalHealth = 0;
 				for (Card card : getParty().getCards()) {
-					if (card instanceof CharacterCard) {
+					if (card instanceof Character) {
 						totalHealth += card.getHits();
 					}
 				}

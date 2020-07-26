@@ -21,17 +21,6 @@ public class CardDesignPane extends VBox {
         this.getStyleClass().add("card");
 
         CardDesign cardDesign;
-        try {
-            cardDesign = CardDesignParser.parseFor(card);
-        } catch (Exception e) {
-            cardDesign = new CardDesign(card.getClass().getSimpleName());
-            if (Logger.isDebugEnabled()) {
-                cardDesign.getCardText().add(new Text(e.getClass().getSimpleName() + " " + e.getMessage()));
-
-            }
-
-        }
-
 
         //setAlignment(Pos.);
 
@@ -44,7 +33,7 @@ public class CardDesignPane extends VBox {
         VBox nameband = new VBox();
 
         nameband.getStyleClass().add("card-nameband");
-        Text name = new Text(cardDesign.getName());
+        Text name = new Text(card.getName());
         name.getStyleClass().add("card-nameband-text");
         Tooltip keywords = new Tooltip(card.getCardKeyWords());
         Tooltip.install(name, keywords);
@@ -52,9 +41,11 @@ public class CardDesignPane extends VBox {
 
         TextFlow text = new TextFlow();
         text.getStyleClass().add("card-text");
-        if (cardDesign.getCardText() != null) {
-            text.getChildren().addAll(cardDesign.getCardText());
+
+        if (CardText.getText(card.getName()) != null) {
+            text.getChildren().addAll(CardText.getText(card.getName()));
         }
+
 
         TextFlow flavor = new TextFlow();
 

@@ -4,7 +4,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CharacterCard;
+import net.sachau.deathcrawl.cards.types.Character;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.gui.PartySelection;
 
@@ -13,7 +13,7 @@ import java.util.Observable;
 public class CardSelect extends CardView {
 
 
-    public CardSelect(PartySelection partySelection, CharacterCard card, Deck target) {
+    public CardSelect(PartySelection partySelection, Character card, Deck target) {
         super(card);
 
 

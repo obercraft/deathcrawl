@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+<!DOCTYPE card SYSTEM "card.dtd">
+-->
+<card>
+    <type>item</type>
+    <damage>1</damage>
+    <command>attack</command>
+    <keywords>simple,weapon</keywords>
+</card>

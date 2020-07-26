@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE card SYSTEM "card.dtd">
+<cards>
+    <card>
+        <name>Knife</name>
+        <type>item</type>
+        <damage>1</damage>
+        <command>attack</command>
+        <keywords>simple,weapon</keywords>
+    </card>
+    <card>
+        <name>Throwing Knife</name>
+        <type>item</type>
+        <damage>1</damage>
+        <command>attack</command>
+        <keywords>simple,weapon,ranged</keywords>
+    </card>
+    <card>
+        <name>Magic Missile</name>
+        <type>spell</type>
+        <command>random_attack_many 3 1</command>
+        <keywords>wizard</keywords>
+    </card>
+</cards>

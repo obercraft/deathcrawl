@@ -23,12 +23,14 @@ import java.util.*;
 public abstract class Card {
 
     private long id;
+    private String name;
+    private String uniqueId;
     private Map<Event, List<CardEffect>> effects;
     private Keywords keywords = new Keywords();
     private String command;
 
-    private SimpleIntegerProperty damage = new SimpleIntegerProperty(1);
-    private SimpleIntegerProperty maxDamage = new SimpleIntegerProperty(1);
+    private SimpleIntegerProperty damage = new SimpleIntegerProperty(0);
+    private SimpleIntegerProperty maxDamage = new SimpleIntegerProperty(0);
     private SimpleIntegerProperty hits = new SimpleIntegerProperty(1);
     private SimpleIntegerProperty maxHits = new SimpleIntegerProperty(1);
     private SimpleBooleanProperty visible = new SimpleBooleanProperty();
@@ -36,6 +38,15 @@ public abstract class Card {
     private Creature owner;
     private Deck deck;
     private SetProperty<Condition> conditions;
+
+    public Card() {
+        super();
+        initHits(1);
+        this.id = Game.createId();
+        this.effects = new HashMap<>();
+        ObservableSet<Condition> observableSet = FXCollections.observableSet(new HashSet<>());
+        this.conditions = new SimpleSetProperty<>(observableSet);
+    }
 
     public Card(int initialHits, int initialDamage) {
         super();
@@ -380,5 +391,19 @@ public abstract class Card {
         return null;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 }

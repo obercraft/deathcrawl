@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <!--
+    <!DOCTYPE card SYSTEM "card.dtd">
+    -->
+
+        <!--
+/*
+        super("Wizard", 6, 0, "Wizard", Deck.builder()
+        .add(Knife.class, Knife.class, MagicMissile.class), MomentumActions.builder());
+        addKeywords(Keyword.CREATURE, Keyword.CASTER, Keyword.WIZARD);
+        */
+        -->
+
+<card>
+    <name uniqueId="Wizard">Wizard</name>
+    <type>Character</type>
+    <hits>6</hits>
+    <starting-cards>Knife,MagicMissile,Knife</starting-cards>
+    <keywords>creature, wizard, caster</keywords>
+    <flavor>A Wizard!</flavor>
+</card>

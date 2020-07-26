@@ -2,16 +2,13 @@ package net.sachau.deathcrawl.gui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CharacterCard;
+import net.sachau.deathcrawl.cards.types.Character;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardTile;
@@ -60,11 +57,11 @@ public class MomentumBox extends ScrollPane {
 
 
         for (Card card : deck.getCards()) {
-            if (card instanceof CharacterCard) {
-                CharacterCard characterCard = (CharacterCard) card;
-                if (characterCard.getMomentumActions()
+            if (card instanceof Character) {
+                Character character = (Character) card;
+                if (character.getMomentumActions()
                         .size() > 0) {
-                    for (MomentumAction action : characterCard.getMomentumActions()) {
+                    for (MomentumAction action : character.getMomentumActions()) {
                         MomentumActionLine momentumActionLine = new MomentumActionLine(player, card, action);
                         container.getChildren()
                                 .add(momentumActionLine);
