@@ -11,11 +11,3 @@
         */
         -->
 
-<card>
-    <name uniqueId="Wizard">Wizard</name>
-    <type>Character</type>
-    <hits>6</hits>
-    <starting-cards>Knife,MagicMissile,Knife</starting-cards>
-    <keywords>creature, wizard, caster</keywords>
-    <flavor>A Wizard!</flavor>
-</card>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+<!DOCTYPE card SYSTEM "card.dtd">
+-->
+<cards>
+    <card>
+        <name uniqueId="Thief">Thief</name>
+        <type>Character</type>
+        <hits>7</hits>
+        <starting-cards>Knife,ThrowingKnife,Knife</starting-cards>
+        <keywords>creature, rogue</keywords>
+        <effects>
+            <effect event="startturn">stealthy</effect>
+        </effects>
+        <flavor>A Thief!</flavor>
+    </card>
+
+    <card>
+        <name uniqueId="Wizard">Wizard</name>
+        <type>Character</type>
+        <hits>6</hits>
+        <starting-cards>Knife,MagicMissile,Knife</starting-cards>
+        <keywords>creature, wizard, caster</keywords>
+        <flavor>A Wizard!</flavor>
+    </card>
+
+</cards>

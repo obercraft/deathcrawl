@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
-public abstract class Card {
+public abstract class Card implements Cloneable {
 
     private long id;
     private String name;
@@ -406,4 +406,11 @@ public abstract class Card {
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
     }
+
+    protected Object clone() throws CloneNotSupportedException {
+        Card clone = (Card) super.clone();
+        clone.setId(Game.createId());
+        return clone;
+    }
+
 }

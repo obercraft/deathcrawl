@@ -6,7 +6,8 @@ import javafx.scene.layout.VBox;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CardFactory;
+import net.sachau.deathcrawl.cards.CardParser;
+import net.sachau.deathcrawl.cards.Cards;
 import net.sachau.deathcrawl.cards.types.Character;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.dto.Player;
@@ -41,12 +42,12 @@ public class PartySelection extends VBox implements Observer {
         HBox available = new HBox();
         availableScroll.setContent(available);
 
-        Reflections reflections = new Reflections("net.sachau.deathcrawl.cards");
-
         DeckPane partyArea = new DeckPane(player.getParty(), length);
-
         try {
-            List<Card> basic = CardFactory.createCards("/cards/characters/starting");
+            List<Card> allCards = CardParser.parse(this.getClass()
+                    .getResourceAsStream("/cards/cards.xml"));
+            Cards.addToAll(allCards);
+            List<Card> basic = CardParser.parse(this.getClass().getResourceAsStream("/cards/starting-characters.xml"));
             for (Card b : basic) {
                 Character card = (Character) b;
                 card.setVisible(true);

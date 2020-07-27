@@ -1,0 +1,21 @@
+<?xml encoding="UTF-8"?>
+
+        <!ELEMENT cards (card)+>
+        <!ELEMENT card (name,type,hits?,damage?,command?,starting-cards?,keywords?,effects?,text?,flavor?)>
+
+        <!ELEMENT name (#PCDATA)>
+        <!ATTLIST name
+                uniqueId CDATA "">
+
+        <!ELEMENT hits (#PCDATA)>
+        <!ELEMENT type (#PCDATA)>
+        <!ELEMENT damage (#PCDATA)>
+        <!ELEMENT command (#PCDATA)>
+        <!ELEMENT keywords (#PCDATA)>
+        <!ELEMENT starting-cards (#PCDATA)>
+        <!ELEMENT text (#PCDATA)>
+        <!ELEMENT flavor (#PCDATA)>
+
+        <!ELEMENT effects (effect)+>
+        <!ELEMENT effect (#PCDATA)>
+        <!ATTLIST effect event CDATA "startturn">
