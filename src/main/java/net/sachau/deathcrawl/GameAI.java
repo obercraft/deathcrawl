@@ -3,10 +3,10 @@ package net.sachau.deathcrawl;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.MonsterCard;
 import net.sachau.deathcrawl.commands.CommandParser;
-import net.sachau.deathcrawl.conditions.Armor;
-import net.sachau.deathcrawl.conditions.Guard;
-import net.sachau.deathcrawl.conditions.Stealth;
 import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.effects.Armored;
+import net.sachau.deathcrawl.effects.Guarded;
+import net.sachau.deathcrawl.effects.Stealthy;
 
 import java.util.Observable;
 import java.util.concurrent.ThreadLocalRandom;
@@ -33,7 +33,7 @@ public class GameAI extends Observable {
 
                     // first check for guards
                     for (Card character : player.getParty().getCards()) {
-                        if (character.isAlive() && character.hasCondition(Guard.class)) {
+                        if (character.isAlive() && character.hasCondition(Guarded.class)) {
                             target = character;
                         }
                     }
@@ -41,7 +41,7 @@ public class GameAI extends Observable {
                     // 2. then attack armor
                     if (target == null) {
                         for (Card character : player.getParty().getCards()) {
-                            if (character.isAlive() && character.hasCondition(Armor.class)) {
+                            if (character.isAlive() && character.hasCondition(Armored.class)) {
                                 target = character;
                             }
                         }
@@ -50,7 +50,7 @@ public class GameAI extends Observable {
                     // 3. attack non-stealth
                     if (target == null) {
                         for (Card character : player.getParty().getCards()) {
-                            if (character.isAlive() && !character.hasCondition(Stealth.class)) {
+                            if (character.isAlive() && !character.hasCondition(Stealthy.class)) {
                                 target = character;
                             }
                         }

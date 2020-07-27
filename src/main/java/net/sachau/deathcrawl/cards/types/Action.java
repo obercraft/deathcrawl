@@ -3,10 +3,10 @@ package net.sachau.deathcrawl.cards.types;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.keywords.Keyword;
 
-public class Spell extends Card {
+public class Action extends Card {
 
-    public Spell() {
+    public Action() {
         super();
-        addKeywords(Keyword.SPELL);
+        addKeywords(Keyword.ACTION);
     }
 }

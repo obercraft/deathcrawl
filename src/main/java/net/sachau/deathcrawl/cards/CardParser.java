@@ -1,10 +1,8 @@
 package net.sachau.deathcrawl.cards;
 
-import javafx.scene.effect.Effect;
-import javafx.scene.text.Text;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.cards.types.Character;
-import net.sachau.deathcrawl.gui.card.CardText;
+import net.sachau.deathcrawl.effects.CardEffect;
 import net.sachau.deathcrawl.keywords.Keyword;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
@@ -62,7 +60,7 @@ public class CardParser {
     private static Card parse(Node node) throws IllegalAccessException, InstantiationException {
         Card card = null;
 
-        String cardType = "Standard";
+        String cardType = "Action";
 
         for (int a = 0; a < node.getChildNodes()
                 .getLength(); a++) {
@@ -94,8 +92,13 @@ public class CardParser {
 
             if (cardNode.getNodeName()
                     .equals("name")) {
-                card.setName(cardNode.getTextContent()
-                        .trim());
+                try {
+                    card.setName(cardNode.getTextContent()
+                            .trim());
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
                 NamedNodeMap attributes = cardNode.getAttributes();
                 for (int i = 0; i < attributes.getLength(); i++) {
                     Node attribute = attributes.item(0);

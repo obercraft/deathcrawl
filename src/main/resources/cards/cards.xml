@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE cards SYSTEM "cards.dtd">
+<!--
+Weapon
+* damage
+* draw
+* ranged
+* + damage for each enemy
+* response damage
+* momentum
+* discard to top
+* cancel damage
+* attack all
+* attack adjacent
+* attack random
+* permanent
+* permanent with token
+* bonus for condition
+-->
 <cards>
     <card>
         <name>Knife</name>
@@ -8,6 +25,14 @@
         <command>attack</command>
         <keywords>simple,weapon</keywords>
     </card>
+    <card>
+        <name>Knife</name>
+        <type>item</type>
+        <damage>1</damage>
+        <command>attack</command>
+        <keywords>simple,weapon</keywords>
+    </card>
+
     <card>
         <name>Throwing Knife</name>
         <type>item</type>
@@ -21,4 +46,51 @@
         <command>random_attack_many 3 1</command>
         <keywords>wizard</keywords>
     </card>
+
+
+    <card>
+        <name>Gold</name>
+        <type>Item</type>
+        <command>gold 1</command>
+    </card>
+
+    <card>
+        <name>Healing Potion</name>
+        <type>Item</type>
+        <command>heal 1</command>
+    </card>
+
+    <card>
+        <name>Healing Touch</name>
+        <type>Spell</type>
+        <command>heal 2</command>
+        <keywords>cleric</keywords>
+    </card>
+
+    <card>
+        <name>Horse</name>
+        <type>Horse</type>
+    </card>
+
+    <card>
+        <name>Poison</name>
+        <type>Item</type>
+        <command>poison_item 2 SIMPLE WEAPON</command>
+        <keywords>rogue</keywords>
+    </card>
+
+    <card>
+        <name>Short Sword</name>
+        <type>Item</type>
+        <damage>1</damage>
+        <command>attack; draw</command>
+        <keywords>weapon</keywords>
+    </card>
+
+    <card>
+        <name>Mark</name>
+        <type>Action</type>
+        <command>condition_attack MARKED</command>
+    </card>
+
 </cards>

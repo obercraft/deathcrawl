@@ -1,14 +1,11 @@
-package net.sachau.deathcrawl.cards.items;
+package net.sachau.deathcrawl.cards.types;
 
-import javafx.scene.effect.Effect;
 import net.sachau.deathcrawl.Event;
-import net.sachau.deathcrawl.cards.Basic;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CardEffect;
+import net.sachau.deathcrawl.effects.CardEffect;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.keywords.Keyword;
 
-@Basic
 public class Horse extends Card {
 
 	public Horse() {
@@ -19,7 +16,7 @@ public class Horse extends Card {
 
 		addEffect(Event.STARTTURN, new CardEffect() {
 			@Override
-			public void trigger(Card targetCard) {
+			public void trigger(Card sourceCard, Card targetCard) {
 
 				Player p = getPlayer();
 				if (p != null) {

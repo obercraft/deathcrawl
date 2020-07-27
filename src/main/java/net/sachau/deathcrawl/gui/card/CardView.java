@@ -29,9 +29,6 @@ public abstract class CardView extends StackPane implements Observer {
     CardCover cardCover = new CardCover();
 
 
-
-    ConditionBox conditionBox = new ConditionBox(card);
-
     CardDesignPane cardDesignPane = new CardDesignPane(card);
 
 

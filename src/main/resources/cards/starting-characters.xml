@@ -24,4 +24,74 @@
         <flavor>A Wizard!</flavor>
     </card>
 
+    
+    <card>
+        <name uniqueId="Cleric">Cleric</name>
+        <type>Character</type>
+        <hits>7</hits>
+        <starting-cards>Knife,Healing Touch,Knife</starting-cards>
+        <keywords>creature, cleric, caster</keywords>
+        <flavor>A Wizard!</flavor>
+    </card>
+
+    <card>
+        <name uniqueId="Paladin">Paladin</name>
+        <type>Character</type>
+        <hits>8</hits>
+        <starting-cards>Knife,Horse,Knife</starting-cards>
+        <keywords>creature, paladin, caster</keywords>
+        <flavor>A Paladin!</flavor>
+    </card>
+
+    <card>
+        <name uniqueId="Warrior">Warrior</name>
+        <type>Character</type>
+        <hits>9</hits>
+        <starting-cards>Knife,short sword,Knife</starting-cards>
+        <keywords>creature, fighter</keywords>
+        <flavor>A Fighter!</flavor>
+    </card>
+
+
+
 </cards>
+
+
+<!--
+
+package net.sachau.deathcrawl.cards.characters;
+
+import net.sachau.deathcrawl.cards.types.Character;
+
+public class Warrior extends Character {
+
+    public Warrior() {
+        /*
+        super("Warrior", 10, 0, "Warrior", Deck.builder(false)
+                        .add(Knife.class, Knife.class, ShortSword.class),
+                MomentumActions.builder()
+                        .addAction(new MomentumAction(new Charge(), 3)));
+        addKeywords(Keyword.CREATURE, Keyword.FIGHTER);
+        getConditions().add(new Guard());
+        */
+    }
+
+
+}
+
+package net.sachau.deathcrawl.cards.characters;
+
+import net.sachau.deathcrawl.cards.types.Character;
+
+public class Wizard extends Character {
+
+    public Wizard() {
+        /*
+        super("Wizard", 6, 0, "Wizard", Deck.builder()
+                .add(Knife.class, Knife.class, MagicMissile.class), MomentumActions.builder());
+        addKeywords(Keyword.CREATURE, Keyword.CASTER, Keyword.WIZARD);
+         */
+    }
+}
+
+-->

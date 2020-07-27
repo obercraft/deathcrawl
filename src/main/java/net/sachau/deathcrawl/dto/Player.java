@@ -8,11 +8,12 @@ import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.types.Character;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.cards.monsters.Goblin;
-import net.sachau.deathcrawl.conditions.Armor;
-import net.sachau.deathcrawl.conditions.Guard;
+import net.sachau.deathcrawl.effects.Armored;
+import net.sachau.deathcrawl.effects.Guarded;
 import net.sachau.deathcrawl.gui.map.MapCoord;
 import net.sachau.deathcrawl.keywords.Keyword;
 
+import java.security.Guard;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
@@ -221,12 +222,11 @@ public class Player extends Creature implements Observer {
 					goblin.setVisible(true);
 					if (i == 0) {
 						goblin.getConditions()
-								.add(new Armor());
+								.add(new Armored());
 					} else if (i == 1) {
 						goblin.getConditions()
-								.add(new Guard());
-						goblin.getConditions()
-								.add(new Armor());
+								.add(new Guarded());
+						goblin.getConditions().add(new Armored());
 					}
 					hazards.add(goblin);
 				}

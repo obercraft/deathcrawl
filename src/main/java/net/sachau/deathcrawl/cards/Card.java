@@ -8,12 +8,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
-import net.sachau.deathcrawl.conditions.Armor;
-import net.sachau.deathcrawl.conditions.Condition;
-import net.sachau.deathcrawl.conditions.Guard;
-import net.sachau.deathcrawl.conditions.Poisonous;
 import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.effects.Armored;
+import net.sachau.deathcrawl.effects.CardEffect;
+import net.sachau.deathcrawl.effects.Guarded;
 import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.keywords.Keywords;
 import org.apache.commons.lang3.StringUtils;
@@ -37,14 +36,14 @@ public abstract class Card implements Cloneable {
 
     private Creature owner;
     private Deck deck;
-    private SetProperty<Condition> conditions;
+    private SetProperty<CardEffect> conditions;
 
     public Card() {
         super();
         initHits(1);
         this.id = Game.createId();
         this.effects = new HashMap<>();
-        ObservableSet<Condition> observableSet = FXCollections.observableSet(new HashSet<>());
+        ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
         this.conditions = new SimpleSetProperty<>(observableSet);
     }
 
@@ -54,7 +53,7 @@ public abstract class Card implements Cloneable {
         initDamage(initialDamage);
         this.id = Game.createId();
         this.effects = new HashMap<>();
-        ObservableSet<Condition> observableSet = FXCollections.observableSet(new HashSet<>());
+        ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
         this.conditions = new SimpleSetProperty<>(observableSet);
 
     }
@@ -67,7 +66,7 @@ public abstract class Card implements Cloneable {
         List<CardEffect> phaseCardEffects = getPhaseEffects(event);
         if (phaseCardEffects != null) {
             for (CardEffect e : phaseCardEffects) {
-                e.trigger(this);
+                e.trigger(null, this);
             }
         }
     }
@@ -163,8 +162,8 @@ public abstract class Card implements Cloneable {
         Deck targetDeck = target.getDeck();
         for (Card card : targetDeck.getCards()) {
             if (card.isAlive()) {
-                for (Condition condition : card.getConditions()) {
-                    if (condition instanceof Guard && card.getId() != target.getId()) {
+                for (CardEffect cardEffect : card.getConditions()) {
+                    if (cardEffect instanceof Guarded && card.getId() != target.getId()) {
                         return false;
                     }
                 }
@@ -180,13 +179,6 @@ public abstract class Card implements Cloneable {
         }
 
         int hits = target.getHits();
-
-        for (Condition c : getConditions()) {
-            if (c instanceof Poisonous) {
-                attack += c.getAmount();
-                conditions.remove(c);
-            }
-        }
 
         if (attack > 0) {
             hits -= attack;
@@ -215,18 +207,6 @@ public abstract class Card implements Cloneable {
 
     public void setDeck(Deck deck) {
         this.deck = deck;
-    }
-
-    public ObservableSet<Condition> getConditions() {
-        return conditions.get();
-    }
-
-    public SetProperty<Condition> conditionsProperty() {
-        return conditions;
-    }
-
-    public void setConditions(ObservableSet<Condition> conditions) {
-        this.conditions.set(conditions);
     }
 
     public Keywords getKeywords() {
@@ -339,15 +319,15 @@ public abstract class Card implements Cloneable {
     }
 
     public boolean attackArmor() {
-        Condition armorCondition = null;
-        for (Condition c : conditions) {
-            if (c instanceof Armor) {
-                armorCondition = c;
+        CardEffect armor = null;
+        for (CardEffect e : getConditions()) {
+            if (e instanceof Armored) {
+                armor = e;
                 break;
             }
         }
-        if (armorCondition != null) {
-            conditions.remove(armorCondition);
+        if (armor != null) {
+            conditions.remove(armor);
             return true;
         }
         return false;
@@ -371,9 +351,9 @@ public abstract class Card implements Cloneable {
         return  keywords.contains(Keyword.RANGED);
     }
 
-    public boolean hasCondition(Class<? extends Condition> clazz) {
-        for (Condition c : this.conditions) {
-            if (c.getClass().equals(clazz)) {
+    public boolean hasCondition(Class<? extends CardEffect> clazz) {
+        for (CardEffect cardEffect : getConditions()) {
+            if (cardEffect.getClass().equals(clazz)) {
                 return true;
             }
         }
@@ -413,4 +393,17 @@ public abstract class Card implements Cloneable {
         return clone;
     }
 
+    public ObservableSet<CardEffect> getConditions() {
+        return conditions.get();
+    }
+
+    public SetProperty<CardEffect> conditionsProperty() {
+        return conditions;
+    }
+
+    public void setConditions(ObservableSet<CardEffect> conditions) {
+        this.conditions.set(conditions);
+    }
+
 }
+

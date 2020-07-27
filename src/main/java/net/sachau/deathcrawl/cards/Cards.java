@@ -27,7 +27,7 @@ public class Cards {
         Card card = allCards.get(cardName.toLowerCase().replaceAll("\\ ", ""));
         try {
             return (Card) card.clone();
-        } catch (CloneNotSupportedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

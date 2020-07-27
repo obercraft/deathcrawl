@@ -2,11 +2,8 @@ package net.sachau.deathcrawl.commands;
 
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.cards.items.Poison;
-import net.sachau.deathcrawl.conditions.Armor;
-import net.sachau.deathcrawl.conditions.Condition;
-import net.sachau.deathcrawl.conditions.Poisonous;
 import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.effects.Armored;
 import net.sachau.deathcrawl.keywords.Keyword;
 
 import java.util.HashSet;
@@ -95,23 +92,25 @@ public class CommandParser {
                 if (target != null && target.getKeywords()
                         .contains(Keyword.CREATURE)) {
                     target.getConditions()
-                            .add(new Armor());
+                            .add(new Armored());
                 }
                 return true;
             }
             case POISON_ITEM: {
-                int amount = new Integer(args[1]);
-                Set<Keyword> keywords = new HashSet<>();
-                for (int i = 2; i < args.length; i++) {
-                    keywords.add(Keyword.valueOf(args[i]));
-                }
-
-
-                if (target.hasAllKeywords(keywords)) {
-                    target.getConditions()
-                            .add(new Poisonous(amount));
-                    return true;
-                }
+                // TODO msachau
+//                int amount = new Integer(args[1]);
+//                Set<Keyword> keywords = new HashSet<>();
+//                for (int i = 2; i < args.length; i++) {
+//                    keywords.add(Keyword.valueOf(args[i]));
+//                }
+//
+//
+//                if (target.hasAllKeywords(keywords)) {
+//                    target.getConditions()
+//                            .add(new Poisonous(amount));
+//                    return true;
+//                }
+//                return false;
                 return false;
             }
             case MOMENTUM: {
