@@ -1,14 +1,15 @@
-package net.sachau.deathcrawl.cards;
+package net.sachau.deathcrawl.cards.types;
 
-public abstract class MonsterCard extends Card {
+import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.keywords.Keyword;
+
+public class Monster extends Card {
 
     private int xp;
     private int gold;
 
-    public MonsterCard(int initialHits, int initialDamage, int exp, int gold) {
-        super(initialHits, initialDamage);
-        this.gold = gold;
-        this.xp = exp;
+    public Monster() {
+        addKeywords(Keyword.CREATURE);
     }
 
     public int getXp() {

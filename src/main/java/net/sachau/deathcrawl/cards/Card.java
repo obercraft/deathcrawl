@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
+import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.effects.Armored;
@@ -187,8 +188,8 @@ public abstract class Card implements Cloneable {
         target.setHits(hits);
         if (hits <= 0) {
 
-            if (target instanceof MonsterCard && owner != null) {
-                MonsterCard mc = (MonsterCard) target;
+            if (target instanceof Monster && owner != null) {
+                Monster mc = (Monster) target;
                 int gold = mc.getGold() + owner.getGold();
                 owner.setGold(gold);
                 int xp = mc.getXp() + owner.getXp();

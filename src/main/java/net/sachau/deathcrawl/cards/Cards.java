@@ -33,6 +33,17 @@ public class Cards {
         return null;
     }
 
+    public static List<Card> getByType(Class<? extends Card> cardType) {
+        List<Card> subList = new LinkedList<>();
+        for (Card card : allCards()) {
+            if (card.getClass().isInstance(cardType)) {
+                subList.add(card);
+            }
+        }
+        return subList;
+    }
+
+
     public static void put(Card card) {
         allCards.put(card.getName().toLowerCase().replaceAll("\\ ", ""), card);
     }

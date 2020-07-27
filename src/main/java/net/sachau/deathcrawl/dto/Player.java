@@ -2,22 +2,20 @@ package net.sachau.deathcrawl.dto;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import net.sachau.deathcrawl.Event;
-import net.sachau.deathcrawl.GameAI;
 import net.sachau.deathcrawl.Game;
+import net.sachau.deathcrawl.GameAI;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.types.Character;
+import net.sachau.deathcrawl.cards.Cards;
 import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.cards.monsters.Goblin;
+import net.sachau.deathcrawl.cards.types.Character;
+import net.sachau.deathcrawl.cards.types.EventDeck;
+import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.effects.Armored;
 import net.sachau.deathcrawl.effects.Guarded;
 import net.sachau.deathcrawl.gui.map.MapCoord;
 import net.sachau.deathcrawl.keywords.Keyword;
 
-import java.security.Guard;
-import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
+import java.util.*;
 
 
 public class Player extends Creature implements Observer {
@@ -215,10 +213,13 @@ public class Player extends Creature implements Observer {
 
 				return;
 			case STARTENCOUNTER:
+
+				List<Card> eventCards = Cards.getByType(EventDeck.class);
+
 				Deck hazards = new Deck();
 
 				for (int i = 0; i < 3; i++) {
-					Goblin goblin = new Goblin();
+					Monster goblin = (Monster) Cards.get("Goblin");
 					goblin.setVisible(true);
 					if (i == 0) {
 						goblin.getConditions()

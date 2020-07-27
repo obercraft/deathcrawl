@@ -2,6 +2,8 @@ package net.sachau.deathcrawl.cards;
 
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.cards.types.Character;
+import net.sachau.deathcrawl.cards.types.EventDeck;
+import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.effects.CardEffect;
 import net.sachau.deathcrawl.keywords.Keyword;
 import org.apache.commons.lang3.StringUtils;
@@ -78,6 +80,7 @@ public class CardParser {
             if (clazz.getSimpleName()
                     .toLowerCase()
                     .matches(cardType.toLowerCase())) {
+                System.out.println(clazz.getSimpleName());
                 card = clazz.newInstance();
             }
         }
@@ -114,6 +117,18 @@ public class CardParser {
             }
 
             if (cardNode.getNodeName()
+                    .equals("deck")) {
+                if (card instanceof EventDeck) {
+                    EventDeck eventDeck = (EventDeck) card;
+                    String [] cards = cardNode.getTextContent().trim().split(",", -1);
+                    for (String cardName : cards) {
+                        eventDeck.getDeck().add(Cards.get(cardName));
+                    }
+                }
+            }
+
+
+            if (cardNode.getNodeName()
                     .equals("hits")) {
                 int h = Integer.parseInt(cardNode.getTextContent()
                         .trim());
@@ -126,6 +141,25 @@ public class CardParser {
                         .trim());
                 card.initDamage(d);
             }
+
+            if (cardNode.getNodeName()
+                    .equals("experience")) {
+                if (card instanceof Monster) {
+                    int xp = Integer.parseInt(cardNode.getTextContent()
+                            .trim());
+                    ((Monster) card).setXp(xp);
+                }
+            }
+
+            if (cardNode.getNodeName()
+                    .equals("gold")) {
+                if (card instanceof Monster) {
+                    int gold = Integer.parseInt(cardNode.getTextContent()
+                            .trim());
+                    ((Monster) card).setGold(gold);
+                }
+            }
+
 
             if (cardNode.getNodeName()
                     .equals("command")) {

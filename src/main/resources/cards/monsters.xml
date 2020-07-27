@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE cards SYSTEM "cards.dtd">
+<cards>
+    <card>
+        <name uniqueId="Thief">Kobold</name>
+        <type>Monster</type>
+        <hits>3</hits>
+        <damage>1</damage>
+        <experience>1</experience>
+        <gold>1</gold>
+        <flavor>A Kobold!</flavor>
+    </card>
+
+    <card>
+        <name uniqueId="Thief">Goblin</name>
+        <type>Monster</type>
+        <hits>4</hits>
+        <damage>2</damage>
+        <experience>2</experience>
+        <gold>1</gold>
+        <flavor>A Goblin!</flavor>
+    </card>
+
+</cards>

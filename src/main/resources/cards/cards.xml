@@ -93,4 +93,25 @@ Weapon
         <command>condition_attack MARKED</command>
     </card>
 
+    <card>
+        <name>Healing Touch</name>
+        <type>Spell</type>
+        <command>heal 2</command>
+        <keywords>cleric</keywords>
+    </card>
+
+    <card>
+        <name>Magic Missile</name>
+        <type>Spell</type>
+        <command>random_attack_many 3 1</command>
+        <keywords>wizard</keywords>
+    </card>
+
+    <card>
+        <name>Shield</name>
+        <type>Spell</type>
+        <command>shield 1</command>
+        <keywords>wizard</keywords>
+    </card>
+
 </cards>

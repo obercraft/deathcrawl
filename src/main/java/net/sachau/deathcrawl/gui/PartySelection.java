@@ -47,6 +47,11 @@ public class PartySelection extends VBox implements Observer {
             List<Card> allCards = CardParser.parse(this.getClass()
                     .getResourceAsStream("/cards/cards.xml"));
             Cards.addToAll(allCards);
+
+            List<Card> monsters = CardParser.parse(this.getClass()
+                    .getResourceAsStream("/cards/monsters.xml"));
+            Cards.addToAll(monsters);
+
             List<Card> basic = CardParser.parse(this.getClass().getResourceAsStream("/cards/starting-characters.xml"));
             for (Card b : basic) {
                 Character card = (Character) b;

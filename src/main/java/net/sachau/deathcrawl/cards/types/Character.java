@@ -3,6 +3,7 @@ package net.sachau.deathcrawl.cards.types;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.dto.Creature;
+import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.momentum.MomentumActions;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,6 +14,7 @@ public class Character extends Card {
 
     public Character() {
         super();
+        addKeywords(Keyword.CREATURE);
     }
 
     public Deck getStartingCards() {

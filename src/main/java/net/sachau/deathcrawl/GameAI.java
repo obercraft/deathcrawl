@@ -1,7 +1,7 @@
 package net.sachau.deathcrawl;
 
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.MonsterCard;
+import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.commands.CommandParser;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.effects.Armored;
@@ -17,8 +17,8 @@ public class GameAI extends Observable {
 
         for (Card card : player.getHazard().getCards()) {
 
-            if (card instanceof MonsterCard) {
-                MonsterCard monsterCard = (MonsterCard) card;
+            if (card instanceof Monster) {
+                Monster monsterCard = (Monster) card;
 
                 if (monsterCard.isRanged()) {
                     int randomNum = ThreadLocalRandom.current()
