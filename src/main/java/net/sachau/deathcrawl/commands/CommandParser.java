@@ -3,11 +3,8 @@ package net.sachau.deathcrawl.commands;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.dto.Player;
-import net.sachau.deathcrawl.effects.Armored;
+import net.sachau.deathcrawl.effects.Armor;
 import net.sachau.deathcrawl.keywords.Keyword;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class CommandParser {
 
@@ -96,7 +93,7 @@ public class CommandParser {
                 if (target != null && target.getKeywords()
                         .contains(Keyword.CREATURE)) {
                     target.getConditions()
-                            .add(new Armored());
+                            .add(new Armor());
                 }
                 return true;
             }

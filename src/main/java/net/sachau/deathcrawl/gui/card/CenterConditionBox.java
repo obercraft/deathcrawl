@@ -10,10 +10,10 @@ import net.sachau.deathcrawl.effects.CardEffect;
 
 public class CenterConditionBox extends StackPane {
 
-    public CenterConditionBox(Card card) {
+    public CenterConditionBox(Card card, String cssClass) {
 
         super();
-        getStyleClass().add("card");
+        getStyleClass().add(cssClass);
 
 
         HBox items = new HBox();

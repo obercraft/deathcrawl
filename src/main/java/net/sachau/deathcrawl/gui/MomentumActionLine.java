@@ -4,16 +4,13 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CardCache;
+import net.sachau.deathcrawl.cards.catalog.Catalog;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardTile;
 import net.sachau.deathcrawl.momentum.MomentumAction;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +34,7 @@ public class MomentumActionLine extends HBox {
 
                 Map<DataFormat, Object> map = new HashMap<>();
                 action.getCard().setOwner(player);
-                CardCache.put(action.getCard());
+                Catalog.putById(action.getCard());
                 map.put(CardTile.momentumFormat, action.getCard()
                         .getId() + "," +  action.getCost());
                 db.setContent(map);

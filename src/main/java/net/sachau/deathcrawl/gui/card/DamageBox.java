@@ -27,15 +27,7 @@ public class DamageBox extends HBox {
                 hits.setText(getDamageString());
             }
         });
-
-        card.maxDamageProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                hits.setText(getDamageString());
-            }
-        });
-
-
+        
     }
 
     private String getDamageString() {

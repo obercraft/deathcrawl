@@ -3,16 +3,15 @@ package net.sachau.deathcrawl.effects;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.gui.images.Tile;
 
-public class Guarded extends CardEffect {
-
-    public Guarded() {
+public class Armor extends CardEffect {
+    public Armor() {
         super();
-        setTile(Tile.GUARD);
+        this.setTile(Tile.ARMOR);
     }
 
     @Override
     public void trigger(Card sourceCard, Card targetCard) {
-        targetCard.getConditions().add(new Guarded());
+        targetCard.getConditions().add(new Armor());
     }
 
     @Override

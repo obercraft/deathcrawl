@@ -30,7 +30,7 @@ public class MainRegion extends VBox implements Observer {
         setMinHeight(GAME_HEIGHT);
         setMinWidth(GAME_WIDTH);
 
-        partySelection = new PartySelection(player, 5);
+        partySelection = new PartySelection(player, 5, "card");
 
         welcomeScreen = new WelcomeScreen(GAME_WIDTH, GAME_HEIGHT);
         getChildren()

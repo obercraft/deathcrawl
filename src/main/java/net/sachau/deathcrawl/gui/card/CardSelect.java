@@ -13,8 +13,8 @@ import java.util.Observable;
 public class CardSelect extends CardView {
 
 
-    public CardSelect(PartySelection partySelection, StartingCharacter card, Deck target) {
-        super(card);
+    public CardSelect(PartySelection partySelection, StartingCharacter card, Deck target, String cssClass) {
+        super(card, cssClass);
 
 
         if (card.getStartingCards() != null) {
@@ -23,7 +23,7 @@ public class CardSelect extends CardView {
             for (Card c : card.getStartingCards()
                     .getCards()) {
                 c.setVisible(true);
-                CardView cardView = new CardView(c) {
+                CardView cardView = new CardView(c, cssClass) {
                     @Override
                     public void update(Observable o, Object arg) {
 

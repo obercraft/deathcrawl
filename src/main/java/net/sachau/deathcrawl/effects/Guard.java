@@ -3,18 +3,16 @@ package net.sachau.deathcrawl.effects;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.gui.images.Tile;
 
-public class Marked extends CardEffect {
-    public Marked() {
+public class Guard extends CardEffect {
+
+    public Guard() {
         super();
-        setTile(Tile.MARKED);
+        setTile(Tile.GUARD);
     }
 
     @Override
     public void trigger(Card sourceCard, Card targetCard) {
-        int amount = 1;
-        if (sourceCard != null) {
-            amount = Math.max(1, sourceCard.getDamage());
-        }
+        targetCard.getConditions().add(new Guard());
     }
 
     @Override

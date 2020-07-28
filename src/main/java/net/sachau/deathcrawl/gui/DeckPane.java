@@ -17,7 +17,7 @@ public class DeckPane extends ScrollPane {
     private HBox container = new HBox();
     private Deck deck;
 
-    public DeckPane(Deck deck, int length) {
+    public DeckPane(Deck deck, int length, String cssClass) {
         super();
         this.deck = deck;
 
@@ -36,7 +36,7 @@ public class DeckPane extends ScrollPane {
         for (Card card : deck.getCards()) {
             try {
                 container.getChildren()
-                        .add(CardTileCache.getTile(card));
+                        .add(CardTileCache.getTile(card, cssClass));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -51,7 +51,7 @@ public class DeckPane extends ScrollPane {
                             if (added > 0) {
                                 for (Card c : change.getAddedSubList()) {
                                     container.getChildren()
-                                            .add(CardTileCache.getTile(c));
+                                            .add(CardTileCache.getTile(c, cssClass));
                                 }
                             }
 
@@ -59,7 +59,7 @@ public class DeckPane extends ScrollPane {
                             if (removed > 0) {
                                 for (Card c : change.getRemoved()) {
                                     container.getChildren()
-                                            .remove(CardTileCache.getTile(c));
+                                            .remove(CardTileCache.getTile(c, cssClass));
 
                                 }
                             }

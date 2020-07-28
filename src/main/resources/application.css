@@ -4,10 +4,35 @@
     -fx-card-height: 264px; // 88 * 3
 }
 
+* {
+    -fx-card-small-width: 189px; // 63 * 3
+    -fx-card-small-height: 164px; // 88 * 3
+}
+
+
 .card {
 
     width: -fx-card-width;
     height: -fx-card-height;
+    -fx-min-width: width;
+    -fx-max-width: width;
+    -fx-min-height: height;
+    -fx-max-height: height;
+
+    -fx-background-size: height width;
+    /*  -fx-background-color: #FFFFFF; */
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #000000;
+    -fx-border-width: 1;
+
+    /* top-left, top-right, bottom-right, and bottom-left corners, in that order. */
+}
+
+.card-small {
+
+    width: -fx-card-small-width;
+    height: -fx-card-small-height;
     -fx-min-width: width;
     -fx-max-width: width;
     -fx-min-height: height;

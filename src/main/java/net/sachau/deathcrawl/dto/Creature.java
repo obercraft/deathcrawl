@@ -5,12 +5,10 @@ import net.sachau.deathcrawl.keywords.Keyword;
 
 import java.util.Set;
 
-public abstract class  Creature {
+public abstract class Creature {
 
     private SimpleIntegerProperty xp = new SimpleIntegerProperty();
     private SimpleIntegerProperty gold = new SimpleIntegerProperty();
-
-    public abstract int getAttackBonus();
 
     public int getXp() {
         return xp.get();

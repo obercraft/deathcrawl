@@ -5,7 +5,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CardCache;
+import net.sachau.deathcrawl.cards.catalog.Catalog;
 import net.sachau.deathcrawl.commands.CommandParser;
 import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
@@ -21,8 +21,8 @@ public class CardTile extends CardView {
     public static final DataFormat momentumFormat = new DataFormat("momentum");
     private Card card;
 
-    public CardTile(Card card) {
-        super(card);
+    public CardTile(Card card, String cssClass) {
+        super(card, cssClass);
         this.card = card;
 
 
@@ -76,7 +76,7 @@ public class CardTile extends CardView {
                 executeCommand(sourceCard, 0, true);
             } else if (db.getContent(momentumFormat) != null) {
                 String[] args = ((String) db.getContent(momentumFormat)).split(",", -1);
-                Card sourceCard = CardCache.get(new Long(args[0]));
+                Card sourceCard = Catalog.getById(new Long(args[0]));
                 executeCommand(sourceCard, new Integer(args[1]), true);
 
 

@@ -10,9 +10,9 @@ import net.sachau.deathcrawl.effects.CardEffect;
 
 public class ConditionBox extends HBox {
 
-    public ConditionBox(Card card) {
+    public ConditionBox(Card card, String cssClass) {
         super();
-        getStyleClass().add("card");
+        getStyleClass().add(cssClass);
         setAlignment(Pos.BOTTOM_CENTER);
 
         HBox items = new HBox();

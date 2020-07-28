@@ -9,10 +9,10 @@ public class CardTileCache {
 
     private static Map<Long, CardTile> tileCache = new HashMap<>();
 
-    public static CardTile getTile(Card card) {
+    public static CardTile getTile(Card card, String cssClass) {
         CardTile cachedTile = tileCache.get(card.getId());
         if (cachedTile == null) {
-            cachedTile = new CardTile(card);
+            cachedTile = new CardTile(card,cssClass);
             tileCache.put(card.getId(), cachedTile);
         }
         return cachedTile;

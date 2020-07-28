@@ -103,11 +103,6 @@ public class Player extends Creature implements Observer {
 		this.turn = turn;
 	}
 
-	@Override
-	public int getAttackBonus() {
-		return 0;
-	}
-
 	public Deck getHazard() {
 		return hazard;
 	}

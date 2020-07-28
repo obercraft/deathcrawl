@@ -12,6 +12,7 @@ public class Catalog {
 
     private final CardCache allCards = new CardCache();
 
+    private static Map<Long, Card> idCache = new HashMap<>();
 
 
     private static Catalog catalog;
@@ -87,5 +88,15 @@ public class Catalog {
         return allCards.get(cardName
                 .toLowerCase()
                 .replaceAll("\\ ", ""));
+    }
+
+    public static Card getById(long id) {
+        return idCache.get(id);
+    }
+
+
+    public static Card putById(Card card) {
+        idCache.put(card.getId(), card);
+        return card;
     }
 }

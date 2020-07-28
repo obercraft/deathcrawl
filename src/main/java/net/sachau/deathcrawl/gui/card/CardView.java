@@ -17,31 +17,26 @@ public abstract class CardView extends StackPane implements Observer {
   public static final double WIDTH = 63*3;
   private final Card card;
 
-  public CardView(Card card) {
+  public CardView(Card card, String cssClass) {
     super();
     this.card = card;
 
     Game.events().addObserver(this);
-    this.getStyleClass().add("card");
+    this.getStyleClass().add(cssClass);
     this.getStyleClass().add("card-background");
 
 
-    CardCover cardCover = new CardCover();
+    CardCover cardCover = new CardCover(cssClass);
 
 
-    CardDesignPane cardDesignPane = new CardDesignPane(card);
+    CardDesignPane cardDesignPane = new CardDesignPane(card, cssClass);
 
 
     this.getChildren()
-      .addAll(cardDesignPane, new CenterConditionBox(card));
+      .addAll(cardDesignPane, new CenterConditionBox(card, cssClass));
 
     if (card.getKeywords().contains(Keyword.CREATURE)) {
-      CornerValueBox cornerValueBox = new CornerValueBox(card.hitsProperty(), card.maxHitsProperty(), "bottom-right");
-      this.getChildren().add(cornerValueBox);
-    }
-
-    if (card.getMaxDamage() > 0) {
-      CornerValueBox cornerValueBox = new CornerValueBox(card.damageProperty(), card.maxDamageProperty(), "bottom-left");
+      CornerValueBox cornerValueBox = new CornerValueBox(card.hitsProperty(), card.maxHitsProperty(), "bottom-right", cssClass);
       this.getChildren().add(cornerValueBox);
     }
 

@@ -9,10 +9,10 @@ import net.sachau.deathcrawl.gui.images.TileSet;
 
 public class CardCover extends StackPane {
 
-  public CardCover() {
+  public CardCover(String cssClass) {
     super();
 
-    getStyleClass().add("card");
+    getStyleClass().add(cssClass);
     getStyleClass().add("card-cover");
 
 

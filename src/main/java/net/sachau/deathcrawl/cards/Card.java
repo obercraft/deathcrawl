@@ -12,9 +12,9 @@ import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
-import net.sachau.deathcrawl.effects.Armored;
+import net.sachau.deathcrawl.effects.Armor;
 import net.sachau.deathcrawl.effects.CardEffect;
-import net.sachau.deathcrawl.effects.Guarded;
+import net.sachau.deathcrawl.effects.Guard;
 import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.keywords.Keywords;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +31,6 @@ public abstract class Card {
     private String command;
 
     private SimpleIntegerProperty damage = new SimpleIntegerProperty(0);
-    private SimpleIntegerProperty maxDamage = new SimpleIntegerProperty(0);
     private SimpleIntegerProperty hits = new SimpleIntegerProperty(1);
     private SimpleIntegerProperty maxHits = new SimpleIntegerProperty(1);
     private SimpleBooleanProperty visible = new SimpleBooleanProperty();
@@ -71,7 +70,6 @@ public abstract class Card {
         this.command = card.command;
 
         this.setDamage(card.getDamage());
-        this.setMaxDamage(card.getMaxDamage());
         this.setHits(card.getHits());
         this.setMaxHits(card.getMaxHits());
         this.setVisible(card.isVisible());
@@ -206,7 +204,7 @@ public abstract class Card {
         for (Card card : targetDeck.getCards()) {
             if (card.isAlive()) {
                 for (CardEffect cardEffect : card.getConditions()) {
-                    if (cardEffect instanceof Guarded && card.getId() != target.getId()) {
+                    if (cardEffect instanceof Guard && card.getId() != target.getId()) {
                         return false;
                     }
                 }
@@ -215,10 +213,6 @@ public abstract class Card {
 
         if (target.attackArmor()) {
             return true;
-        }
-
-        if (owner != null) {
-            attack += owner.getAttackBonus();
         }
 
         int hits = target.getHits();
@@ -322,18 +316,6 @@ public abstract class Card {
         this.damage.set(damage);
     }
 
-    public int getMaxDamage() {
-        return maxDamage.get();
-    }
-
-    public SimpleIntegerProperty maxDamageProperty() {
-        return maxDamage;
-    }
-
-    public void setMaxDamage(int maxDamage) {
-        this.maxDamage.set(maxDamage);
-    }
-
     public void setKeywords(Keywords keywords) {
         this.keywords = keywords;
     }
@@ -345,7 +327,6 @@ public abstract class Card {
 
     public void initDamage(int damage) {
         setDamage(damage);
-        setMaxDamage(damage);
     }
 
     public boolean hasAllKeywords(Set<Keyword> wantedKeywords) {
@@ -367,7 +348,7 @@ public abstract class Card {
     public boolean attackArmor() {
         CardEffect armor = null;
         for (CardEffect e : getConditions()) {
-            if (e instanceof Armored) {
+            if (e instanceof Armor) {
                 armor = e;
                 break;
             }

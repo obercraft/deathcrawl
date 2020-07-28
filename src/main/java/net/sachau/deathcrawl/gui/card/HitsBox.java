@@ -13,10 +13,10 @@ public class HitsBox extends StackPane {
     Card card;
 
 
-    public HitsBox(Card card) {
+    public HitsBox(Card card, String cssClass) {
 
       super();
-      getStyleClass().add("card");
+      getStyleClass().add(cssClass);
       getStyleClass().add("hits-layer");
         this.card = card;
 

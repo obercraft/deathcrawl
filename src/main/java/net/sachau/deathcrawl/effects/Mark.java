@@ -3,16 +3,18 @@ package net.sachau.deathcrawl.effects;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.gui.images.Tile;
 
-public class Stealthy extends CardEffect {
-
-    public Stealthy() {
+public class Mark extends CardEffect {
+    public Mark() {
         super();
-        setTile(Tile.STEALTH);
+        setTile(Tile.MARKED);
     }
 
     @Override
     public void trigger(Card sourceCard, Card targetCard) {
-        targetCard.getConditions().add(new Stealthy());
+        int amount = 1;
+        if (sourceCard != null) {
+            amount = Math.max(1, sourceCard.getDamage());
+        }
     }
 
     @Override

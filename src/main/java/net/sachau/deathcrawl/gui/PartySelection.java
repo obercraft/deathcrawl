@@ -26,7 +26,7 @@ public class PartySelection extends VBox implements Observer {
 
     Deck availableCharacters = new Deck();
 
-    public PartySelection(Player player, int length) {
+    public PartySelection(Player player, int length, String cssClass) {
         super();
         Game.events().addObserver(this);
         this.player = player;
@@ -42,7 +42,7 @@ public class PartySelection extends VBox implements Observer {
 
          
         
-        DeckPane partyArea = new DeckPane(player.getParty(), length);
+        DeckPane partyArea = new DeckPane(player.getParty(), length, "card-small");
         try {
             Catalog.init();
             List<Card> basic = Catalog.getInstance()
@@ -50,7 +50,7 @@ public class PartySelection extends VBox implements Observer {
             for (Card b : basic) {
                 StartingCharacter card = (StartingCharacter) b;
                 card.setVisible(true);
-                available.getChildren().add(new CardSelect(this, card, player.getParty()));
+                available.getChildren().add(new CardSelect(this, card, player.getParty(), cssClass));
                 availableCharacters.add(card);
             }
             getChildren().addAll(available, partyArea);

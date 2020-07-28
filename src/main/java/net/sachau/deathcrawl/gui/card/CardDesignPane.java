@@ -6,23 +6,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.gui.images.Tile;
 import net.sachau.deathcrawl.gui.images.TileSet;
 
 public class CardDesignPane extends VBox {
 
-    public CardDesignPane(Card card) {
+    public CardDesignPane(Card card, String cssClass) {
         super();
         setMinHeight(CardView.HEIGHT-50);
         setMaxHeight(CardView.HEIGHT-50);
         setAlignment(Pos.TOP_CENTER);
-        this.getStyleClass().add("card");
-
-        CardDesign cardDesign;
-
-        //setAlignment(Pos.);
+        this.getStyleClass().add(cssClass);
 
         HBox image = new HBox();
 
@@ -50,7 +45,11 @@ public class CardDesignPane extends VBox {
         TextFlow flavor = new TextFlow();
 
         // getChildren().addAll(TileSet.getInstance().getTile(Tile.DEATHCRAWL), nameband, text);
-        getChildren().addAll(image, nameband, text);
+        if (cssClass.contains("small")) {
+            getChildren().addAll(nameband, text);
+        } else {
+            getChildren().addAll(image, nameband, text);
+        }
 
 
 

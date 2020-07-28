@@ -13,11 +13,11 @@ public class CardBoard extends VBox {
         HBox row3 = new HBox();
 
 
-        DeckPane playArea = new DeckPane(player.getHazard(), 5);
+        DeckPane playArea = new DeckPane(player.getHazard(), 5, "card-small");
         DrawPile drawPile = new DrawPile(player);
         DiscardPile discardPile = new DiscardPile(player);
-        DeckPane hand = new DeckPane(player.getHand(), 5);
-        DeckPane partyArea = new DeckPane(player.getParty(), 5);
+        DeckPane hand = new DeckPane(player.getHand(), 5, "card-small");
+        DeckPane partyArea = new DeckPane(player.getParty(), 5, "card-small");
 
         MomentumBox momentumBox = new MomentumBox(player);
 

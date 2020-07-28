@@ -6,20 +6,18 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CardCache;
 
 public class CornerValueBox extends StackPane {
 
     SimpleIntegerProperty property;
     SimpleIntegerProperty maxProperty;
     
-    public CornerValueBox(SimpleIntegerProperty simpleIntegerProperty, SimpleIntegerProperty maxProperty, String position) {
+    public CornerValueBox(SimpleIntegerProperty simpleIntegerProperty, SimpleIntegerProperty maxProperty, String position, String cssClass) {
 
         super();
         this.property = simpleIntegerProperty;
         this.maxProperty = maxProperty; 
-        getStyleClass().add("card");
+        getStyleClass().add(cssClass);
         getStyleClass().add("value-" + position);
     
         HBox textBox = new HBox();
