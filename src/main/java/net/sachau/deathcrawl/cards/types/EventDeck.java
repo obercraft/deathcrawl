@@ -12,6 +12,10 @@ public class EventDeck extends Card {
         super();
     }
 
+    public EventDeck(Deck deck) {
+        this.deck = deck;
+    }
+
     @Override
     public Deck getDeck() {
         return deck;

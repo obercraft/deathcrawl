@@ -72,7 +72,11 @@ public class CommandParser {
 
                     Deck targetDeck = target.getDeck();
                     int count = new Integer(args[1]);
-                    int amount = source.getDamage();
+                    int amount = 1;
+                    if (args.length > 2) {
+                        amount = Integer.parseInt(args[2]);
+                    }
+                    source.setDamage(amount);
                     for (int i = 0; i < count; i++) {
                         Card targetCard = targetDeck.getRandomCard();
                         if (targetCard != null) {

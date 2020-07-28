@@ -84,7 +84,7 @@ Weapon
         <type>Item</type>
         <damage>1</damage>
         <command>attack; draw</command>
-        <keywords>weapon</keywords>
+        <keywords>weapon, fighter</keywords>
     </card>
 
     <card>

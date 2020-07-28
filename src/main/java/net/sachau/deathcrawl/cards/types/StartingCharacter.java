@@ -2,18 +2,21 @@ package net.sachau.deathcrawl.cards.types;
 
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.momentum.MomentumActions;
-import org.apache.commons.lang3.StringUtils;
 
-public class Character extends Card {
+public class StartingCharacter extends Card {
 
-    private Deck startingCards;
+    private Deck startingCards = new Deck();
     private MomentumActions momentumActions = new MomentumActions();
 
-    public Character() {
+    public StartingCharacter() {
         super();
+        addKeywords(Keyword.CREATURE);
+    }
+
+    public StartingCharacter(StartingCharacter startingCharacter) {
+        super(startingCharacter);
         addKeywords(Keyword.CREATURE);
     }
 

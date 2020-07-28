@@ -9,4 +9,8 @@ public class Action extends Card {
         super();
         addKeywords(Keyword.ACTION);
     }
+
+    public Action(Action action) {
+        super(action);
+    }
 }

@@ -12,6 +12,13 @@ public class Monster extends Card {
         addKeywords(Keyword.CREATURE);
     }
 
+    public Monster(Monster card) {
+        super(card);
+        addKeywords(Keyword.CREATURE);
+        this.xp = card.xp;
+        this.gold = card.gold;
+    }
+
     public int getXp() {
         return xp;
     }

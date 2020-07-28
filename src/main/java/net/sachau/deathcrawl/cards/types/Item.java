@@ -9,4 +9,9 @@ public class Item extends Card {
         super();
         addKeywords(Keyword.ITEM);
     }
+
+    public Item(Item card) {
+        super(card);
+        addKeywords(Keyword.ITEM);
+    }
 }

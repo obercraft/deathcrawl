@@ -34,8 +34,12 @@ public class DeckPane extends ScrollPane {
 
 
         for (Card card : deck.getCards()) {
-            container.getChildren()
-                    .add(CardTileCache.getTile(card));
+            try {
+                container.getChildren()
+                        .add(CardTileCache.getTile(card));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         deck.getCards()
@@ -48,7 +52,6 @@ public class DeckPane extends ScrollPane {
                                 for (Card c : change.getAddedSubList()) {
                                     container.getChildren()
                                             .add(CardTileCache.getTile(c));
-                                    Logger.debug("" + container.getChildren().size());
                                 }
                             }
 

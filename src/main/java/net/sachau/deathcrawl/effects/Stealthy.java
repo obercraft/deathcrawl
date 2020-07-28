@@ -14,4 +14,9 @@ public class Stealthy extends CardEffect {
     public void trigger(Card sourceCard, Card targetCard) {
         targetCard.getConditions().add(new Stealthy());
     }
+
+    @Override
+    public void remove(Card card) {
+
+    }
 }

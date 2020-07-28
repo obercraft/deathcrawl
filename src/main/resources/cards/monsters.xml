@@ -2,23 +2,42 @@
 <!DOCTYPE cards SYSTEM "cards.dtd">
 <cards>
     <card>
-        <name uniqueId="Thief">Kobold</name>
+        <name>Kobold</name>
         <type>Monster</type>
         <hits>3</hits>
         <damage>1</damage>
         <experience>1</experience>
         <gold>1</gold>
+        <command>attack</command>
         <flavor>A Kobold!</flavor>
     </card>
 
     <card>
-        <name uniqueId="Thief">Goblin</name>
+        <name>Goblin</name>
+        <type>Monster</type>
+        <hits>3</hits>
+        <damage>1</damage>
+        <experience>2</experience>
+        <gold>1</gold>
+        <command>attack</command>
+        <keywords>goblin</keywords>
+        <flavor>A Goblin!</flavor>
+    </card>
+
+    <card>
+        <name>Goblin Leader</name>
         <type>Monster</type>
         <hits>4</hits>
         <damage>2</damage>
-        <experience>2</experience>
-        <gold>1</gold>
-        <flavor>A Goblin!</flavor>
+        <experience>3</experience>
+        <gold>2</gold>
+        <command>attack</command>
+        <keywords>goblin</keywords>
+        <effects>
+            <effect event="STARTENCOUNTER">GoblinLeader</effect>
+        </effects>
+        <flavor>A Goblin Leader!</flavor>
     </card>
+
 
 </cards>

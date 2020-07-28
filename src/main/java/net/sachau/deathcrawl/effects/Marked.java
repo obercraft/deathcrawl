@@ -15,7 +15,10 @@ public class Marked extends CardEffect {
         if (sourceCard != null) {
             amount = Math.max(1, sourceCard.getDamage());
         }
+    }
 
+    @Override
+    public void remove(Card card) {
 
     }
 }

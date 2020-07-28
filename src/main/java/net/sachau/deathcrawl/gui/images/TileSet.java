@@ -32,6 +32,9 @@ public class TileSet {
     }
 
     public ImageView getTile(Tile tile) {
+        if (tile == null) {
+            return null;
+        }
         WritableImage writableImage = readImage(tile.getX(), tile.getY());
         ImageView imageView = new ImageView(writableImage);
         if (tile.getHeight() != Tile.HEIGHT || tile.getWidth() != Tile.WIDTH) {

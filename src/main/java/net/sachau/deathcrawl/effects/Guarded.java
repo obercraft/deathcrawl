@@ -14,4 +14,9 @@ public class Guarded extends CardEffect {
     public void trigger(Card sourceCard, Card targetCard) {
         targetCard.getConditions().add(new Guarded());
     }
+
+    @Override
+    public void remove(Card card) {
+
+    }
 }

@@ -33,7 +33,7 @@ public class CardDesignPane extends VBox {
         VBox nameband = new VBox();
 
         nameband.getStyleClass().add("card-nameband");
-        Text name = new Text(card.getName());
+        Text name = new Text(card.toString());
         name.getStyleClass().add("card-nameband-text");
         Tooltip keywords = new Tooltip(card.getCardKeyWords());
         Tooltip.install(name, keywords);

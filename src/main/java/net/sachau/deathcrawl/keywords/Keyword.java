@@ -16,7 +16,7 @@ public enum Keyword {
     POTION (true),
     SPELL (true),
     MONSTER, CREATURE, ACTION, MOMENTUM,
-    RANGED(true), PERMANENT();
+    RANGED(true), PERMANENT(), GOBLIN();
 
     private boolean onCard;
 

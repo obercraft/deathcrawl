@@ -6,7 +6,7 @@ import javafx.scene.layout.StackPane;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.types.Character;
+import net.sachau.deathcrawl.cards.types.StartingCharacter;
 import net.sachau.deathcrawl.keywords.Keyword;
 
 import java.util.Observer;
@@ -66,7 +66,7 @@ public abstract class CardView extends StackPane implements Observer {
       @Override
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         if (card.getHits() <= 0) {
-          if (card instanceof Character) {
+          if (card instanceof StartingCharacter) {
             Game.events().send(Event.CHARACTERDEATH);
           } else {
             card.getDeck()

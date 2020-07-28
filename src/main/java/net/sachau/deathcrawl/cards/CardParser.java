@@ -1,7 +1,9 @@
 package net.sachau.deathcrawl.cards;
 
 import net.sachau.deathcrawl.Event;
-import net.sachau.deathcrawl.cards.types.Character;
+import net.sachau.deathcrawl.Utils;
+import net.sachau.deathcrawl.cards.catalog.Catalog;
+import net.sachau.deathcrawl.cards.types.StartingCharacter;
 import net.sachau.deathcrawl.cards.types.EventDeck;
 import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.effects.CardEffect;
@@ -70,7 +72,8 @@ public class CardParser {
                     .item(a);
             if (cardNode.getNodeName()
                     .equals("type")) {
-                cardType = cardNode.getTextContent().trim();
+                cardType = cardNode.getTextContent()
+                        .trim();
             }
         }
 
@@ -80,7 +83,6 @@ public class CardParser {
             if (clazz.getSimpleName()
                     .toLowerCase()
                     .matches(cardType.toLowerCase())) {
-                System.out.println(clazz.getSimpleName());
                 card = clazz.newInstance();
             }
         }
@@ -90,7 +92,6 @@ public class CardParser {
                 .getLength(); a++) {
             Node cardNode = node.getChildNodes()
                     .item(a);
-
 
 
             if (cardNode.getNodeName()
@@ -120,10 +121,24 @@ public class CardParser {
                     .equals("deck")) {
                 if (card instanceof EventDeck) {
                     EventDeck eventDeck = (EventDeck) card;
-                    String [] cards = cardNode.getTextContent().trim().split(",", -1);
+                    eventDeck.getDeck()
+                            .setVisible(true);
+                    String[] cards = cardNode.getTextContent()
+                            .trim()
+                            .split(",", -1);
                     for (String cardName : cards) {
-                        eventDeck.getDeck().add(Cards.get(cardName));
+
+                        try {
+                            Card c = Catalog.getInstance()
+                                    .get(cardName);
+                            eventDeck.getDeck()
+                                    .add(Utils.copyCard(c));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                    eventDeck.getDeck()
+                            .setVisible(true);
                 }
             }
 
@@ -171,16 +186,21 @@ public class CardParser {
 
             if (cardNode.getNodeName()
                     .equals("starting-cards")) {
-                if (card instanceof Character) {
+                if (card instanceof StartingCharacter) {
 
                     String[] cards = cardNode.getTextContent()
                             .trim()
                             .split(",", -1);
-                    Character characterCard = (Character) card;
-                    characterCard.setStartingCards(new Deck());
+                    StartingCharacter startingCharacterCard = (StartingCharacter) card;
+                    startingCharacterCard.setStartingCards(new Deck());
                     for (String startingCard : cards) {
-                        characterCard.getStartingCards()
-                                .add(Cards.get(startingCard));
+                        try {
+                            startingCharacterCard.getStartingCards()
+                                    .add(Utils.copyCard(Catalog.getInstance()
+                                            .get(startingCard)));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
@@ -204,10 +224,8 @@ public class CardParser {
                 NodeList effectNodes = cardNode.getChildNodes();
                 if (effectNodes.getLength() > 0) {
                     for (int i = 0; i < effectNodes.getLength(); i++) {
-                        NodeList childNodes = effectNodes.item(0)
-                                .getChildNodes();
-                        for (int j = 0; j < childNodes.getLength(); j++) {
-                            Node effectNode = childNodes.item(j);
+                        Node effectNode = effectNodes.item(i);
+                        if ("effect".equals(effectNode.getNodeName())) {
                             if (effectNode.getAttributes() != null) {
                                 for (int k = 0; k < effectNode.getAttributes()
                                         .getLength(); k++) {
@@ -279,7 +297,9 @@ public class CardParser {
 
         }
         if (card != null) {
-            Cards.put(card);
+
+            Catalog.getInstance()
+                    .add(card);
         }
         return card;
     }

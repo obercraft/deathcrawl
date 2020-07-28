@@ -10,6 +10,14 @@ public class Horse extends Card {
 
 	public Horse() {
 		super( 0, 1);
+		init();
+	}
+
+	public Horse(Horse card) {
+		super(card);
+	}
+
+	private void init() {
 		addKeywords(Keyword.SIMPLE, Keyword.ITEM, Keyword.PERMANENT);
 
 		setCommand("play_to_party");
@@ -24,8 +32,13 @@ public class Horse extends Card {
 					p.setMomentum(m);
 				}
 			}
+
+			@Override
+			public void remove(Card card) {
+
+			}
 		});
 
-	}
 
+	}
 }

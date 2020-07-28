@@ -9,4 +9,9 @@ public class Spell extends Card {
         super();
         addKeywords(Keyword.SPELL);
     }
+
+    public Spell(Spell card) {
+        super(card);
+        addKeywords(Keyword.SPELL);
+    }
 }

@@ -13,4 +13,9 @@ public class Armored extends CardEffect {
     public void trigger(Card sourceCard, Card targetCard) {
         targetCard.getConditions().add(new Armored());
     }
+
+    @Override
+    public void remove(Card card) {
+
+    }
 }

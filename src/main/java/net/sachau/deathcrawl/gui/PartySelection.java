@@ -6,14 +6,12 @@ import javafx.scene.layout.VBox;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.CardParser;
-import net.sachau.deathcrawl.cards.Cards;
-import net.sachau.deathcrawl.cards.types.Character;
+import net.sachau.deathcrawl.cards.catalog.Catalog;
+import net.sachau.deathcrawl.cards.types.StartingCharacter;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardSelect;
 import net.sachau.deathcrawl.gui.card.CardTile;
-import org.reflections.Reflections;
 
 import java.util.*;
 
@@ -42,19 +40,15 @@ public class PartySelection extends VBox implements Observer {
         HBox available = new HBox();
         availableScroll.setContent(available);
 
+         
+        
         DeckPane partyArea = new DeckPane(player.getParty(), length);
         try {
-            List<Card> allCards = CardParser.parse(this.getClass()
-                    .getResourceAsStream("/cards/cards.xml"));
-            Cards.addToAll(allCards);
-
-            List<Card> monsters = CardParser.parse(this.getClass()
-                    .getResourceAsStream("/cards/monsters.xml"));
-            Cards.addToAll(monsters);
-
-            List<Card> basic = CardParser.parse(this.getClass().getResourceAsStream("/cards/starting-characters.xml"));
+            Catalog.init();
+            List<Card> basic = Catalog.getInstance()
+                    .get(StartingCharacter.class);
             for (Card b : basic) {
-                Character card = (Character) b;
+                StartingCharacter card = (StartingCharacter) b;
                 card.setVisible(true);
                 available.getChildren().add(new CardSelect(this, card, player.getParty()));
                 availableCharacters.add(card);

@@ -17,6 +17,7 @@ public abstract class CardEffect implements Serializable {
 		super();
 	}
 	abstract public void trigger(Card sourceCard, Card targetCard);
+	abstract public void remove(Card card);
 
 	public Tile getTile() {
 		return tile;

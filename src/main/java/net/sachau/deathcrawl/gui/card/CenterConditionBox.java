@@ -19,7 +19,10 @@ public class CenterConditionBox extends StackPane {
         HBox items = new HBox();
         items.getStyleClass().add("value-bottom-center");
         for (CardEffect condition : card.getConditions()) {
-            items.getChildren().add(new ConditionItem(condition));
+            if (condition.getTile() != null) {
+                items.getChildren()
+                        .add(new ConditionItem(condition));
+            }
         }
 
         getChildren().add(items);
@@ -27,15 +30,22 @@ public class CenterConditionBox extends StackPane {
         card.conditionsProperty().addListener(new ChangeListener<ObservableSet<CardEffect>>() {
             @Override
             public void changed(ObservableValue<? extends ObservableSet<CardEffect>> observable, ObservableSet<CardEffect> oldValue, ObservableSet<CardEffect> newValue) {
-                items.getChildren().remove(0, getChildren().size());
 
-                if (newValue != null || newValue.size() > 0) {
-                    for (CardEffect c : newValue) {
-                        items.getChildren().add(new ConditionItem(c));
+                if (oldValue != null && oldValue.size() > 0) {
+                    if (getChildren().size() > 0) {
+                        items.getChildren()
+                                .remove(0, getChildren().size());
                     }
                 }
 
-
+                if (newValue != null && newValue.size() > 0) {
+                    for (CardEffect c : newValue) {
+                        if (c.getTile() != null) {
+                            items.getChildren()
+                                    .add(new ConditionItem(c));
+                        }
+                    }
+                }
             }
         });
     }

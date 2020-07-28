@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
+import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
@@ -20,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
-public abstract class Card implements Cloneable {
+public abstract class Card {
 
     private long id;
     private String name;
@@ -46,6 +47,46 @@ public abstract class Card implements Cloneable {
         this.effects = new HashMap<>();
         ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
         this.conditions = new SimpleSetProperty<>(observableSet);
+    }
+
+    public Card(Card card) {
+        super();
+        this.id = Game.createId();
+        this.effects = new HashMap<>();
+        this.name = card.name;
+        this.uniqueId = card.uniqueId;
+        if (card.effects != null) {
+            this.effects = new HashMap<>();
+            for (Map.Entry<Event, List<CardEffect>> entry : card.effects.entrySet()) {
+                this.effects.put(entry.getKey(), entry.getValue());
+            }
+        }
+        this.keywords = new Keywords();
+        if (card.keywords != null) {
+            for (Keyword kw : card.getKeywords()) {
+                this.keywords.add(kw);
+            }
+        }
+
+        this.command = card.command;
+
+        this.setDamage(card.getDamage());
+        this.setMaxDamage(card.getMaxDamage());
+        this.setHits(card.getHits());
+        this.setMaxHits(card.getMaxHits());
+        this.setVisible(card.isVisible());
+
+        this.owner = card.owner;
+        this.deck = card.deck;
+
+        ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
+        this.conditions = new SimpleSetProperty<>(observableSet);
+        if (card.conditions != null) {
+            for (CardEffect condition : card.conditions) {
+                this.conditions.add(condition);
+            }
+        }
+
     }
 
     public Card(int initialHits, int initialDamage) {
@@ -127,19 +168,18 @@ public abstract class Card implements Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return id == card.id;
+        return id == card.id &&
+                name.equals(card.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name);
     }
 
     @Override
     public String toString() {
-        return "Card{" +
-                "id=" + id +
-                '}';
+        return "[" + name + '@' + id + "]";
     }
 
     public int getHits() {
@@ -155,6 +195,8 @@ public abstract class Card implements Cloneable {
     }
 
     public boolean attack(Card target, int attack) {
+
+        Logger.debug(this + " attacks " + target + " for " + attack);
 
         if (target == null) {
             return false;
@@ -195,6 +237,9 @@ public abstract class Card implements Cloneable {
                 int xp = mc.getXp() + owner.getXp();
                 owner.setXp(xp);
 
+                for (CardEffect ce : target.getConditions()) {
+                    ce.remove(target);
+                }
             }
         }
         return true;
@@ -386,12 +431,6 @@ public abstract class Card implements Cloneable {
 
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
-    }
-
-    protected Object clone() throws CloneNotSupportedException {
-        Card clone = (Card) super.clone();
-        clone.setId(Game.createId());
-        return clone;
     }
 
     public ObservableSet<CardEffect> getConditions() {

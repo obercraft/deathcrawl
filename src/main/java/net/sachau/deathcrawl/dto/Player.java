@@ -1,17 +1,12 @@
 package net.sachau.deathcrawl.dto;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import net.sachau.deathcrawl.Event;
-import net.sachau.deathcrawl.Game;
-import net.sachau.deathcrawl.GameAI;
+import net.sachau.deathcrawl.*;
 import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.Cards;
 import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.cards.types.Character;
+import net.sachau.deathcrawl.cards.catalog.Catalog;
+import net.sachau.deathcrawl.cards.types.StartingCharacter;
 import net.sachau.deathcrawl.cards.types.EventDeck;
-import net.sachau.deathcrawl.cards.types.Monster;
-import net.sachau.deathcrawl.effects.Armored;
-import net.sachau.deathcrawl.effects.Guarded;
 import net.sachau.deathcrawl.gui.map.MapCoord;
 import net.sachau.deathcrawl.keywords.Keyword;
 
@@ -160,9 +155,9 @@ public class Player extends Creature implements Observer {
 		for (Keyword k : keywords) {
 
 			for (Card card : getParty().getCards()) {
-				if (card instanceof Character) {
-					Character character = (Character) card;
-					if (character.getKeywords()
+				if (card instanceof StartingCharacter) {
+					StartingCharacter startingCharacter = (StartingCharacter) card;
+					if (startingCharacter.getKeywords()
 							.contains(k)) {
 						foundKeywords.add(k);
 						if (keywords.size() == foundKeywords.size()) {
@@ -214,32 +209,35 @@ public class Player extends Creature implements Observer {
 				return;
 			case STARTENCOUNTER:
 
-				List<Card> eventCards = Cards.getByType(EventDeck.class);
+				List<Card> eventCards = Catalog.getInstance().get(EventDeck.class);
 
 				Deck hazards = new Deck();
-
-				for (int i = 0; i < 3; i++) {
-					Monster goblin = (Monster) Cards.get("Goblin");
-					goblin.setVisible(true);
-					if (i == 0) {
-						goblin.getConditions()
-								.add(new Armored());
-					} else if (i == 1) {
-						goblin.getConditions()
-								.add(new Guarded());
-						goblin.getConditions().add(new Armored());
+				hazards.setVisible(true);
+				for (Card card : eventCards.get(0).getDeck().getCards()) {
+					try {
+						hazards.add(Utils.copyCard(card));
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					hazards.add(goblin);
 				}
 				setHazard(hazards);
+
+				for (Card card : getParty().getCards()) {
+					card.triggerPhaseEffects(Event.STARTENCOUNTER);
+				}
+
+				for (Card card : getHazard().getCards()) {
+					card.triggerPhaseEffects(Event.STARTENCOUNTER);
+				}
+
 				Game.events().send(Event.STARTENCOUNTERVIEW);
 				Game.events().send(Event.STARTCARDPHASE);
 				return;
 
 			case PARTYDONE:
 				for (Card c : getParty().getCards()) {
-					Character character = (Character) c;
-					for (Card startingCard : character.getStartingCards().getCards()) {
+					StartingCharacter startingCharacter = (StartingCharacter) c;
+					for (Card startingCard : startingCharacter.getStartingCards().getCards()) {
 						startingCard.setOwner(this);
 						getDraw().add(startingCard);
 					}
@@ -274,15 +272,17 @@ public class Player extends Creature implements Observer {
 			case CHARACTERDEATH:
 				int totalHealth = 0;
 				for (Card card : getParty().getCards()) {
-					if (card instanceof Character) {
-						totalHealth += card.getHits();
+					if (card instanceof StartingCharacter) {
+						totalHealth += Math.max(0,card.getHits());
 					}
 				}
 				// ALL DEAD
 				if (totalHealth <= 0) {
+					Logger.debug("all characters are dead - game over");
 					Game.events().send(Event.GAMEOVER);
+					return;
 				}
-				return;
+
 		}
 	}
 
@@ -302,25 +302,13 @@ public class Player extends Creature implements Observer {
 		if (amount < 1) {
 			amount = 1;
 		}
-		int limit = Math.min(amount, getHandSize() - getHand().size());
+		int limit = Math.min(amount, getDraw().size());
+		getDraw().draw(getHand(), limit);
 
-		if (limit < getDraw().size()) {
-
-			getDraw().draw(getHand(), limit);
-
-		} else {
-			getDraw().draw(getHand(), getDraw().size());
-			limit = limit - getDraw().size();
-
-			if (limit > 0) {
-				// put discard to draw pile and shuffle
-				getDiscard().moveAll(getDraw());
-				getDraw().shuffe();
-				getDraw().draw(getHand(), getHandSize() - getHand().size());
-
-				// draw again
-				getDraw().draw(getHand(), limit);
-			}
+		if (amount - limit > 0) {
+			getDiscard().moveAll(getDraw());
+			getDraw().shuffe();
+			getDraw().draw(getHand(), Math.min(getDraw().size(), amount - limit));
 		}
 	}
 }
