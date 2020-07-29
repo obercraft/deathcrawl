@@ -7,13 +7,14 @@ import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.cards.catalog.Catalog;
 import net.sachau.deathcrawl.cards.types.StartingCharacter;
 import net.sachau.deathcrawl.cards.types.EventDeck;
+import net.sachau.deathcrawl.effects.CardEffect;
 import net.sachau.deathcrawl.gui.map.MapCoord;
 import net.sachau.deathcrawl.keywords.Keyword;
 
 import java.util.*;
 
 
-public class Player extends Creature implements Observer {
+public class Player extends Creature {
 
 	private Deck party;
 
@@ -38,7 +39,6 @@ public class Player extends Creature implements Observer {
 
 	public Player() {
 		super();
-		Game.events().addObserver(this);
 
 		party = new Deck();
 		party.setVisible(true);
@@ -190,98 +190,7 @@ public class Player extends Creature implements Observer {
 		this.handSize.set(handSize);
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		switch(Game.get(arg)) {
-			case STARTTURN:
-				setMoves(1);
-
-				// trigger events
-				for (Card card : getParty().getCards()) {
-					card.triggerPhaseEffects(Event.STARTTURN);
-				}
-
-				return;
-			case STARTENCOUNTER:
-
-				List<Card> eventCards = Catalog.getInstance().get(EventDeck.class);
-
-				Deck hazards = new Deck();
-				hazards.setVisible(true);
-				for (Card card : eventCards.get(0).getDeck().getCards()) {
-					try {
-						hazards.add(Utils.copyCard(card));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				setHazard(hazards);
-
-				for (Card card : getParty().getCards()) {
-					card.triggerPhaseEffects(Event.STARTENCOUNTER);
-				}
-
-				for (Card card : getHazard().getCards()) {
-					card.triggerPhaseEffects(Event.STARTENCOUNTER);
-				}
-
-				Game.events().send(Event.STARTENCOUNTERVIEW);
-				Game.events().send(Event.STARTCARDPHASE);
-				return;
-
-			case PARTYDONE:
-				for (Card c : getParty().getCards()) {
-					StartingCharacter startingCharacter = (StartingCharacter) c;
-					for (Card startingCard : startingCharacter.getStartingCards().getCards()) {
-						startingCard.setOwner(this);
-						getDraw().add(startingCard);
-					}
-				}
-
-				initHand();
-				return;
-			case ENDCARDPHASE:
-				getDraw().draw(getHand(), getHandSize() - getHand().size());
-
-				// the hand still has open slots
-				if (getHandSize() - getHand().size() > 0) {
-
-					// put discard to draw pile and shuffle
-					getDiscard().moveAll(getDraw());
-					getDraw().shuffe();
-					getDraw().draw(getHand(), getHandSize() - getHand().size());
-
-					// draw again
-					getDraw().draw(getHand(), getHandSize() - getHand().size());
-				}
-				if (getHazard().size() > 0) {
-					GameAI.execute(this);
-					Game.events()
-							.send(Event.STARTCARDPHASE);
-				} else {
-					//GameEvent.events()
-					//		.send(GameEvent.Type.EXPERIENCEPHASE);
-					Game.events().send(Event.STARTTURN);
-				}
-				return;
-			case CHARACTERDEATH:
-				int totalHealth = 0;
-				for (Card card : getParty().getCards()) {
-					if (card instanceof StartingCharacter) {
-						totalHealth += Math.max(0,card.getHits());
-					}
-				}
-				// ALL DEAD
-				if (totalHealth <= 0) {
-					Logger.debug("all characters are dead - game over");
-					Game.events().send(Event.GAMEOVER);
-					return;
-				}
-
-		}
-	}
-
-	private void initHand() {
+	public void initHand() {
 		getDraw().draw(getHand(), getHandSize());
 	}
 
@@ -306,4 +215,24 @@ public class Player extends Creature implements Observer {
 			getDraw().draw(getHand(), Math.min(getDraw().size(), amount - limit));
 		}
 	}
+
+	public List<Card> getPartyCardsWithKeywords(Set<Keyword> wantedKeywords) {
+		List<Card> cards = new LinkedList<>();
+		for (Card card : getParty().getCards()) {
+			if (card.hasAllKeywords(wantedKeywords)) {
+				cards.add(card);
+			}
+		}
+		return cards;
+	}
+
+	public boolean isAll(List<Card> partyMembers, Class<? extends CardEffect> effect) {
+		for (Card card : partyMembers) {
+			if (!card.hasCondition(effect)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }

@@ -10,11 +10,14 @@ import net.sachau.deathcrawl.Event;
 import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.types.Monster;
+import net.sachau.deathcrawl.commands.Command;
+import net.sachau.deathcrawl.commands.CommandType;
 import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.effects.Armor;
 import net.sachau.deathcrawl.effects.CardEffect;
 import net.sachau.deathcrawl.effects.Guard;
+import net.sachau.deathcrawl.effects.Prone;
 import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.keywords.Keywords;
 import org.apache.commons.lang3.StringUtils;
@@ -194,24 +197,32 @@ public abstract class Card {
 
     public boolean attack(Card target, int attack) {
 
-        Logger.debug(this + " attacks " + target + " for " + attack);
-
         if (target == null) {
+            Logger.debug("target is null");
             return false;
+        }
+
+        if (hasCondition(Prone.class)) {
+            Logger.debug(this + " is prone");;
+            return false;
+        }
+
+        if (attack <=0) {
+            Logger.debug("damage is less than 1");
+            return true;
         }
 
         Deck targetDeck = target.getDeck();
         for (Card card : targetDeck.getCards()) {
-            if (card.isAlive()) {
-                for (CardEffect cardEffect : card.getConditions()) {
-                    if (cardEffect instanceof Guard && card.getId() != target.getId()) {
-                        return false;
-                    }
-                }
+            if (card.isAlive() && card.getId() != target.getId() && card.hasCondition(Armor.class)) {
+                Logger.debug(target + " is guarded by " + card);
+                return false;
             }
         }
 
-        if (target.attackArmor()) {
+        if (target.hasCondition(Armor.class)) {
+            target.removeCondition(Armor.class);
+            Logger.debug(target + " saved by armor");
             return true;
         }
 
@@ -222,7 +233,10 @@ public abstract class Card {
         }
 
         target.setHits(hits);
+        Logger.debug(target + " hit for " + attack + " damage");
         if (hits <= 0) {
+
+            Logger.debug(target + " killed");
 
             if (target instanceof Monster && owner != null) {
                 Monster mc = (Monster) target;
@@ -231,9 +245,7 @@ public abstract class Card {
                 int xp = mc.getXp() + owner.getXp();
                 owner.setXp(xp);
 
-                for (CardEffect ce : target.getConditions()) {
-                    ce.remove(target);
-                }
+                Logger.debug(owner + " gains " + gold + " gold & " + xp + " XP");
             }
         }
         return true;
@@ -259,7 +271,30 @@ public abstract class Card {
         }
     }
 
-    public boolean isPlayable() {
+    public boolean isPlayable(Player player) {
+
+
+        List<Card> playableMembers = player.getPartyCardsWithKeywords(getKeywords());
+
+        if (playableMembers.size() == 0) {
+            Logger.debug("no party-member support keywords "+ getCardKeyWords());
+            return false;
+        }
+
+        CommandType commandType = Command.getType(getCommand());
+        switch (commandType) {
+            default:
+            case ACTION:
+                break;
+            case SPELL:
+                break;
+            case ATTACK:
+                if (!player.isAll(playableMembers, Prone.class)) {
+                    return false;
+                }
+                break;
+        }
+
         if (keywords.contains(Keyword.SIMPLE)) {
             return true;
         }
@@ -345,21 +380,6 @@ public abstract class Card {
         return false;
     }
 
-    public boolean attackArmor() {
-        CardEffect armor = null;
-        for (CardEffect e : getConditions()) {
-            if (e instanceof Armor) {
-                armor = e;
-                break;
-            }
-        }
-        if (armor != null) {
-            conditions.remove(armor);
-            return true;
-        }
-        return false;
-    }
-
     public String getCardKeyWords() {
         if (this.getKeywords() == null) {
             return "";
@@ -386,6 +406,20 @@ public abstract class Card {
         }
         return false;
     }
+
+    public CardEffect removeCondition(Class<? extends CardEffect> clazz) {
+        CardEffect removeCondition = null;
+        for (CardEffect cardEffect : getConditions()) {
+            if (cardEffect.getClass().equals(clazz)) {
+                removeCondition = cardEffect;
+            }
+        }
+        if (removeCondition != null) {
+            getConditions().remove(removeCondition);
+        }
+        return removeCondition;
+    }
+
 
     public boolean isAlive() {
         return getHits() > 0;
@@ -426,5 +460,8 @@ public abstract class Card {
         this.conditions.set(conditions);
     }
 
+    public  boolean hasKeyword(Keyword keyword) {
+        return this.getKeywords().contains(keyword);
+    }
 }
 

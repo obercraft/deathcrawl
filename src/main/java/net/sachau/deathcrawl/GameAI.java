@@ -13,58 +13,63 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class GameAI extends Observable {
 
+    @Deprecated
     public static void execute(Player player) {
 
-        for (Card card : player.getHazard().getCards()) {
+        for (Card card : player.getHazard()
+                .getCards()) {
+            execute(player, card);
+        }
 
-            if (card instanceof Monster) {
-                Monster monsterCard = (Monster) card;
+    }
 
-                if (monsterCard.isRanged()) {
-                    int randomNum = ThreadLocalRandom.current()
-                            .nextInt(0, player.getParty().size());
+    public static void execute(Player player, Card card) {
+        if (card instanceof Monster) {
+            Monster monsterCard = (Monster) card;
 
-                    Card target = player.getParty().getCards().get(randomNum);
+            if (monsterCard.isRanged()) {
+                int randomNum = ThreadLocalRandom.current()
+                        .nextInt(0, player.getParty().size());
 
-                    CommandParser.executeCommand(monsterCard, target);
-                } else {
+                Card target = player.getParty().getCards().get(randomNum);
 
-                    Card target = null;
+                CommandParser.executeCommand(monsterCard, target);
+            } else {
 
-                    // first check for guards
-                    for (Card character : player.getParty().getCards()) {
-                        if (character.isAlive() && character.hasCondition(Guard.class)) {
-                            target = character;
-                        }
-                    }
+                Card target = null;
 
-                    // 2. then attack armor
-                    if (target == null) {
-                        for (Card character : player.getParty().getCards()) {
-                            if (character.isAlive() && character.hasCondition(Armor.class)) {
-                                target = character;
-                            }
-                        }
-                    }
-
-                    // 3. attack non-stealth
-                    if (target == null) {
-                        for (Card character : player.getParty().getCards()) {
-                            if (character.isAlive() && !character.hasCondition(Stealth.class)) {
-                                target = character;
-                            }
-                        }
-                    }
-
-                    if (target != null) {
-                        CommandParser.executeCommand(monsterCard, target);
+                // first check for guards
+                for (Card character : player.getParty().getCards()) {
+                    if (character.isAlive() && character.hasCondition(Guard.class)) {
+                        target = character;
                     }
                 }
 
+                // 2. then attack armor
+                if (target == null) {
+                    for (Card character : player.getParty().getCards()) {
+                        if (character.isAlive() && character.hasCondition(Armor.class)) {
+                            target = character;
+                        }
+                    }
+                }
 
+                // 3. attack non-stealth
+                if (target == null) {
+                    for (Card character : player.getParty().getCards()) {
+                        if (character.isAlive() && !character.hasCondition(Stealth.class)) {
+                            target = character;
+                        }
+                    }
+                }
+
+                if (target != null) {
+                    CommandParser.executeCommand(monsterCard, target);
+                }
             }
-        }
 
+
+        }
     }
 
 }

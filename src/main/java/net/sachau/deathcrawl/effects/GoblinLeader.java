@@ -18,7 +18,7 @@ public class GoblinLeader extends CardEffect {
                     if (card instanceof Monster && card.getKeywords().contains(Keyword.GOBLIN)) {
                         int d = card.getDamage() + 1;
                         card.setDamage(d);
-                        card.getConditions().add(new GoblinLeader());
+                        card.getConditions().add(this);
                     }
             }
 

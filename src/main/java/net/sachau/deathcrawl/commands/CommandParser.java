@@ -4,6 +4,7 @@ import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.effects.Armor;
+import net.sachau.deathcrawl.effects.Exhausted;
 import net.sachau.deathcrawl.keywords.Keyword;
 
 public class CommandParser {
@@ -37,7 +38,7 @@ public class CommandParser {
             return false;
         }
 
-        Command command = Command.valueOf(args[0].toUpperCase()
+        Commands command = Commands.valueOf(args[0].toUpperCase()
                 .trim());
 
         switch (command) {
@@ -56,7 +57,7 @@ public class CommandParser {
                 if (target == null) {
                     return false;
                 }
-                if (target.getOwner() instanceof Player) {
+                if (target.getOwner() instanceof Player && source.getOwner() instanceof Player) {
                     return false;
                 }
                 return source.attack(target, source.getDamage());
@@ -143,6 +144,15 @@ public class CommandParser {
                     int g = p.getGold() + 1;
                     p.setGold(g);
                 }
+                return true;
+            }
+
+            case PRONE: {
+
+                return true;
+            }
+            case EXHAUST: {
+                source.getConditions().add(new Exhausted());
                 return true;
             }
 

@@ -24,7 +24,6 @@ public class CardTest {
         char1.setHits(2);
         char1.setMaxHits(2);
         char2.setDamage(2);
-        char2.setMaxDamage(2);
 
 
         Assert.assertNotEquals(char1.getName(), char2.getName());
@@ -32,7 +31,6 @@ public class CardTest {
         Assert.assertNotEquals(char1.getHits(), char2.getHits());
         Assert.assertNotEquals(char1.getMaxHits(), char2.getMaxHits());
         Assert.assertNotEquals(char1.getDamage(), char2.getDamage());
-        Assert.assertNotEquals(char1.getMaxDamage(), char2.getMaxDamage());
 
         Assert.assertEquals(char1.getKeywords(), char1.getKeywords());
         char1.addKeywords(Keyword.SIMPLE);

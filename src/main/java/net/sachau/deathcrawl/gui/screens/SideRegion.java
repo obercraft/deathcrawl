@@ -17,7 +17,7 @@ public class SideRegion extends VBox implements Observer {
     private final Button partyClear;
     private final Button randomParty;
     private final Button encounter;
-    private final Button endCardPhase;
+    private final Button actionDone;
     VBox buttons = new VBox();
 
 
@@ -39,7 +39,7 @@ public class SideRegion extends VBox implements Observer {
 
         randomParty = new Button("RANDOM PARTY");
 
-        endCardPhase = new Button("DONE");
+        actionDone = new Button("NEXT");
 
 
 
@@ -66,8 +66,8 @@ public class SideRegion extends VBox implements Observer {
             Game.events().send(Event.STARTENCOUNTER);
         });
 
-        endCardPhase.setOnMouseClicked(event -> {
-            Game.events().send(Event.ENDCARDPHASE);
+        actionDone.setOnMouseClicked(event -> {
+            Game.events().send(Event.ACTIONDONE);
         });
 
 /*
@@ -165,9 +165,10 @@ public class SideRegion extends VBox implements Observer {
             case STARTENCOUNTER:
                 buttons.getChildren().remove(0, buttons.getChildren().size());
                 return;
+            case NEXTACTION:
             case STARTCARDPHASE:
                 buttons.getChildren().remove(0, buttons.getChildren().size());
-                buttons.getChildren().add(endCardPhase);
+                buttons.getChildren().add(actionDone);
                 return;
             case GAMEOVER:
                 buttons.getChildren().remove(0, buttons.getChildren().size());

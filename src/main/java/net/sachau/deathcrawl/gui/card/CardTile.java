@@ -41,9 +41,9 @@ public class CardTile extends CardView {
 
         setOnDragDetected(event -> {
 
-            if (!card.isPlayable()) {
-                return;
-            }
+            //if (!card.isPlayable()) {
+            //    return;
+            //}
             Dragboard db = this.startDragAndDrop(TransferMode.ANY);
 
             Map<DataFormat, Object> map = new HashMap<>();
@@ -69,11 +69,9 @@ public class CardTile extends CardView {
             Dragboard db = event.getDragboard();
 
             if (db.getContent(cardFormat) != null) {
-
                 CardTile sourceTile = CardTileCache.getTile((Long) db.getContent(cardFormat));
                 Card sourceCard = sourceTile.getCard();
-
-                executeCommand(sourceCard, 0, true);
+                executeCommand(sourceCard, 0, !sourceCard.hasKeyword(Keyword.PERMANENT));
             } else if (db.getContent(momentumFormat) != null) {
                 String[] args = ((String) db.getContent(momentumFormat)).split(",", -1);
                 Card sourceCard = Catalog.getById(new Long(args[0]));

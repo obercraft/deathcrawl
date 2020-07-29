@@ -21,16 +21,6 @@ public class Deck {
         this.cards = new SimpleListProperty<>(observableList);
     }
 
-    public static Deck builder() {
-        return Deck.builder(false);
-    }
-
-    public static Deck builder(boolean visible) {
-        Deck d = new Deck();
-        d.setVisible(visible);
-        return d;
-    }
-
     public Deck add(Card card) {
         if (isVisible()) {
             card.setVisible(true);
@@ -209,4 +199,9 @@ public class Deck {
 
     }
 
+    public void addAll(Deck party) {
+        for (Card c : party.getCards()) {
+            add(c);
+        }
+    }
 }
