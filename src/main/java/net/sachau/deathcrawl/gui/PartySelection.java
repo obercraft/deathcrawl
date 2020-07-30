@@ -3,8 +3,8 @@ package net.sachau.deathcrawl.gui;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import net.sachau.deathcrawl.Event;
-import net.sachau.deathcrawl.Game;
+import net.sachau.deathcrawl.events.Event;
+import net.sachau.deathcrawl.events.GameEvent;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.catalog.Catalog;
 import net.sachau.deathcrawl.cards.types.StartingCharacter;
@@ -28,7 +28,7 @@ public class PartySelection extends VBox implements Observer {
 
     public PartySelection(Player player, int length, String cssClass) {
         super();
-        Game.events().addObserver(this);
+        GameEvent.getInstance().addObserver(this);
         this.player = player;
 
 
@@ -44,14 +44,13 @@ public class PartySelection extends VBox implements Observer {
         
         DeckPane partyArea = new DeckPane(player.getParty(), length, "card-small");
         try {
-            Catalog.init();
             List<Card> basic = Catalog.getInstance()
                     .get(StartingCharacter.class);
             for (Card b : basic) {
                 StartingCharacter card = (StartingCharacter) b;
                 card.setVisible(true);
                 available.getChildren().add(new CardSelect(this, card, player.getParty(), cssClass));
-                availableCharacters.add(card);
+                availableCharacters.add(new StartingCharacter(card));
             }
             getChildren().addAll(available, partyArea);
         } catch (Exception e) {
@@ -75,14 +74,14 @@ public class PartySelection extends VBox implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        switch (Game.get(arg)) {
+        switch (GameEvent.getType(arg)) {
             case RANDOMPARTY:
                 for (int i = 0; i < PARTY_SIZE; i++) {
                     availableCharacters.drawRandom(player.getParty());
                 }
 
-                Game.events().send(Event.PARTYDONE);
-                Game.events().send(Event.STARTTURN);
+                GameEvent.getInstance().send(Event.Type.PARTYDONE);
+                GameEvent.getInstance().send(Event.Type.STARTTURN);
                 return;
             default:
                 return;

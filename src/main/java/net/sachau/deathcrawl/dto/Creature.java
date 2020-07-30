@@ -5,13 +5,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
-import net.sachau.deathcrawl.Game;
 import net.sachau.deathcrawl.effects.CardEffect;
-import net.sachau.deathcrawl.keywords.Keyword;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 public abstract class Creature {
 

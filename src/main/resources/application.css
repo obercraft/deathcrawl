@@ -56,6 +56,13 @@
     -fx-background-color: #FFFFFF;
 }
 
+.active {
+    -fx-background-color: #FF0000;
+}
+. inactive {
+    -fx-background-color: #000000;
+}
+
 .card-nameband {
     -fx-alignment: center;
     height: 20px;
@@ -64,7 +71,6 @@
     -fx-max-width: width;
     -fx-min-height: height;
     -fx-max-height: height;
-    -fx-background-color: #000000;
 }
 
 .card-nameband-text {

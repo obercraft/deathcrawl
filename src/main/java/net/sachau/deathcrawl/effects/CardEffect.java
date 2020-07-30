@@ -1,22 +1,23 @@
 package net.sachau.deathcrawl.effects;
 
 
-import net.sachau.deathcrawl.Event;
+import net.sachau.deathcrawl.GameEngine;
+import net.sachau.deathcrawl.events.Event;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.gui.images.Tile;
 
-import java.io.Serializable;
 import java.util.Objects;
-import java.util.Set;
 
 public abstract class CardEffect {
 
+	private long id;
 	private Tile tile;
 	private int amount = 1;
 	private Event ends;
 
 	public CardEffect() {
 		super();
+		id = GameEngine.createId();
 	}
 	abstract public void trigger(Card sourceCard, Card targetCard);
 	abstract public void remove(Card card);
@@ -39,15 +40,19 @@ public abstract class CardEffect {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null) {
-			return false;
-		} else {
-			return o.getClass().equals(this.getClass());
-		}
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CardEffect that = (CardEffect) o;
+		return id == that.id;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.getClass());
+		return Objects.hash(id);
 	}
+
+	public long getId() {
+		return id;
+	}
+
 }

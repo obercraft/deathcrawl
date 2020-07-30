@@ -6,17 +6,16 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
-import net.sachau.deathcrawl.Event;
-import net.sachau.deathcrawl.Game;
+import net.sachau.deathcrawl.effects.Exhausted;
+import net.sachau.deathcrawl.events.Event;
+import net.sachau.deathcrawl.GameEngine;
 import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.commands.Command;
 import net.sachau.deathcrawl.commands.CommandType;
 import net.sachau.deathcrawl.dto.Creature;
 import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.effects.Armor;
 import net.sachau.deathcrawl.effects.CardEffect;
-import net.sachau.deathcrawl.effects.Guard;
 import net.sachau.deathcrawl.effects.Prone;
 import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.keywords.Keywords;
@@ -29,7 +28,7 @@ public abstract class Card {
     private long id;
     private String name;
     private String uniqueId;
-    private Map<Event, List<CardEffect>> effects;
+    private Map<Event.Type, List<CardEffect>> effects;
     private Keywords keywords = new Keywords();
     private String command;
 
@@ -37,6 +36,7 @@ public abstract class Card {
     private SimpleIntegerProperty hits = new SimpleIntegerProperty(1);
     private SimpleIntegerProperty maxHits = new SimpleIntegerProperty(1);
     private SimpleBooleanProperty visible = new SimpleBooleanProperty();
+    private SimpleBooleanProperty active = new SimpleBooleanProperty(false);
 
     private Creature owner;
     private Deck deck;
@@ -45,21 +45,46 @@ public abstract class Card {
     public Card() {
         super();
         initHits(1);
-        this.id = Game.createId();
+        this.id = GameEngine.createId();
         this.effects = new HashMap<>();
         ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
         this.conditions = new SimpleSetProperty<>(observableSet);
+
+        this.hitsProperty().addListener(new HitsListener(this));
+//        Card card = this;
+//        this.hitsProperty().addListener(new ChangeListener<Number>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+//                if (newValue != null && newValue.intValue() <= 0) {
+//
+//                    Logger.debug(card + " killed");
+//
+//
+//                    if (card instanceof Monster && owner != null) {
+//                        Monster mc = (Monster) card;
+//                        int gold = mc.getGold() + owner.getGold();
+//                        owner.setGold(gold);
+//                        int xp = mc.getXp() + owner.getXp();
+//                        owner.setXp(xp);
+//
+//                        Logger.debug(owner + " gains " + gold + " gold & " + xp + " XP");
+//                    }
+//                    GameEvent.getInstance().send(new Event(Event.Type.CHARACTERDEATH, card));
+//                }
+//
+//            }
+//        });
     }
 
     public Card(Card card) {
         super();
-        this.id = Game.createId();
+        this.id = GameEngine.createId();
         this.effects = new HashMap<>();
         this.name = card.name;
         this.uniqueId = card.uniqueId;
         if (card.effects != null) {
             this.effects = new HashMap<>();
-            for (Map.Entry<Event, List<CardEffect>> entry : card.effects.entrySet()) {
+            for (Map.Entry<Event.Type, List<CardEffect>> entry : card.effects.entrySet()) {
                 this.effects.put(entry.getKey(), entry.getValue());
             }
         }
@@ -88,24 +113,27 @@ public abstract class Card {
             }
         }
 
+        this.setActive(card.isActive());
+
+        this.hitsProperty().addListener(new HitsListener(this));
     }
 
     public Card(int initialHits, int initialDamage) {
         super();
         initHits(initialHits);
         initDamage(initialDamage);
-        this.id = Game.createId();
+        this.id = GameEngine.createId();
         this.effects = new HashMap<>();
         ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
         this.conditions = new SimpleSetProperty<>(observableSet);
 
     }
 
-    private List<CardEffect> getPhaseEffects(Event event) {
+    private List<CardEffect> getPhaseEffects(Event.Type event) {
         return effects.get(event) != null ? effects.get(event) : new LinkedList<>();
     }
 
-    public void triggerPhaseEffects(Event event) {
+    public void triggerPhaseEffects(Event.Type event) {
         List<CardEffect> phaseCardEffects = getPhaseEffects(event);
         if (phaseCardEffects != null) {
             for (CardEffect e : phaseCardEffects) {
@@ -115,7 +143,7 @@ public abstract class Card {
     }
 
 
-    public void addEffect(Event event, CardEffect cardEffect) {
+    public void addEffect(Event.Type event, CardEffect cardEffect) {
         if (effects.get(event) == null) {
             effects.put(event, new LinkedList<>());
         }
@@ -124,7 +152,7 @@ public abstract class Card {
 
     }
 
-    public void setEffects(Map<Event, List<CardEffect>> effects) {
+    public void setEffects(Map<Event.Type, List<CardEffect>> effects) {
         this.effects = effects;
     }
 
@@ -234,23 +262,11 @@ public abstract class Card {
 
         target.setHits(hits);
         Logger.debug(target + " hit for " + attack + " damage");
-        if (hits <= 0) {
-
-            Logger.debug(target + " killed");
-
-            if (target instanceof Monster && owner != null) {
-                Monster mc = (Monster) target;
-                int gold = mc.getGold() + owner.getGold();
-                owner.setGold(gold);
-                int xp = mc.getXp() + owner.getXp();
-                owner.setXp(xp);
-
-                Logger.debug(owner + " gains " + gold + " gold & " + xp + " XP");
-            }
-        }
         return true;
 
     }
+
+
 
 
     public Deck getDeck() {
@@ -271,48 +287,34 @@ public abstract class Card {
         }
     }
 
-    public boolean isPlayable(Player player) {
+    public boolean isPlayable() {
 
-
-        List<Card> playableMembers = player.getPartyCardsWithKeywords(getKeywords());
-
-        if (playableMembers.size() == 0) {
-            Logger.debug("no party-member support keywords "+ getCardKeyWords());
+        if (this.hasCondition(Exhausted.class)) {
+            Logger.debug(this + " is exhausted");
             return false;
         }
 
-        CommandType commandType = Command.getType(getCommand());
-        switch (commandType) {
-            default:
-            case ACTION:
-                break;
-            case SPELL:
-                break;
-            case ATTACK:
-                if (!player.isAll(playableMembers, Prone.class)) {
-                    return false;
-                }
-                break;
-        }
-
-        if (keywords.contains(Keyword.SIMPLE)) {
+        if (this.isActive()) {
             return true;
         }
+        Card currentCard = GameEngine.getInstance().getCurrentCard();
+        if (currentCard != null) {
 
-        if (owner == null) {
-            return false;
-        }
-
-        if (owner instanceof Player) {
-            Set<Keyword> kwords = ((Player) owner).getParty()
-                    .getKeywords();
-            for (Keyword cardKeyword : this.keywords) {
-                if (kwords.contains(cardKeyword)) {
-                    return true;
-                }
+            if (this.getKeywords().contains(Keyword.SIMPLE)) {
+                return true;
+            } else {
+                return currentCard.hasOneKeyword(this.getKeywords());
             }
         }
+        return false;
+    }
 
+    public boolean hasOneKeyword(Keywords keywords) {
+        for (Keyword kw : keywords) {
+            if (getKeywords().contains(kw)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -380,13 +382,13 @@ public abstract class Card {
         return false;
     }
 
-    public String getCardKeyWords() {
+    public String getCardKeyWords(boolean all) {
         if (this.getKeywords() == null) {
             return "";
         }
         Set<String> words = new TreeSet<>();
         for (Keyword k : this.getKeywords()) {
-            if (k.isOnCard()) {
+            if (all || k.isOnCard()) {
                 words.add(k.name());
             }
         }
@@ -407,6 +409,21 @@ public abstract class Card {
         return false;
     }
 
+    public CardEffect removeCondition(CardEffect effect) {
+        CardEffect removeCondition = null;
+        for (CardEffect cardEffect : getConditions()) {
+            if (cardEffect == effect) {
+                removeCondition = cardEffect;
+            }
+        }
+        if (removeCondition != null) {
+            removeCondition.remove(this);
+            getConditions().remove(removeCondition);
+        }
+        return removeCondition;
+    }
+
+
     public CardEffect removeCondition(Class<? extends CardEffect> clazz) {
         CardEffect removeCondition = null;
         for (CardEffect cardEffect : getConditions()) {
@@ -415,6 +432,7 @@ public abstract class Card {
             }
         }
         if (removeCondition != null) {
+            removeCondition.remove(this);
             getConditions().remove(removeCondition);
         }
         return removeCondition;
@@ -463,5 +481,19 @@ public abstract class Card {
     public  boolean hasKeyword(Keyword keyword) {
         return this.getKeywords().contains(keyword);
     }
+
+    public boolean isActive() {
+        return active.get();
+    }
+
+    public SimpleBooleanProperty activeProperty() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active.set(active);
+    }
+
+
 }
 

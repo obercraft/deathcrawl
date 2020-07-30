@@ -2,9 +2,9 @@ package net.sachau.deathcrawl.gui.screens;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import net.sachau.deathcrawl.Event;
-import net.sachau.deathcrawl.Game;
-import net.sachau.deathcrawl.Logger;
+import net.sachau.deathcrawl.events.Event;
+
+import net.sachau.deathcrawl.events.GameEvent;
 import net.sachau.deathcrawl.dto.Player;
 
 import java.util.Observable;
@@ -25,7 +25,7 @@ public class SideRegion extends VBox implements Observer {
     public SideRegion(Player player) {
         super();
         this.player = player;
-        Game.events().addObserver(this);
+        GameEvent.getInstance().addObserver(this);
 
         setMaxWidth(200);
         buttons.setMinHeight(400);
@@ -45,7 +45,7 @@ public class SideRegion extends VBox implements Observer {
 
         buttons.getChildren().add(newGame);
 
-        getChildren().addAll(buttons, Logger.getConsole());
+        getChildren().addAll(buttons);
 
 
         partyClear = new Button();
@@ -55,19 +55,19 @@ public class SideRegion extends VBox implements Observer {
 
 
         newGame.setOnMouseClicked(event -> {
-            Game.events().send(Event.NEWGAME);
+            GameEvent.getInstance().send(Event.Type.NEWGAME);
         });
 
         randomParty.setOnMouseClicked(event -> {
-            Game.events().send(Event.RANDOMPARTY);
+            GameEvent.getInstance().send(Event.Type.RANDOMPARTY);
         });
 
         encounter.setOnMouseClicked(event -> {
-            Game.events().send(Event.STARTENCOUNTER);
+            GameEvent.getInstance().send(Event.Type.STARTENCOUNTER);
         });
 
         actionDone.setOnMouseClicked(event -> {
-            Game.events().send(Event.ACTIONDONE);
+            GameEvent.getInstance().send(Event.Type.PLAYERACTIONDONE);
         });
 
 /*
@@ -152,7 +152,7 @@ public class SideRegion extends VBox implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        switch (Game.get(arg)) {
+        switch (GameEvent.getType(arg)) {
             case NEWGAME:
                 buttons.getChildren().remove(newGame);
                 buttons.getChildren().addAll(partyClear, partyDone, randomParty);

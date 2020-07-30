@@ -2,6 +2,7 @@ package net.sachau.deathcrawl.gui;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.dto.Player;
 
 public class CardBoard extends VBox {
@@ -11,6 +12,7 @@ public class CardBoard extends VBox {
         HBox row1 = new HBox();
         HBox row2 = new HBox();
         HBox row3 = new HBox();
+        HBox row4 = new HBox();
 
 
         DeckPane playArea = new DeckPane(player.getHazard(), 5, "card-small");
@@ -25,7 +27,9 @@ public class CardBoard extends VBox {
         row2.getChildren().addAll(hand);
         row3.getChildren().addAll(partyArea, momentumBox);
 
-        getChildren().addAll(row1, row2, row3);
+        row4.getChildren().addAll(Logger.getConsole());
+
+        getChildren().addAll(row1, row2, row3, row4);
 
     }
 

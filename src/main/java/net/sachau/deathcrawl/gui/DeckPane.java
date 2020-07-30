@@ -22,7 +22,7 @@ public class DeckPane extends ScrollPane {
         this.deck = deck;
 
         container.setMinHeight(CardTile.HEIGHT);
-        setMinHeight(CardTile.HEIGHT+20);
+        setMinHeight((cssClass.contains("small") ? CardTile.HEIGHT_SMALL : CardTile.HEIGHT) +20);
 
         setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
         setVbarPolicy(ScrollBarPolicy.AS_NEEDED);

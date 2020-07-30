@@ -1,19 +1,28 @@
 package net.sachau.deathcrawl.gui.card;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
+import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.gui.images.Tile;
 import net.sachau.deathcrawl.gui.images.TileSet;
 
+
 public class CardDesignPane extends VBox {
 
+    private Card card;
+    private VBox nameband;
     public CardDesignPane(Card card, String cssClass) {
         super();
+        this.card = card;
+
         setMinHeight(CardView.HEIGHT-50);
         setMaxHeight(CardView.HEIGHT-50);
         setAlignment(Pos.TOP_CENTER);
@@ -25,13 +34,11 @@ public class CardDesignPane extends VBox {
         image.setMaxHeight(100);
         image.getChildren().add(TileSet.getInstance().getTile(Tile.DEATHCRAWL_SMALL));
 
-        VBox nameband = new VBox();
+        nameband = new VBox();
 
-        nameband.getStyleClass().add("card-nameband");
+        nameband.getStyleClass().addAll("card-nameband", "inactive");
         Text name = new Text(card.toString());
         name.getStyleClass().add("card-nameband-text");
-        Tooltip keywords = new Tooltip(card.getCardKeyWords());
-        Tooltip.install(name, keywords);
         nameband.getChildren().add(name);
 
         TextFlow text = new TextFlow();
@@ -51,7 +58,27 @@ public class CardDesignPane extends VBox {
             getChildren().addAll(image, nameband, text);
         }
 
+        card.activeProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (Boolean.TRUE.equals(newValue)) {
+                        nameband.getStyleClass().remove("inactive");
+                        nameband.getStyleClass().add("active");
+                    } else {
+                        nameband.getStyleClass().remove("active");
+                        nameband.getStyleClass().add("inactive");
+
+                    }
+            }
+        });
 
 
     }
+
+
+    public Card getCard() {
+        return card;
+    }
+
+
 }

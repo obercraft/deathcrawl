@@ -27,24 +27,12 @@ public class MomentumBox extends ScrollPane {
         setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
         setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        setHeight(CardTile.HEIGHT + 20);
-        setMaxHeight(CardTile.HEIGHT + 20);
         setMaxWidth(CardTile.WIDTH);
         setFitToHeight(true);
         setFitToWidth(true);
         container.setAlignment(Pos.TOP_LEFT);
         this.player = player;
         this.deck = player.getParty();
-
-
-
-        setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        setMinHeight(CardTile.HEIGHT);
-        setMinWidth(CardTile.WIDTH);
-        setMaxHeight(CardTile.HEIGHT);
-        setMaxWidth(CardTile.WIDTH);
-//setAlignment(Pos.CENTER);
 
 
         HBox momentum = new HBox();

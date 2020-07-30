@@ -1,5 +1,6 @@
 package net.sachau.deathcrawl.gui.card;
 
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
@@ -25,6 +26,10 @@ public class CardTile extends CardView {
         super(card, cssClass);
         this.card = card;
 
+        String tp = card.getCardKeyWords(true);
+        Tooltip keywords = new Tooltip(tp);
+        Tooltip.install(this, keywords);
+
 
         setOnMouseClicked(event -> {
             if (event.getButton()
@@ -41,14 +46,12 @@ public class CardTile extends CardView {
 
         setOnDragDetected(event -> {
 
-            //if (!card.isPlayable()) {
-            //    return;
-            //}
-            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
-
-            Map<DataFormat, Object> map = new HashMap<>();
-            map.put(cardFormat, card.getId());
-            db.setContent(map);
+            if (card.isPlayable()) {
+                Dragboard db = this.startDragAndDrop(TransferMode.ANY);
+                Map<DataFormat, Object> map = new HashMap<>();
+                map.put(cardFormat, card.getId());
+                db.setContent(map);
+            }
             event.consume();
         });
 

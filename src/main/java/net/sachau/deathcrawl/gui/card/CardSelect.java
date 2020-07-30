@@ -29,10 +29,6 @@ public class CardSelect extends CardView {
 
                     }
 
-                    @Override
-                    public Card getCard() {
-                        return super.getCard();
-                    }
                 };
 
                 tooltipBar.getChildren()

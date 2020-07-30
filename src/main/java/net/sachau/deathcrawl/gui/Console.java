@@ -9,6 +9,6 @@ public class Console extends TextArea {
 
     public Console() {
         super();
-        TextArea textArea = new TextArea();
+        this.setEditable(false);
     }
 }

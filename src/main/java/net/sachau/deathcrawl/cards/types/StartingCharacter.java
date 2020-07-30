@@ -18,6 +18,9 @@ public class StartingCharacter extends Card {
     public StartingCharacter(StartingCharacter startingCharacter) {
         super(startingCharacter);
         addKeywords(Keyword.CREATURE);
+        if (startingCharacter.startingCards != null) {
+            startingCards.addAll(startingCharacter.getStartingCards());
+        }
     }
 
     public Deck getStartingCards() {

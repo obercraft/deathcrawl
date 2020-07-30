@@ -1,6 +1,6 @@
 package net.sachau.deathcrawl.cards.types;
 
-import net.sachau.deathcrawl.Event;
+import net.sachau.deathcrawl.events.Event;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.effects.CardEffect;
 import net.sachau.deathcrawl.dto.Player;
@@ -22,7 +22,7 @@ public class Horse extends Card {
 
 		setCommand("play_to_party");
 
-		addEffect(Event.STARTTURN, new CardEffect() {
+		addEffect(Event.Type.STARTTURN, new CardEffect() {
 			@Override
 			public void trigger(Card sourceCard, Card targetCard) {
 

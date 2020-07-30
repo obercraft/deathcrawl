@@ -1,6 +1,6 @@
 package net.sachau.deathcrawl.cards;
 
-import net.sachau.deathcrawl.Event;
+import net.sachau.deathcrawl.events.Event;
 import net.sachau.deathcrawl.Utils;
 import net.sachau.deathcrawl.cards.catalog.Catalog;
 import net.sachau.deathcrawl.cards.types.StartingCharacter;
@@ -246,7 +246,7 @@ public class CardParser {
                                             if (effectClass.getSimpleName()
                                                     .toLowerCase()
                                                     .equals(effectName)) {
-                                                card.addEffect(Event.valueOf(event), effectClass.newInstance());
+                                                card.addEffect(Event.Type.valueOf(event), effectClass.newInstance());
                                             }
                                         }
                                     }
