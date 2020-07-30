@@ -432,6 +432,7 @@ public abstract class Card {
             }
         }
         if (removeCondition != null) {
+            Logger.debug("remove " + clazz + " from " + this);
             removeCondition.remove(this);
             getConditions().remove(removeCondition);
         }

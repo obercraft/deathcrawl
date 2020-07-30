@@ -184,7 +184,7 @@ public class GameEngine  implements Observer {
                     card.removeCondition(Exhausted.class);
                 }
 
-                if (player.getHazard().size() == 0) {
+                if (player.getHazard() == null ||player.getHazard().size() == 0) {
                     GameEvent.getInstance().send(Event.Type.STARTTURN);
                 } else {
                     GameEvent.getInstance().send(Event.Type.STARTCARDPHASE);
