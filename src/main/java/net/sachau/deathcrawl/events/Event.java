@@ -17,6 +17,9 @@ public class Event {
         PLAYERACTIONDONE,
 
         GUI_NEXTACTION,
+        ENVIROMENTDEATH,
+        ;
+
     }
 
     private Type type;

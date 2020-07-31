@@ -1,7 +1,7 @@
 <?xml encoding="UTF-8"?>
 
         <!ELEMENT cards (card)+>
-        <!ELEMENT card (name,type,deck?,hits?,damage?,experience?,gold?,command?,starting-cards?,keywords?,effects?,text?,flavor?)>
+        <!ELEMENT card (name,type,deck?,hits?,damage?,skill?,threat?,experience?,gold?,command?,starting-cards?,keywords?,effects?,text?,flavor?)>
 
         <!ELEMENT name (#PCDATA)>
         <!ATTLIST name
@@ -11,6 +11,8 @@
         <!ELEMENT type (#PCDATA)>
         <!ELEMENT deck (#PCDATA)>
         <!ELEMENT damage (#PCDATA)>
+        <!ELEMENT skill (#PCDATA)>
+        <!ELEMENT threat (#PCDATA)>
         <!ELEMENT experience (#PCDATA)>
         <!ELEMENT gold (#PCDATA)>
 

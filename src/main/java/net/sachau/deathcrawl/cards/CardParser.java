@@ -1,5 +1,7 @@
 package net.sachau.deathcrawl.cards;
 
+import net.sachau.deathcrawl.Logger;
+import net.sachau.deathcrawl.cards.types.Environment;
 import net.sachau.deathcrawl.events.Event;
 import net.sachau.deathcrawl.Utils;
 import net.sachau.deathcrawl.cards.catalog.Catalog;
@@ -99,6 +101,9 @@ public class CardParser {
                 try {
                     card.setName(cardNode.getTextContent()
                             .trim());
+                    if (cardType.toLowerCase().contains("envir")) {
+                        Logger.debug(cardType + " " + card.getName());
+                    }
                 } catch (Exception e) {
 
                     e.printStackTrace();
@@ -156,6 +161,24 @@ public class CardParser {
                         .trim());
                 card.initDamage(d);
             }
+
+            if (cardNode.getNodeName()
+                    .equals("skill")) {
+                int s = Integer.parseInt(cardNode.getTextContent()
+                        .trim());
+                card.initSkill(s);
+            }
+
+            if (cardNode.getNodeName()
+                    .equals("threat")) {
+                if (card instanceof Environment) {
+                    int t = Integer.parseInt(cardNode.getTextContent()
+                            .trim());
+                    ((Environment) card).setThreat(t);
+                }
+            }
+
+
 
             if (cardNode.getNodeName()
                     .equals("experience")) {

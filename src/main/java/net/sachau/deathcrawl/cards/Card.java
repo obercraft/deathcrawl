@@ -32,8 +32,10 @@ public abstract class Card {
     private Keywords keywords = new Keywords();
     private String command;
 
+
     private SimpleIntegerProperty damage = new SimpleIntegerProperty(0);
     private SimpleIntegerProperty hits = new SimpleIntegerProperty(1);
+    private SimpleIntegerProperty skill = new SimpleIntegerProperty(0);
     private SimpleIntegerProperty maxHits = new SimpleIntegerProperty(1);
     private SimpleBooleanProperty visible = new SimpleBooleanProperty();
     private SimpleBooleanProperty active = new SimpleBooleanProperty(false);
@@ -493,6 +495,23 @@ public abstract class Card {
 
     public void setActive(boolean active) {
         this.active.set(active);
+    }
+
+
+    public int getSkill() {
+        return skill.get();
+    }
+
+    public SimpleIntegerProperty skillProperty() {
+        return skill;
+    }
+
+    public void setSkill(int skill) {
+        this.skill.set(skill);
+    }
+
+    public void initSkill(int skill) {
+        this.setSkill(skill);
     }
 
 

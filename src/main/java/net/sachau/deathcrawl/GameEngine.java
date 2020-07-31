@@ -3,6 +3,7 @@ package net.sachau.deathcrawl;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.cards.catalog.Catalog;
+import net.sachau.deathcrawl.cards.types.Environment;
 import net.sachau.deathcrawl.cards.types.EventDeck;
 import net.sachau.deathcrawl.cards.types.StartingCharacter;
 import net.sachau.deathcrawl.dto.Player;
@@ -82,8 +83,14 @@ public class GameEngine  implements Observer {
                 List<Card> eventCards = Catalog.getInstance()
                         .get(EventDeck.class);
 
+                List<Card> environments = Catalog.getInstance()
+                        .get(Environment.class);
+
                 Deck hazards = new Deck();
                 hazards.setVisible(true);
+
+                hazards.add(environments.get(0));
+
                 for (Card card : eventCards.get(0)
                         .getDeck()
                         .getCards()) {
@@ -120,6 +127,11 @@ public class GameEngine  implements Observer {
 
             case STARTCARDPHASE: {
                 currentTurnDeck = 0;
+
+                for (Card card : player.getHazard().getCards()) {
+                    card.triggerPhaseEffects(Event.Type.STARTCARDPHASE);
+                }
+
                 GameEvent.getInstance()
                         .send(Event.Type.NEXTACTION);
                 return;

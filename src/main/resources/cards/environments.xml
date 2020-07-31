@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE cards SYSTEM "cards.dtd">
+<cards>
+    <card>
+        <name>Swarm of Crows</name>
+        <type>Environment</type>
+        <damage>1</damage>
+        <effects>
+            <effect event="STARTCARDPHASE">EnvironmentDamage</effect>
+        </effects>
+    </card>
+</cards>

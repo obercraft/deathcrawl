@@ -32,17 +32,22 @@ public class Catalog {
             Catalog.getInstance()
                     .add(monsters);
 
+            List<Card> environments = CardParser.parse(Catalog.class
+                    .getResourceAsStream("/cards/environments.xml"));
+            Catalog.getInstance()
+                    .add(environments);
+
             List<Card> events = CardParser.parse(Catalog.class
                     .getResourceAsStream("/cards/events.xml"));
             Catalog.getInstance()
                     .add(events);
+
 
             List<Card> basic = CardParser.parse(Catalog.class
                     .getResourceAsStream("/cards/starting-characters.xml"));
             Catalog.getInstance()
                     .add(basic);
 
-            return;
         } catch (Exception e) {
             Logger.error("init catalog failed", e);
         }
@@ -64,10 +69,9 @@ public class Catalog {
         }
         String cardName = card.getName()
                 .toLowerCase()
-                .replaceAll("\\ ", "");
+                .replaceAll(" ", "");
         catalog.caches.get(clazz).put(cardName, card);
         catalog.allCards.put(cardName, card);
-        return;
     }
 
     public void add(Collection<Card> cards) {
@@ -87,7 +91,7 @@ public class Catalog {
     public Card get(String cardName) {
         return allCards.get(cardName
                 .toLowerCase()
-                .replaceAll("\\ ", ""));
+                .replaceAll(" ", ""));
     }
 
     public static Card getById(long id) {
@@ -95,8 +99,7 @@ public class Catalog {
     }
 
 
-    public static Card putById(Card card) {
+    public static void putById(Card card) {
         idCache.put(card.getId(), card);
-        return card;
     }
 }
