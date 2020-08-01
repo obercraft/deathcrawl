@@ -37,7 +37,7 @@ public class CardDesignPane extends VBox {
         nameband = new VBox();
 
         nameband.getStyleClass().addAll("card-nameband", "inactive");
-        Text name = new Text(card.toString());
+        Text name = new Text(card.getName() + "@" +  card.getId());
         name.getStyleClass().add("card-nameband-text");
         nameband.getChildren().add(name);
 

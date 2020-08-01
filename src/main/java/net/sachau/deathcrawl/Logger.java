@@ -53,7 +53,7 @@ public class Logger {
             return;
         }
         if (logLevel.getPriority() <= level.getPriority()) {
-            console.appendText(text + "\n");
+            console.appendText(text);
             if (logLevel == Level.DEBUG) {
                 System.out.println(text);
             }

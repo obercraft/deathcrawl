@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
+import net.sachau.deathcrawl.cards.catalog.Catalog;
 import net.sachau.deathcrawl.effects.Exhausted;
 import net.sachau.deathcrawl.events.Event;
 import net.sachau.deathcrawl.GameEngine;
@@ -53,6 +54,7 @@ public abstract class Card {
         this.conditions = new SimpleSetProperty<>(observableSet);
 
         this.hitsProperty().addListener(new HitsListener(this));
+        Catalog.putById(this);
 //        Card card = this;
 //        this.hitsProperty().addListener(new ChangeListener<Number>() {
 //            @Override
@@ -118,6 +120,8 @@ public abstract class Card {
         this.setActive(card.isActive());
 
         this.hitsProperty().addListener(new HitsListener(this));
+
+        Catalog.putById(this);
     }
 
     public Card(int initialHits, int initialDamage) {
@@ -210,7 +214,7 @@ public abstract class Card {
 
     @Override
     public String toString() {
-        return "[" + name + '@' + id + "]";
+        return "{Card@" + id + "}";
     }
 
     public int getHits() {
