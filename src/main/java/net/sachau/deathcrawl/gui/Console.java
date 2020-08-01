@@ -54,32 +54,32 @@ public class Console extends TextFlow {
 
             Card card = Catalog.getById(cardId);
             System.out.println("cardId=" + cardId + " card= "+ card);
-            Text hbox = new Text();
+            Text cardLink = new Text();
 
             if (card != null) {
-                hbox.setOnMouseClicked(event -> {
+                cardLink.setOnMouseClicked(event -> {
                     cardInfoWindow.setCardId(cardId);
                     cardInfoWindow.show();
                     cardInfoWindow.toFront();
                 });
-                hbox.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                cardLink.setOnMouseEntered(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        hbox.setUnderline(true);
+                        cardLink.setUnderline(true);
                     }
                 });
-                hbox.setOnMouseExited(new EventHandler<MouseEvent>() {
+                cardLink.setOnMouseExited(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        hbox.setUnderline(false);
+                        cardLink.setUnderline(false);
                     }
                 });
-                hbox.setText("[" + card.getName() + "@" + card.getId() + "]");
+                cardLink.setText("[" + card.getName() + "@" + card.getId() + "]");
 
             } else {
-                hbox.setText("[" + cardId + " not found]");
+                cardLink.setText("[" + cardId + " not found]");
             }
-            return hbox;
+            return cardLink;
         } else {
             return new Text(textString);
         }

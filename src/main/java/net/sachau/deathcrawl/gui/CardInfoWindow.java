@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -13,6 +14,7 @@ import net.sachau.deathcrawl.gui.card.CardInfoView;
 import net.sachau.deathcrawl.gui.card.CardTile;
 import net.sachau.deathcrawl.gui.card.CardView;
 
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -23,11 +25,11 @@ public class CardInfoWindow extends Stage {
 
     private SimpleLongProperty cardId = new SimpleLongProperty(-1);
 
-    private VBox secondaryLayout;
+    private HBox secondaryLayout;
     public CardInfoWindow() {
         super();
-        secondaryLayout = new VBox();
-        Scene secondScene = new Scene(secondaryLayout, 230, 100);
+        secondaryLayout = new HBox();
+        Scene secondScene = new Scene(secondaryLayout, 1000, 800);
         secondScene.getStylesheets().add(this.getClass().getResource("/application.css").toExternalForm());
         this.setScene(secondScene);
 

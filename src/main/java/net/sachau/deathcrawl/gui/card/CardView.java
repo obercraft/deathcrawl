@@ -30,9 +30,6 @@ public abstract class CardView extends StackPane implements Observer {
                 .add("card-background");
 
 
-        CardCover cardCover = new CardCover(cssClass);
-
-
         CardDesignPane cardDesignPane = new CardDesignPane(card, cssClass);
 
 
@@ -46,25 +43,6 @@ public abstract class CardView extends StackPane implements Observer {
             this.getChildren()
                     .addAll(leftBox, rightBox);
         }
-
-        if (!card.isVisible()) {
-            this.getChildren()
-                    .add(cardCover);
-        }
-
-
-        card.visibleProperty()
-                .addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        if (Boolean.TRUE.equals(newValue)) {
-                            getChildren().remove(cardCover);
-                        } else {
-                            getChildren().add(cardCover);
-                        }
-                    }
-                });
-
 
     }
 

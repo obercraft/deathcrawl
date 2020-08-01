@@ -1,5 +1,7 @@
 package net.sachau.deathcrawl.gui.card;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
@@ -95,6 +97,28 @@ public class CardTile extends CardView {
 
             event.consume();
         });
+
+        CardCover cardCover = new CardCover(cssClass);
+        if (!card.isVisible()) {
+            this.getChildren()
+                    .add(cardCover);
+        }
+
+
+        card.visibleProperty()
+                .addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        if (Boolean.TRUE.equals(newValue)) {
+                            getChildren().remove(cardCover);
+                        } else {
+                            getChildren().add(cardCover);
+                        }
+                    }
+                });
+
+
+
 
     }
 

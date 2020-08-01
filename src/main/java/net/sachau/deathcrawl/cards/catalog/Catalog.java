@@ -1,5 +1,10 @@
 package net.sachau.deathcrawl.cards.catalog;
 
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.CardParser;
@@ -12,12 +17,27 @@ public class Catalog {
 
     private final CardCache allCards = new CardCache();
 
-    private static Map<Long, Card> idCache = new HashMap<>();
+    private MapProperty<Long, Card> idCache;
+    //private Map<Long, Card> idCache = new HashMap<>();
 
 
     private static Catalog catalog;
 
     private Catalog() {
+        ObservableMap<Long,Card> observableMap = FXCollections.observableHashMap();
+        idCache = new SimpleMapProperty<>(observableMap);
+    }
+
+    public ObservableMap<Long, Card> getIdCache() {
+        return idCache.get();
+    }
+
+    public MapProperty<Long, Card> idCacheProperty() {
+        return idCache;
+    }
+
+    public void setIdCache(ObservableMap<Long, Card> idCache) {
+        this.idCache.set(idCache);
     }
 
     public static void init() {
@@ -51,6 +71,7 @@ public class Catalog {
         } catch (Exception e) {
             Logger.error("init catalog failed", e);
         }
+
 
 
     }
@@ -95,11 +116,11 @@ public class Catalog {
     }
 
     public static Card getById(long id) {
-        return idCache.get(id);
+        return getInstance().getIdCache().get(id);
     }
 
 
     public static void putById(Card card) {
-        idCache.put(card.getId(), card);
+        getInstance().getIdCache().put(card.getId(), card);
     }
 }
