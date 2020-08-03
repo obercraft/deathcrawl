@@ -123,4 +123,8 @@ public class Catalog {
     public static void putById(Card card) {
         getInstance().getIdCache().put(card.getId(), card);
     }
+
+    public static List<Class<? extends Card>> getCategories() {
+        return new ArrayList<Class<? extends Card>>(getInstance().caches.keySet());
+    }
 }
