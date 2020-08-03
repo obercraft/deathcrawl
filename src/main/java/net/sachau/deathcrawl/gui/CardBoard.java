@@ -15,11 +15,9 @@ public class CardBoard extends VBox {
         HBox row4 = new HBox();
 
 
-        DeckPane playArea = new DeckPane(player.getHazard(), 5, "card-small");
-        DrawPile drawPile = new DrawPile(player);
-        DiscardPile discardPile = new DiscardPile(player);
-        DeckPane hand = new DeckPane(player.getHand(), 5, "card-small");
-        DeckPane partyArea = new DeckPane(player.getParty(), 5, "card-small");
+        DeckPane playArea = new DeckPane(player.hazardsProperty(), 5, "card-small");
+        DeckPane hand = new DeckPane(player.handProperty(), 5, "card-small");
+        DeckPane partyArea = new DeckPane(player.partyProperty(), 5, "card-small");
 
         MomentumBox momentumBox = new MomentumBox(player);
 

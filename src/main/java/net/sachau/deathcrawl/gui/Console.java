@@ -85,4 +85,8 @@ public class Console extends TextFlow {
         }
 
     }
+
+    public CardInfoWindow getCardInfoWindow() {
+        return cardInfoWindow;
+    }
 }

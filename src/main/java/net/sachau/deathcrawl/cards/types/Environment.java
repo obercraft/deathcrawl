@@ -20,7 +20,7 @@ public class Environment extends Card implements AdvancedAction {
     }
 
     public Environment(Environment card) {
-        super();
+        super(card);
         this.setThreat(card.getThreat());
         threat.addListener(new ThreatListener(card));
     }

@@ -16,8 +16,7 @@ public class GameAI extends Observable {
     @Deprecated
     public static void execute(Player player) {
 
-        for (Card card : player.getHazard()
-                .getCards()) {
+        for (Card card : player.getHazards()) {
             execute(player, card);
         }
 
@@ -31,7 +30,7 @@ public class GameAI extends Observable {
                 int randomNum = ThreadLocalRandom.current()
                         .nextInt(0, player.getParty().size());
 
-                Card target = player.getParty().getCards().get(randomNum);
+                Card target = player.getParty().get(randomNum);
 
                 CommandParser.executeCommand(monsterCard, target);
             } else {
@@ -39,7 +38,7 @@ public class GameAI extends Observable {
                 Card target = null;
 
                 // first check for guards
-                for (Card character : player.getParty().getCards()) {
+                for (Card character : player.getParty()) {
                     if (character.isAlive() && character.hasCondition(Guard.class)) {
                         target = character;
                     }
@@ -47,7 +46,7 @@ public class GameAI extends Observable {
 
                 // 2. then attack armor
                 if (target == null) {
-                    for (Card character : player.getParty().getCards()) {
+                    for (Card character : player.getParty()) {
                         if (character.isAlive() && character.hasCondition(Armor.class)) {
                             target = character;
                         }
@@ -56,7 +55,7 @@ public class GameAI extends Observable {
 
                 // 3. attack non-stealth
                 if (target == null) {
-                    for (Card character : player.getParty().getCards()) {
+                    for (Card character : player.getParty()) {
                         if (character.isAlive() && !character.hasCondition(Stealth.class)) {
                             target = character;
                         }

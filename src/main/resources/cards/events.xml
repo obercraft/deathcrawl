@@ -3,7 +3,7 @@
 <cards>
     <card>
         <name>Goblins Attack!</name>
-        <type>EventDeck</type>
+        <type>Encounter</type>
         <deck>Goblin,Goblin Leader,Goblin</deck>
     </card>
 </cards>

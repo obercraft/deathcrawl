@@ -14,7 +14,7 @@ public class EnvironmentDamage extends CardEffect {
     public void trigger(Card sourceCard, Card targetCard) {
         Player player = GameEngine.getInstance()
                 .getPlayer();
-        for (Card card : player.getParty().getCards()) {
+        for (Card card : player.getParty()) {
             int hits = card.getHits() - Math.max(1, targetCard.getDamage());
             card.setHits(hits);
         }

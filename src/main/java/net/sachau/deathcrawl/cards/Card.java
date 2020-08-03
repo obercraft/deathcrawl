@@ -26,6 +26,11 @@ import java.util.*;
 
 public abstract class Card {
 
+    public enum Source {
+        NONE,
+        HAND,
+        PARTY,
+    };
     private long id;
     private String name;
     private String uniqueId;
@@ -42,7 +47,7 @@ public abstract class Card {
     private SimpleBooleanProperty active = new SimpleBooleanProperty(false);
 
     private Creature owner;
-    private Deck deck;
+    private Source source;
     private SetProperty<CardEffect> conditions;
 
     public Card() {
@@ -107,7 +112,7 @@ public abstract class Card {
         this.setVisible(card.isVisible());
 
         this.owner = card.owner;
-        this.deck = card.deck;
+        this.source = card.source;
 
         ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
         this.conditions = new SimpleSetProperty<>(observableSet);
@@ -246,13 +251,14 @@ public abstract class Card {
             return true;
         }
 
-        Deck targetDeck = target.getDeck();
-        for (Card card : targetDeck.getCards()) {
-            if (card.isAlive() && card.getId() != target.getId() && card.hasCondition(Armor.class)) {
-                Logger.debug(target + " is guarded by " + card);
-                return false;
-            }
-        }
+        // TODO msachau armor
+//        Deck targetDeck = target.getDeck();
+//        for (Card card : targetDeck.getCards()) {
+//            if (card.isAlive() && card.getId() != target.getId() && card.hasCondition(Armor.class)) {
+//                Logger.debug(target + " is guarded by " + card);
+//                return false;
+//            }
+//        }
 
         if (target.hasCondition(Armor.class)) {
             target.removeCondition(Armor.class);
@@ -273,14 +279,12 @@ public abstract class Card {
     }
 
 
-
-
-    public Deck getDeck() {
-        return deck;
+    public Source getSource() {
+        return source;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
+    public void setSource(Source source) {
+        this.source = source;
     }
 
     public Keywords getKeywords() {

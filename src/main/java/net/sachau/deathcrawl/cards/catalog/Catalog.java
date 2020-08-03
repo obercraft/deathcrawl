@@ -3,7 +3,6 @@ package net.sachau.deathcrawl.cards.catalog;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
@@ -125,6 +124,9 @@ public class Catalog {
     }
 
     public static List<Class<? extends Card>> getCategories() {
-        return new ArrayList<Class<? extends Card>>(getInstance().caches.keySet());
+        for (Class<?> c : getInstance().caches.keySet()) {
+         System.out.println(c);
+        }
+        return new ArrayList<>(getInstance().caches.keySet());
     }
 }

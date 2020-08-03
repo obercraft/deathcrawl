@@ -33,6 +33,7 @@ public class CardInfoWindow extends Stage {
         secondScene.getStylesheets().add(this.getClass().getResource("/application.css").toExternalForm());
         this.setScene(secondScene);
 
+        secondaryLayout.getChildren().add(new CatalogView());
 
         cardId.addListener(new ChangeListener<Number>() {
             @Override
@@ -45,7 +46,7 @@ public class CardInfoWindow extends Stage {
                     CardInfoView cardInfoView = cache.get(id);
                     if (cardInfoView == null) {
                         Card card = Catalog.getById(id);
-                        cardInfoView = new CardInfoView(card, "");
+                        cardInfoView = new CardInfoView(card, "card");
                         cache.put(id, cardInfoView);
                     }
 

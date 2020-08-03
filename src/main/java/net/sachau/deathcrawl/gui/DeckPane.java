@@ -1,6 +1,9 @@
 package net.sachau.deathcrawl.gui;
 
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
@@ -12,14 +15,17 @@ import net.sachau.deathcrawl.dto.Player;
 import net.sachau.deathcrawl.gui.card.CardTile;
 import net.sachau.deathcrawl.gui.card.CardTileCache;
 
+import java.util.List;
+
 public class DeckPane extends ScrollPane {
 
     private HBox container = new HBox();
-    private Deck deck;
+    private SimpleListProperty<Card> cards;
 
-    public DeckPane(Deck deck, int length, String cssClass) {
+    public DeckPane(SimpleListProperty<Card> cards, int length, String cssClass) {
         super();
-        this.deck = deck;
+
+        this.cards = cards;
 
         container.setMinHeight(CardTile.HEIGHT);
         setMinHeight((cssClass.contains("small") ? CardTile.HEIGHT_SMALL : CardTile.HEIGHT) +20);
@@ -33,7 +39,7 @@ public class DeckPane extends ScrollPane {
         setContent(container);
 
 
-        for (Card card : deck.getCards()) {
+        for (Card card : cards) {
             try {
                 container.getChildren()
                         .add(CardTileCache.getTile(card, cssClass));
@@ -42,8 +48,7 @@ public class DeckPane extends ScrollPane {
             }
         }
 
-        deck.getCards()
-                .addListener(new ListChangeListener<Card>() {
+        this.cards.addListener(new ListChangeListener<Card>() {
                     @Override
                     public void onChanged(Change<? extends Card> change) {
                         while (change.next()) {

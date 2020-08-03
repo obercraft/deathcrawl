@@ -1,7 +1,10 @@
 package net.sachau.deathcrawl.gui.screens;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import net.sachau.deathcrawl.Logger;
+import net.sachau.deathcrawl.cards.catalog.Catalog;
 import net.sachau.deathcrawl.events.Event;
 
 import net.sachau.deathcrawl.events.GameEvent;
@@ -18,6 +21,7 @@ public class SideRegion extends VBox implements Observer {
     private final Button randomParty;
     private final Button encounter;
     private final Button actionDone;
+    private final Button cardInfoButton;
     VBox buttons = new VBox();
 
 
@@ -31,6 +35,9 @@ public class SideRegion extends VBox implements Observer {
         buttons.setMinHeight(400);
 
 
+        HBox toolButtons = new HBox();
+        cardInfoButton = new Button("CARDS");
+        toolButtons.getChildren().add(cardInfoButton);
         newGame = new Button();
         newGame.setText("NEW GAME");
 
@@ -43,7 +50,7 @@ public class SideRegion extends VBox implements Observer {
 
 
 
-        buttons.getChildren().add(newGame);
+        buttons.getChildren().addAll(toolButtons, newGame);
 
         getChildren().addAll(buttons);
 
@@ -70,81 +77,10 @@ public class SideRegion extends VBox implements Observer {
             GameEvent.getInstance().send(Event.Type.PLAYERACTIONDONE);
         });
 
-/*
-        newGame.setOnMouseClicked(event -> {
-
-
-            mainRegion.getChildren()
-                    .removeAll(welcomeScreen);
-            gameButtons.getChildren()
-                    .remove(newGame);
-
-            Button partyClear = new Button();
-            partyClear.setText("CLEAR PARTY");
-
-            partySelection = new PartySelection(player, partyDone, partyClear, 5);
-            mainRegion.getChildren()
-                    .add(partySelection);
-
-            gameButtons.getChildren()
-                    .addAll(partyClear, partyDone);
-
-
+        cardInfoButton.setOnMouseClicked(event -> {
+            Logger.getConsole().getCardInfoWindow().show();
         });
 
-        partyDone.setOnMouseClicked(event -> {
-            gameButtons.getChildren()
-                    .remove(0, gameButtons.getChildren()
-                            .size());
-            mainRegion.getChildren()
-                    .remove(partySelection);
-
-
-            Deck party = player.getParty();
-            for (Card partyMember : party.getCards()) {
-
-                if (partyMember instanceof CharacterCard) {
-                    CharacterCard characterCard = (CharacterCard) partyMember;
-                    for (Card c : characterCard.getStartingCards()
-                            .getCards()) {
-                        c.setOwner(player);
-                        c.setVisible(false);
-                        player.getDraw()
-                                .add(c);
-                    }
-                }
-
-            }
-
-            Deck hazards = new Deck();
-
-            for (int i = 0; i < 3; i++) {
-                Goblin goblin = new Goblin();
-                goblin.setVisible(true);
-                if (i == 0) {
-                    goblin.getConditions()
-                            .add(new Armor());
-                } else if (i == 1) {
-                    goblin.getConditions()
-                            .add(new Guard());
-                    goblin.getConditions()
-                            .add(new Armor());
-                }
-                hazards.add(goblin);
-            }
-
-            player.setHazard(hazards);
-
-            for (int i = 0; i < player.getHandSize(); i++) {
-                player.getDraw()
-                        .draw(player.getHand());
-            }
-
-            mainRegion.getChildren()
-                    .add(new CardBoard(player));
-        });
-
-*/
     }
 
 
@@ -178,5 +114,6 @@ public class SideRegion extends VBox implements Observer {
 
         }
     }
+
 }
 

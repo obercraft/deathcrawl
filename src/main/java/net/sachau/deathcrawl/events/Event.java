@@ -7,6 +7,8 @@ public class Event {
         NEWGAME,
         RANDOMPARTY,
         PARTYDONE,
+
+
         STARTTURN,
         STARTENCOUNTER,
         STARTCARDPHASE,

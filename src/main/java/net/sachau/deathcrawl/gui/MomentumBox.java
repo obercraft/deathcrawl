@@ -16,8 +16,6 @@ import net.sachau.deathcrawl.momentum.MomentumAction;
 
 public class MomentumBox extends ScrollPane {
     private Player player;
-    private Deck deck;
-
 
     public MomentumBox(Player player) {
         super();
@@ -32,8 +30,6 @@ public class MomentumBox extends ScrollPane {
         setFitToWidth(true);
         container.setAlignment(Pos.TOP_LEFT);
         this.player = player;
-        this.deck = player.getParty();
-
 
         HBox momentum = new HBox();
         Text momentumText = new Text(getMomentum());
@@ -44,7 +40,7 @@ public class MomentumBox extends ScrollPane {
                 .add(momentum);
 
 
-        for (Card card : deck.getCards()) {
+        for (Card card : player.getParty()) {
             if (card instanceof StartingCharacter) {
                 StartingCharacter startingCharacter = (StartingCharacter) card;
                 if (startingCharacter.getMomentumActions()

@@ -6,10 +6,11 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.cards.catalog.Catalog;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CatalogView extends HBox {
 
@@ -28,7 +29,7 @@ public class CatalogView extends HBox {
         categoryList.setItems(categories);
         cardList.setItems(cards);
 
-        this.getChildren().add(categoryList);
+        this.getChildren().addAll(categoryList, cardList);
         categoryList.setCellFactory(new Callback<ListView<Class<? extends Card>>, ListCell<Class<? extends Card>>>() {
             @Override
             public ListCell<Class<? extends Card>> call(ListView<Class<? extends Card>> param) {
@@ -36,8 +37,22 @@ public class CatalogView extends HBox {
             }
         });
 
+        cardList.setCellFactory(new Callback<ListView<Card>, ListCell<Card>>() {
+            @Override
+            public ListCell<Card> call(ListView<Card> param) {
+                return new CardCell();
+            }
+        });
+
         categoryList.setOnMouseClicked(event -> {
             Class<? extends Card> selectedItem = categoryList.getSelectionModel().getSelectedItem();
+            Logger.debug("-> " + selectedItem);
+            List<Class<? extends Card>> cats = Catalog.getCategories();
+            if (cardList.getItems().size() > 0) {
+                cardList.getItems()
+                        .remove(0, cardList.getItems().size());
+            }
+            cardList.getItems().addAll(Catalog.getInstance().get(selectedItem));
         });
     }
 
@@ -53,13 +68,14 @@ public class CatalogView extends HBox {
 
     }
 
-    private class CategoryCell extends ListCell<Class<? extends Card>> {
+
+    private class CardCell extends ListCell<Card> {
 
         @Override
-        public void updateItem(Class<? extends Card> cardClass, boolean empty) {
-            super.updateItem(cardClass, empty);
-            if (cardClass != null) {
-                setText(cardClass.getSimpleName());
+        public void updateItem(Card card, boolean empty) {
+            super.updateItem(card, empty);
+            if (card != null) {
+                setText(card.getName() + "@" + card.getId());
             }
         }
 

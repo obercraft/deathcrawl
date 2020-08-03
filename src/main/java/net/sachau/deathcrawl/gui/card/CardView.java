@@ -3,6 +3,7 @@ package net.sachau.deathcrawl.gui.card;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.StackPane;
+import net.sachau.deathcrawl.cards.types.Environment;
 import net.sachau.deathcrawl.events.GameEvent;
 import net.sachau.deathcrawl.cards.Card;
 import net.sachau.deathcrawl.keywords.Keyword;
@@ -34,7 +35,7 @@ public abstract class CardView extends StackPane implements Observer {
 
 
         this.getChildren()
-                .addAll(cardDesignPane, new CenterConditionBox(card, cssClass));
+                .add(cardDesignPane);
 
         if (card.getKeywords()
                 .contains(Keyword.CREATURE)) {
@@ -42,6 +43,11 @@ public abstract class CardView extends StackPane implements Observer {
             CornerValueBox rightBox = new CornerValueBox(card.hitsProperty(), card.maxHitsProperty(), "bottom-right", cssClass);
             this.getChildren()
                     .addAll(leftBox, rightBox);
+        } else if (card instanceof Environment) {
+            CornerValueBox rightBox = new CornerValueBox(((Environment) card).threatProperty(), null, "bottom-right", cssClass);
+            this.getChildren()
+                    .addAll(rightBox);
+
         }
 
     }

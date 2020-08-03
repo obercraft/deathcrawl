@@ -81,8 +81,6 @@ public class CardTile extends CardView {
                 String[] args = ((String) db.getContent(momentumFormat)).split(",", -1);
                 Card sourceCard = Catalog.getById(new Long(args[0]));
                 executeCommand(sourceCard, new Integer(args[1]), true);
-
-
             }
 //
 //            boolean commandSuccessful = CommandParser.executeCommand(sourceCard, getCard());
@@ -106,14 +104,11 @@ public class CardTile extends CardView {
 
 
         card.visibleProperty()
-                .addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        if (Boolean.TRUE.equals(newValue)) {
-                            getChildren().remove(cardCover);
-                        } else {
-                            getChildren().add(cardCover);
-                        }
+                .addListener((observable, oldValue, newValue) -> {
+                    if (Boolean.TRUE.equals(newValue)) {
+                        getChildren().remove(cardCover);
+                    } else {
+                        getChildren().add(cardCover);
                     }
                 });
 
@@ -132,9 +127,11 @@ public class CardTile extends CardView {
             Creature owner = sourceCard.getOwner();
             if (owner != null && owner instanceof Player) {
                 Player player = (Player) owner;
-                if (discard && sourceCard.getDeck() != null) {
-                    sourceCard.getDeck()
-                            .discard(sourceCard, player.getDiscard());
+                if (discard) {
+                    if (Card.Source.HAND.equals(sourceCard.getSource())) {
+                        player.getDraw().addToDiscard(card);
+                    }
+                    player.getHand().remove(sourceCard);
                 }
 
                 int m = player.getMomentum() - cost;

@@ -67,20 +67,20 @@ public class CommandParser {
                     if (target.getOwner() instanceof Player) {
                         return false;
                     }
-
-                    Deck targetDeck = target.getDeck();
-                    int count = new Integer(args[1]);
-                    int amount = 1;
-                    if (args.length > 2) {
-                        amount = Integer.parseInt(args[2]);
-                    }
-                    source.setDamage(amount);
-                    for (int i = 0; i < count; i++) {
-                        Card targetCard = targetDeck.getRandomCard();
-                        if (targetCard != null) {
-                            source.attack(targetCard, amount);
-                        }
-                    }
+                    // TODO msachau rework
+//                    Deck targetDeck = target.getDeck();
+//                    int count = new Integer(args[1]);
+//                    int amount = 1;
+//                    if (args.length > 2) {
+//                        amount = Integer.parseInt(args[2]);
+//                    }
+//                    source.setDamage(amount);
+//                    for (int i = 0; i < count; i++) {
+//                        Card targetCard = targetDeck.getRandomCard();
+//                        if (targetCard != null) {
+//                            source.attack(targetCard, amount);
+//                        }
+//                    }
                 }
                 return true;
             }

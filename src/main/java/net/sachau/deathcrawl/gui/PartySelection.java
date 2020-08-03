@@ -42,14 +42,14 @@ public class PartySelection extends VBox implements Observer {
 
          
         
-        DeckPane partyArea = new DeckPane(player.getParty(), length, "card-small");
+        DeckPane partyArea = new DeckPane(player.partyProperty(), length, "card-small");
         try {
             List<Card> basic = Catalog.getInstance()
                     .get(StartingCharacter.class);
             for (Card b : basic) {
                 StartingCharacter card = (StartingCharacter) b;
                 card.setVisible(true);
-                available.getChildren().add(new CardSelect(this, card, player.getParty(), cssClass));
+                available.getChildren().add(new CardSelect(this, card, player.partyProperty(), cssClass));
                 availableCharacters.add(new StartingCharacter(card));
             }
             getChildren().addAll(available, partyArea);

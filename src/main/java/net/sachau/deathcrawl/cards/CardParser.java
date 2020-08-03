@@ -6,7 +6,7 @@ import net.sachau.deathcrawl.events.Event;
 import net.sachau.deathcrawl.Utils;
 import net.sachau.deathcrawl.cards.catalog.Catalog;
 import net.sachau.deathcrawl.cards.types.StartingCharacter;
-import net.sachau.deathcrawl.cards.types.EventDeck;
+import net.sachau.deathcrawl.cards.types.Encounter;
 import net.sachau.deathcrawl.cards.types.Monster;
 import net.sachau.deathcrawl.effects.CardEffect;
 import net.sachau.deathcrawl.keywords.Keyword;
@@ -124,26 +124,21 @@ public class CardParser {
 
             if (cardNode.getNodeName()
                     .equals("deck")) {
-                if (card instanceof EventDeck) {
-                    EventDeck eventDeck = (EventDeck) card;
-                    eventDeck.getDeck()
-                            .setVisible(true);
+                if (card instanceof Encounter) {
+                    Encounter encounter = (Encounter) card;
                     String[] cards = cardNode.getTextContent()
                             .trim()
                             .split(",", -1);
                     for (String cardName : cards) {
-
                         try {
                             Card c = Catalog.getInstance()
                                     .get(cardName);
-                            eventDeck.getDeck()
-                                    .add(Utils.copyCard(c));
+                            c.setVisible(true);
+                            encounter.getCardList().add(Utils.copyCard(c));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                    eventDeck.getDeck()
-                            .setVisible(true);
                 }
             }
 
@@ -215,7 +210,6 @@ public class CardParser {
                             .trim()
                             .split(",", -1);
                     StartingCharacter startingCharacterCard = (StartingCharacter) card;
-                    startingCharacterCard.setStartingCards(new Deck());
                     for (String startingCard : cards) {
                         try {
                             startingCharacterCard.getStartingCards()

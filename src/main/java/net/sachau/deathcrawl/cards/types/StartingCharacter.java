@@ -5,9 +5,12 @@ import net.sachau.deathcrawl.cards.Deck;
 import net.sachau.deathcrawl.keywords.Keyword;
 import net.sachau.deathcrawl.momentum.MomentumActions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StartingCharacter extends Card {
 
-    private Deck startingCards = new Deck();
+    private List<Card> startingCards = new ArrayList<>();
     private MomentumActions momentumActions = new MomentumActions();
 
     public StartingCharacter() {
@@ -23,11 +26,11 @@ public class StartingCharacter extends Card {
         }
     }
 
-    public Deck getStartingCards() {
+    public List<Card> getStartingCards() {
         return startingCards;
     }
 
-    public void setStartingCards(Deck startingCards) {
+    public void setStartingCards(List<Card> startingCards) {
         this.startingCards = startingCards;
     }
 
