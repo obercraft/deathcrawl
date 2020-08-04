@@ -2,26 +2,29 @@ package net.sachau.deathcrawl.gui.images;
 
 public enum Tile {
 
-    DEATHCRAWL(0, 0, 100, 100),
-    DEATHCRAWL_SMALL(0, 0),
-    ARMOR(1, 7),
-    GUARD(2, 6),
-    STEALTH(2,0),
-    POISONOUS(1, 0),
-    PARTY(3,4),
+    DEATHCRAWL(0,0, 0, 100, 100),
+    DEATHCRAWL_SMALL(0, 0, 0),
+    ARMOR(0,1, 7),
+    GUARD(0,2, 6),
+    STEALTH(0,2,0),
+    POISONOUS(0,1, 0),
+    PARTY(0,3,4),
 
-    MARKED(4,3);
+    MARKED(0,4,3);
 
+    private int index;
     private int x, y, width, height;
 
-    Tile(int x, int y, int width, int height) {
+    Tile(int index, int x, int y, int width, int height) {
+        this.index = index;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
 
-    Tile(int x, int y) {
+    Tile(int index, int x, int y) {
+        this.index = index;
         this.x = x;
         this.y = y;
         this.width = WIDTH;
@@ -58,6 +61,14 @@ public enum Tile {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public static final int HEIGHT = 32;

@@ -6,13 +6,20 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TileSet {
 
+    private static final String[] filenames = new String[] {
+            "icons.png",
+            "icons1.png",
+    };
+
     private static TileSet instance;
-    private PixelReader reader;
+    private List<PixelReader> readers = new ArrayList<>();
 
     Map<String, WritableImage> cache = new HashMap<>();
 
@@ -24,10 +31,13 @@ public class TileSet {
     }
 
     private TileSet() {
-        InputStream inputStream = TileSet.class.getResourceAsStream("/icons.png");
-        Image image = new Image(inputStream);
+        for (String filename : filenames) {
+            InputStream inputStream = TileSet.class.getResourceAsStream("/icons.png");
+            Image image = new Image(inputStream);
 
-        reader = image.getPixelReader();
+            PixelReader reader = image.getPixelReader();
+            readers.add(reader);
+        }
 
     }
 
@@ -35,7 +45,7 @@ public class TileSet {
         if (tile == null) {
             return null;
         }
-        WritableImage writableImage = readImage(tile.getX(), tile.getY());
+        WritableImage writableImage = readImage(tile.getIndex(), tile.getX(), tile.getY());
         ImageView imageView = new ImageView(writableImage);
         if (tile.getHeight() != Tile.HEIGHT || tile.getWidth() != Tile.WIDTH) {
             imageView.setFitHeight(tile.getHeight());
@@ -45,18 +55,14 @@ public class TileSet {
         return imageView;
     }
 
-    public WritableImage writeableImage(Tile tile) {
-        return readImage(tile.getX(), tile.getY());
-    }
 
-
-    private WritableImage readImage(int x, int y) {
+    private WritableImage readImage(int index, int x, int y) {
         final String key = x +"," + y;
         WritableImage image = cache.get(key);
         if (image != null) {
             return image;
         } else {
-            image = new WritableImage(reader, x * Tile.WIDTH, y * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);
+            image = new WritableImage(readers.get(index), x * Tile.WIDTH, y * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);
             cache.put(key, image);
             return  image;
         }

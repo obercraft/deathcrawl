@@ -2,11 +2,10 @@ package net.sachau.deathcrawl.gui.card;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.card.Card;
 
 public class HitsBox extends StackPane {
 

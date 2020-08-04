@@ -59,6 +59,9 @@
         <command>attack;exhaust</command>
         <starting-cards>Knife,short sword,Knife</starting-cards>
         <keywords>creature, fighter</keywords>
+        <effects>
+            <effect event="STARTENCOUNTER">Guard</effect>
+        </effects>
         <flavor>A Fighter!</flavor>
     </card>
 
@@ -69,9 +72,9 @@
 
 <!--
 
-package net.sachau.deathcrawl.cards.characters;
+package net.sachau.deathcrawl.card.characters;
 
-import net.sachau.deathcrawl.cards.types.StartingCharacter;
+import net.sachau.deathcrawl.card.type.StartingCharacter;
 
 public class Warrior extends Character {
 
@@ -89,9 +92,9 @@ public class Warrior extends Character {
 
 }
 
-package net.sachau.deathcrawl.cards.characters;
+package net.sachau.deathcrawl.card.characters;
 
-import net.sachau.deathcrawl.cards.types.StartingCharacter;
+import net.sachau.deathcrawl.card.type.StartingCharacter;
 
 public class Wizard extends Character {
 

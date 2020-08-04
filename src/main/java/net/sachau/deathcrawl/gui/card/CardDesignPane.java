@@ -3,14 +3,12 @@ package net.sachau.deathcrawl.gui.card;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.card.Card;
 import net.sachau.deathcrawl.gui.images.Tile;
 import net.sachau.deathcrawl.gui.images.TileSet;
 

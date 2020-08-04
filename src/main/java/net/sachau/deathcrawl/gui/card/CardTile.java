@@ -1,18 +1,16 @@
 package net.sachau.deathcrawl.gui.card;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.catalog.Catalog;
-import net.sachau.deathcrawl.commands.CommandParser;
-import net.sachau.deathcrawl.dto.Creature;
-import net.sachau.deathcrawl.dto.Player;
-import net.sachau.deathcrawl.keywords.Keyword;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.catalog.Catalog;
+import net.sachau.deathcrawl.command.CommandParser;
+import net.sachau.deathcrawl.card.Creature;
+import net.sachau.deathcrawl.engine.Player;
+import net.sachau.deathcrawl.card.keyword.Keyword;
 
 import java.util.HashMap;
 import java.util.Map;

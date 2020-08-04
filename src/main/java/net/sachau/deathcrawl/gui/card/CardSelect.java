@@ -4,12 +4,10 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.types.StartingCharacter;
-import net.sachau.deathcrawl.cards.Deck;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.type.StartingCharacter;
 import net.sachau.deathcrawl.gui.PartySelection;
 
-import java.util.List;
 import java.util.Observable;
 
 public class CardSelect extends CardView {

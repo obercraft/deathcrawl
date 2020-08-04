@@ -3,11 +3,9 @@ package net.sachau.deathcrawl.gui.card;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableSet;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextFlow;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.effects.CardEffect;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.effect.CardEffect;
 
 public class ConditionFlow extends TextFlow {
 

@@ -5,14 +5,15 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import net.sachau.deathcrawl.events.Event;
-import net.sachau.deathcrawl.events.GameEvent;
-import net.sachau.deathcrawl.dto.Player;
+import javafx.scene.shape.Rectangle;
+import net.sachau.deathcrawl.engine.GameEventContainer;
+import net.sachau.deathcrawl.engine.GameEvent;
+import net.sachau.deathcrawl.engine.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapTile extends Polygon {
+public class MapTile extends Rectangle {
 
 
     private MapCoord mapCoord;
@@ -29,23 +30,19 @@ public class MapTile extends Polygon {
         double x = mapCoord.getX();
         double y = mapCoord.getY();
 
-        getPoints().addAll(
-                x, y,
-                x, y + HexMap.r,
-                x + HexMap.n, y + HexMap.r * 1.5,
-                x + HexMap.TILE_WIDTH, y + HexMap.r,
-                x + HexMap.TILE_WIDTH, y,
-                x + HexMap.n, y - HexMap.r * 0.5
-        );
+        this.setX(x);
+        this.setY(y);
+        this.setWidth(RectMap.TILE_WIDTH);
+        this.setHeight(RectMap.TILE_HEIGHT);
 
         // set up the visuals and a click listener for the tile
-        setFill(MapCoord.Type.VALLEY.getColor());
+        setFill(mapCoord.getType().getColor());
         setStrokeWidth(1);
         setStroke(Color.BLACK);
 
         setOnDragOver(event -> {
             if (event.getDragboard()
-                    .hasContent(HexMap.mapFormat)) {
+                    .hasContent(RectMap.mapFormat)) {
                 event.acceptTransferModes(TransferMode.ANY);
             }
             event.consume();
@@ -57,7 +54,7 @@ public class MapTile extends Polygon {
                     .equals(mapCoord)) {
                 Dragboard db = this.startDragAndDrop(TransferMode.ANY);
                 Map<DataFormat, Object> map = new HashMap<>();
-                map.put(HexMap.mapFormat, getMapCoord());
+                map.put(RectMap.mapFormat, getMapCoord());
                 db.setContent(map);
             }
             event.consume();
@@ -68,7 +65,7 @@ public class MapTile extends Polygon {
         setOnDragDropped(event -> {
 
             MapCoord sourceCoord = (MapCoord) event.getDragboard()
-                    .getContent(HexMap.mapFormat);
+                    .getContent(RectMap.mapFormat);
 
 
             if (player.getMoves() > 0 && Math.abs(sourceCoord.getColumn() - mapCoord.getColumn()) <= 1 && Math.abs(sourceCoord.getRow() - mapCoord.getRow()) <= 1) {
@@ -76,7 +73,7 @@ public class MapTile extends Polygon {
                 int moves = player.getMoves() -1;
                 player.setMoves(moves);
                 GameEvent.getInstance()
-                        .send(Event.Type.PARTYMOVE);
+                        .send(GameEventContainer.Type.PARTYMOVE);
             }
 
             event.consume();

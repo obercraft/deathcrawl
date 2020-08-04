@@ -10,8 +10,9 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import net.sachau.deathcrawl.events.Event;
-import net.sachau.deathcrawl.events.GameEvent;
+import net.sachau.deathcrawl.engine.GameEngine;
+import net.sachau.deathcrawl.engine.GameEventContainer;
+import net.sachau.deathcrawl.engine.GameEvent;
 import net.sachau.deathcrawl.gui.screens.GameScreen;
 
 public class Main extends Application {
@@ -26,7 +27,7 @@ public class Main extends Application {
 
         Scene content = new Scene(new GameScreen(width, height), width, height);
 
-
+        GameEngine.getInstance().setInitialized(true);
 
 
 
@@ -41,9 +42,9 @@ public class Main extends Application {
             public void handle(KeyEvent ke) {
                 if (keyComb.match(ke)) {
                     Logger.debug("Key Pressed: " + GameEvent.getInstance().getStage() + ", l=" + GameEvent.getInstance().getLastStage());
-                    if (Event.Type.WAITINGFORPLAYERACTION.equals(GameEvent.getInstance().getType())) {
+                    if (GameEventContainer.Type.WAITINGFORPLAYERACTION.equals(GameEvent.getInstance().getType())) {
                         Logger.debug("Key Pressed: " + keyComb);
-                        GameEvent.getInstance().send(Event.Type.PLAYERACTIONDONE);
+                        GameEvent.getInstance().send(GameEventContainer.Type.PLAYERACTIONDONE);
                     }
                     ke.consume(); // <-- stops passing the event to next node
                 }

@@ -1,10 +1,10 @@
 package net.sachau.deathcrawl.gui.screens;
 
 import javafx.scene.layout.HBox;
-import net.sachau.deathcrawl.GameEngine;
-import net.sachau.deathcrawl.events.GameEvent;
-import net.sachau.deathcrawl.cards.catalog.Catalog;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.engine.GameEngine;
+import net.sachau.deathcrawl.engine.GameEvent;
+import net.sachau.deathcrawl.card.catalog.Catalog;
+import net.sachau.deathcrawl.engine.Player;
 
 import java.util.Observable;
 import java.util.Observer;

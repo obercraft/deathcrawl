@@ -1,0 +1,222 @@
+package net.sachau.deathcrawl.card;
+
+import net.sachau.deathcrawl.Logger;
+import net.sachau.deathcrawl.card.catalog.Catalog;
+import net.sachau.deathcrawl.card.effect.Armor;
+import net.sachau.deathcrawl.card.effect.Exhausted;
+import net.sachau.deathcrawl.card.effect.Guard;
+import net.sachau.deathcrawl.card.type.Action;
+import net.sachau.deathcrawl.card.type.AdvancedAction;
+import net.sachau.deathcrawl.card.type.StartingCharacter;
+import net.sachau.deathcrawl.card.effect.CardEffect;
+import net.sachau.deathcrawl.card.keyword.Keyword;
+import net.sachau.deathcrawl.command.Command;
+import net.sachau.deathcrawl.command.CommandParser;
+import net.sachau.deathcrawl.engine.GameEngine;
+import net.sachau.deathcrawl.engine.GameEventContainer;
+import net.sachau.deathcrawl.engine.Player;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+@RunWith(JUnit4.class)
+public class CardTest {
+
+    @Test
+    public void copyCard() {
+
+        StartingCharacter char1 = new StartingCharacter();
+        char1.setName("Char2");
+
+
+        StartingCharacter char2 = new StartingCharacter(char1);
+
+        char1.setName("Char1");
+        char1.setHits(2);
+        char1.setMaxHits(2);
+        char2.setDamage(2);
+
+
+        Assert.assertNotEquals(char1.getName(), char2.getName());
+        Assert.assertNotEquals(char1.getId(), char2.getId());
+        Assert.assertNotEquals(char1.getHits(), char2.getHits());
+        Assert.assertNotEquals(char1.getMaxHits(), char2.getMaxHits());
+        Assert.assertNotEquals(char1.getDamage(), char2.getDamage());
+
+        Assert.assertEquals(char1.getKeywords(), char1.getKeywords());
+        char1.addKeywords(Keyword.SIMPLE);
+        Assert.assertNotEquals(char1.getKeywords(), char2.getKeywords());
+
+        Assert.assertEquals(char1.getConditions(), char2.getConditions());
+
+        char1.getConditions().add(new CardEffect() {
+            @Override
+            public void trigger(Card sourceCard, Card targetCard) {
+
+            }
+
+            @Override
+            public void remove(Card card) {
+
+            }
+
+        });
+
+        Assert.assertNotEquals(char1.getConditions(), char2.getConditions());
+
+    }
+    @Test
+    public void testActions() {
+        Player player = new Player();
+        GameEngine.getInstance().setPlayer(player);
+        Catalog.init();
+        Card thief = Catalog.copyOf("Thief");
+        player.addToParty(thief);
+
+        GameEngine.getInstance().setCurrentCard(thief);
+
+        Assert.assertEquals(thief.getId(), player.getParty().get(0).getId());
+        Assert.assertEquals(player.getParty().get(0).getName(), "Thief");
+
+
+        Card gold = Catalog.copyOf("Gold");
+
+        player.addCardToHand(gold);
+        Card draw = new Action();
+        draw.setOwner(player);
+        draw.setCommand("draw 1");
+        draw.addKeywords(Keyword.SIMPLE);
+
+        // Draw
+        boolean result = Command.execute(draw, null);
+        Assert.assertTrue(result);
+
+        // Gold
+        result = Command.execute(player.getHand().get(0), null);
+        Assert.assertTrue(result);
+        Assert.assertEquals(1, player.getGold());
+
+        // Attack
+        Card goblin = Catalog.copyOf("Goblin");
+        result = Command.execute(thief, goblin);
+        Assert.assertTrue(result);
+        Assert.assertNotEquals(goblin.getHits(), goblin.getMaxHits());
+        Assert.assertTrue(player.getDraw().getDiscards().contains(gold));
+        Assert.assertTrue(thief.hasCondition(Exhausted.class));
+
+        // try again will fail (exhaustion)
+        result = Command.execute(thief, goblin);
+        Assert.assertFalse(result);
+
+
+        // Shield
+        Card wizard = Catalog.copyOf("wizard");
+        player.addToParty(wizard);
+        Card shield = Catalog.copyOf("Shield");
+        player.addCardToHand(shield);
+
+        GameEngine.getInstance().setCurrentCard(wizard);
+        result = Command.execute(shield, wizard);
+        Assert.assertTrue(result);
+        Assert.assertTrue(wizard.hasCondition(Armor.class));
+
+        // Attacking Shield
+        result = Command.execute(goblin, wizard);
+        Assert.assertTrue(result);
+        Assert.assertFalse(wizard.hasCondition(Armor.class));
+        Assert.assertEquals(wizard.getHits(), wizard.getMaxHits());
+
+        result = Command.execute(goblin, wizard);
+        Assert.assertTrue(result);
+        Assert.assertNotEquals(wizard.getHits(), wizard.getMaxHits());
+
+        Card potion = Catalog.copyOf("Healing Potion");
+        player.addCardToHand(potion);
+        result = Command.execute(potion, wizard);
+        Assert.assertTrue(result);
+        Assert.assertEquals(wizard.getHits(), wizard.getMaxHits());
+
+        Card horse = Catalog.copyOf("Horse");
+        player.addCardToHand(horse);
+        result = Command.execute(horse, null);
+        Assert.assertTrue(result);
+        Assert.assertTrue(player.getParty().contains(horse));
+
+        Card randomAttack = new Action();
+        randomAttack.setCommand("random_attack 1 2");
+
+        result = Command.execute(randomAttack, null);
+        Assert.assertTrue(result);
+        Assert.assertTrue((thief.getHits() +2 == thief.getMaxHits()) || (wizard.getHits() +2  == wizard.getMaxHits()));
+
+        Card warrior = Catalog.copyOf("Warrior");
+        // trigger events without warrior being in party
+        GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
+        Assert.assertFalse(warrior.hasCondition(Guard.class));
+        // trigger again with warrior being in party, this time warrior should have guard
+        player.addToParty(warrior);
+        GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
+        Assert.assertTrue(warrior.hasCondition(Guard.class));
+
+        // attacking wizard with warrior guard should fail
+        result = Command.execute(goblin, wizard);
+        Assert.assertFalse(result);
+
+        // killing warrior
+        Card kill = new Action();
+        kill.setCommand("attack");
+        kill.setDamage(1000);
+        result = Command.execute(kill, warrior);
+        Assert.assertTrue(result);
+        Assert.assertEquals(0, warrior.getHits());
+        // and attacking again
+        result = Command.execute(goblin, wizard);
+        Assert.assertTrue(result);
+        Assert.assertNotEquals(wizard.getHits(), wizard.getMaxHits());
+
+        AdvancedAction healFull = new AdvancedAction() {
+            @Override
+            public boolean execute(Card targetCard) {
+                Logger.debug("fully healing " + targetCard);
+                targetCard.setHits(targetCard.getMaxHits());
+                return true;
+            }
+        };
+        result = Command.execute(healFull, warrior);
+        Assert.assertTrue(result);
+        Assert.assertEquals(warrior.getHits(), warrior.getMaxHits());
+
+        // some reverse test
+        Card goblinWithGuard = Catalog.copyOf("Goblin");
+        goblinWithGuard.getConditions().add(new Guard());
+        goblinWithGuard.getConditions().add(new Armor());
+
+
+        player.addToHazards(goblin);
+        player.addToHazards(goblinWithGuard);
+        result = Command.execute(warrior, goblin);
+        Assert.assertFalse(result);
+
+        result = Command.execute(warrior, goblinWithGuard);
+        Assert.assertTrue(result);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+}

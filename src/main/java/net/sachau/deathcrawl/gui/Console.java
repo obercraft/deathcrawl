@@ -1,29 +1,23 @@
 package net.sachau.deathcrawl.gui;
 
 
-import javafx.beans.property.SimpleLongProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.catalog.Catalog;
-import net.sachau.deathcrawl.gui.card.CardInfoView;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.catalog.Catalog;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Console extends TextFlow {
 
-    private Pattern pattern = Pattern.compile("\\{Card@(\\d+)\\}");
+    private Pattern pattern = Pattern.compile("\\{Card@(\\d+):(.*?)\\}");
 
     private CardInfoWindow cardInfoWindow = new CardInfoWindow();
 

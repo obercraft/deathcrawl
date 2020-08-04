@@ -7,12 +7,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.types.StartingCharacter;
-import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.type.StartingCharacter;
+import net.sachau.deathcrawl.engine.Player;
 import net.sachau.deathcrawl.gui.card.CardTile;
-import net.sachau.deathcrawl.momentum.MomentumAction;
+import net.sachau.deathcrawl.card.momentum.MomentumAction;
 
 public class MomentumBox extends ScrollPane {
     private Player player;

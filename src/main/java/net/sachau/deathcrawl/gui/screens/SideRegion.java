@@ -4,11 +4,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.cards.catalog.Catalog;
-import net.sachau.deathcrawl.events.Event;
+import net.sachau.deathcrawl.engine.GameEventContainer;
 
-import net.sachau.deathcrawl.events.GameEvent;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.engine.GameEvent;
+import net.sachau.deathcrawl.engine.Player;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -62,19 +61,19 @@ public class SideRegion extends VBox implements Observer {
 
 
         newGame.setOnMouseClicked(event -> {
-            GameEvent.getInstance().send(Event.Type.NEWGAME);
+            GameEvent.getInstance().send(GameEventContainer.Type.NEWGAME);
         });
 
         randomParty.setOnMouseClicked(event -> {
-            GameEvent.getInstance().send(Event.Type.RANDOMPARTY);
+            GameEvent.getInstance().send(GameEventContainer.Type.RANDOMPARTY);
         });
 
         encounter.setOnMouseClicked(event -> {
-            GameEvent.getInstance().send(Event.Type.STARTENCOUNTER);
+            GameEvent.getInstance().send(GameEventContainer.Type.STARTENCOUNTER);
         });
 
         actionDone.setOnMouseClicked(event -> {
-            GameEvent.getInstance().send(Event.Type.PLAYERACTIONDONE);
+            GameEvent.getInstance().send(GameEventContainer.Type.PLAYERACTIONDONE);
         });
 
         cardInfoButton.setOnMouseClicked(event -> {

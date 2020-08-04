@@ -1,5 +1,6 @@
 package net.sachau.deathcrawl;
 
+import net.sachau.deathcrawl.engine.GameEngine;
 import net.sachau.deathcrawl.gui.Console;
 
 import java.io.PrintWriter;
@@ -29,7 +30,7 @@ public class Logger {
     }
 
 
-    private static final Console console = new Console();
+    private static Console console;
 
     public static void info(String text) {
         log(Level.INFO, text);
@@ -45,6 +46,10 @@ public class Logger {
 
 
     public static Console getConsole() {
+
+        if (console == null) {
+            console = new Console();
+        }
         return console;
     }
 
@@ -53,10 +58,11 @@ public class Logger {
             return;
         }
         if (logLevel.getPriority() <= level.getPriority()) {
-            console.appendText(text);
-            if (logLevel == Level.DEBUG) {
-                System.out.println(text);
+            if (GameEngine.getInstance().isInitialized()) {
+                getConsole().appendText(text);
             }
+            System.out.println(text);
+
         }
     }
 
@@ -69,6 +75,10 @@ public class Logger {
             //PrintWriter pw = new PrintWriter(s);
             //e.printStackTrace(pw);
         }
+    }
+
+    public static void main(String [] args) {
+        Logger.debug("text");
     }
 
 

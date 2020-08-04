@@ -1,12 +1,10 @@
 package net.sachau.deathcrawl.gui.card;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.StackPane;
-import net.sachau.deathcrawl.cards.types.Environment;
-import net.sachau.deathcrawl.events.GameEvent;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.keywords.Keyword;
+import net.sachau.deathcrawl.card.type.Environment;
+import net.sachau.deathcrawl.engine.GameEvent;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.keyword.Keyword;
 
 import java.util.Observer;
 

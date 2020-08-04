@@ -5,7 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.card.Card;
 
 public class DamageBox extends HBox {
 

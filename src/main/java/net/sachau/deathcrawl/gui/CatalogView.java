@@ -7,8 +7,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.catalog.Catalog;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.catalog.Catalog;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package net.sachau.deathcrawl.gui.card;
 
-import net.sachau.deathcrawl.cards.Card;
+import net.sachau.deathcrawl.card.Card;
 
 import java.util.HashMap;
 import java.util.Map;

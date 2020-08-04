@@ -3,7 +3,7 @@ package net.sachau.deathcrawl.gui.card;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import net.sachau.deathcrawl.effects.CardEffect;
+import net.sachau.deathcrawl.card.effect.CardEffect;
 import net.sachau.deathcrawl.gui.images.TileSet;
 
 public class ConditionItem extends HBox {

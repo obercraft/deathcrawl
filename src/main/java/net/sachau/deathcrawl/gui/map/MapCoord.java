@@ -9,9 +9,9 @@ import java.util.Objects;
 public class MapCoord implements Serializable {
 
   public enum Type {
-    START("Valley", Color.BLUE),
+    WATER("Water", Color.BLUE),
     VALLEY("Valley", Color.LIGHTGREEN),
-    CAVES("Caves", Color.LIGHTGRAY),
+    HILL("Hills", Color.LIGHTGRAY),
     MOUNTAINS ("Mountains", Color.DARKGRAY),
     WOODS ("Woods", Color.DARKGREEN);
 

@@ -5,9 +5,9 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import net.sachau.deathcrawl.events.GameEvent;
+import net.sachau.deathcrawl.engine.GameEvent;
 import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.engine.Player;
 import net.sachau.deathcrawl.gui.images.Tile;
 import net.sachau.deathcrawl.gui.images.TileSet;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class HexMap extends AnchorPane implements Observer {
 
-    public static final DataFormat mapFormat = new DataFormat("map");
+//    public static final DataFormat mapFormat = new DataFormat("map");
 
     public final static double r = 40; // the inner radius from hexagon center to outer corner
     public final static double n = Math.sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
@@ -55,7 +55,7 @@ public class HexMap extends AnchorPane implements Observer {
 
 
         fill(tilesSet, MapCoord.Type.MOUNTAINS, 5);
-        fill(tilesSet, MapCoord.Type.CAVES, 5);
+        fill(tilesSet, MapCoord.Type.HILL, 5);
         fill(tilesSet, MapCoord.Type.WOODS, 9);
 
         MapTile partyTile = startCoord(tilesSet);
@@ -74,7 +74,7 @@ public class HexMap extends AnchorPane implements Observer {
         partyCounter.setOnDragDetected(event -> {
             Dragboard db = this.startDragAndDrop(TransferMode.ANY);
             Map<DataFormat, Object> map = new HashMap<>();
-            map.put(HexMap.mapFormat, player.getMapCoord());
+            //map.put(HexMap.mapFormat, player.getMapCoord());
             db.setContent(map);
             event.consume();
 

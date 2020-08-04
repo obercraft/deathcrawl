@@ -5,19 +5,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.catalog.Catalog;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.catalog.Catalog;
 import net.sachau.deathcrawl.gui.card.CardInfoView;
-import net.sachau.deathcrawl.gui.card.CardTile;
-import net.sachau.deathcrawl.gui.card.CardView;
 
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
 
 public class CardInfoWindow extends Stage {
 

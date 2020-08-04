@@ -1,11 +1,12 @@
 package net.sachau.deathcrawl.gui.screens;
 
 import javafx.scene.layout.VBox;
-import net.sachau.deathcrawl.events.GameEvent;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.engine.GameEvent;
+import net.sachau.deathcrawl.engine.Player;
 import net.sachau.deathcrawl.gui.CardBoard;
 import net.sachau.deathcrawl.gui.PartySelection;
 import net.sachau.deathcrawl.gui.map.HexMap;
+import net.sachau.deathcrawl.gui.map.RectMap;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -17,7 +18,7 @@ public class MainRegion extends VBox implements Observer {
     WelcomeScreen welcomeScreen;
     Player player;
     CardBoard cardBoard;
-    HexMap hexMap;
+    RectMap rectMap;
     public MainRegion(double gameWidth, double gameHeight, Player player) {
         super();
         this.player =  player;
@@ -45,10 +46,10 @@ public class MainRegion extends VBox implements Observer {
                 return;
             case STARTTURN:
                 getChildren().remove(0, getChildren().size());
-                if (hexMap == null) {
-                    hexMap = new HexMap(player);
+                if (rectMap == null) {
+                    rectMap = new RectMap(player);
                 }
-                getChildren().add(hexMap);
+                getChildren().add(rectMap);
                 return;
             case GUI_STARTENCOUNTER:
                 cardBoard = new CardBoard(player);

@@ -3,13 +3,13 @@ package net.sachau.deathcrawl.gui;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import net.sachau.deathcrawl.events.Event;
-import net.sachau.deathcrawl.events.GameEvent;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.catalog.Catalog;
-import net.sachau.deathcrawl.cards.types.StartingCharacter;
-import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.engine.GameEventContainer;
+import net.sachau.deathcrawl.engine.GameEvent;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.catalog.Catalog;
+import net.sachau.deathcrawl.card.type.StartingCharacter;
+import net.sachau.deathcrawl.card.Deck;
+import net.sachau.deathcrawl.engine.Player;
 import net.sachau.deathcrawl.gui.card.CardSelect;
 import net.sachau.deathcrawl.gui.card.CardTile;
 
@@ -80,8 +80,8 @@ public class PartySelection extends VBox implements Observer {
                     availableCharacters.drawRandom(player.getParty());
                 }
 
-                GameEvent.getInstance().send(Event.Type.PARTYDONE);
-                GameEvent.getInstance().send(Event.Type.STARTTURN);
+                GameEvent.getInstance().send(GameEventContainer.Type.PARTYDONE);
+                GameEvent.getInstance().send(GameEventContainer.Type.STARTTURN);
                 return;
             default:
                 return;

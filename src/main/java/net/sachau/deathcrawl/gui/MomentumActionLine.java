@@ -5,11 +5,11 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.catalog.Catalog;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.card.Card;
+import net.sachau.deathcrawl.card.catalog.Catalog;
+import net.sachau.deathcrawl.engine.Player;
 import net.sachau.deathcrawl.gui.card.CardTile;
-import net.sachau.deathcrawl.momentum.MomentumAction;
+import net.sachau.deathcrawl.card.momentum.MomentumAction;
 
 import java.util.HashMap;
 import java.util.Map;

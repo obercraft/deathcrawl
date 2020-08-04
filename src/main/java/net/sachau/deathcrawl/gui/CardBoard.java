@@ -3,7 +3,7 @@ package net.sachau.deathcrawl.gui;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.engine.Player;
 
 public class CardBoard extends VBox {
 

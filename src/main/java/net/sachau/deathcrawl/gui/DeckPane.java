@@ -1,21 +1,14 @@
 package net.sachau.deathcrawl.gui;
 
 import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import net.sachau.deathcrawl.Logger;
-import net.sachau.deathcrawl.cards.Card;
-import net.sachau.deathcrawl.cards.Deck;
-import net.sachau.deathcrawl.dto.Player;
+import net.sachau.deathcrawl.card.Card;
 import net.sachau.deathcrawl.gui.card.CardTile;
 import net.sachau.deathcrawl.gui.card.CardTileCache;
-
-import java.util.List;
 
 public class DeckPane extends ScrollPane {
 
