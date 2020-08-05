@@ -2,8 +2,9 @@
 <!DOCTYPE cards SYSTEM "cards.dtd">
 <!--
 Weapon
-* damage
-* draw
+[x] attack
+[x] draw
+[x] limited-usage
 * ranged
 * + damage for each enemy
 * response damage
@@ -13,8 +14,8 @@ Weapon
 * attack all
 * attack adjacent
 * attack random
-* permanent
-* permanent with token
+[x] permanent
+[x] permanent with token
 * bonus for condition
 -->
 <cards>
@@ -44,7 +45,8 @@ Weapon
     <card>
         <name>Healing Potion</name>
         <type>Item</type>
-        <command>heal 1</command>
+        <damage>1</damage>
+        <command>heal target</command>
         <keywords>SIMPLE</keywords>
     </card>
 
@@ -77,7 +79,8 @@ Weapon
     <card>
         <name>Healing Touch</name>
         <type>Spell</type>
-        <command>heal 2</command>
+        <damage>2</damage>
+        <command>heal target</command>
         <keywords>cleric</keywords>
     </card>
 

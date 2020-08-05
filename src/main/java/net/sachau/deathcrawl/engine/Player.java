@@ -4,11 +4,13 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.card.Card;
 import net.sachau.deathcrawl.card.Creature;
 import net.sachau.deathcrawl.card.Deck;
 import net.sachau.deathcrawl.card.keyword.Keyword;
 import net.sachau.deathcrawl.gui.map.MapCoord;
+import org.apache.commons.lang3.StringUtils;
 
 
 public class Player extends Creature {
@@ -174,11 +176,19 @@ public class Player extends Creature {
 		}
 	}
 
-	public void addToParty(Card card) {
+	public boolean addToParty(Card card) {
+		if (!StringUtils.isEmpty(card.getUniqueId())) {
+			for (Card c : getParty()) {
+				if (card.getUniqueId().toLowerCase().equalsIgnoreCase(c.getUniqueId())) {
+					Logger.debug("already contains a " + card.getUniqueId());
+					return false;
+				}
+			}
+		}
 		card.setOwner(this);
 		card.addKeywords(Keyword.PERMANENT);
 		this.getParty().add(card);
-
+		return true;
 	}
 
 	public void addToHazards(Card card) {

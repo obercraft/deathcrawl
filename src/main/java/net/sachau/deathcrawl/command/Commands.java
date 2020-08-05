@@ -1,31 +1,33 @@
 package net.sachau.deathcrawl.command;
 
+import net.sachau.deathcrawl.card.keyword.Keyword;
+
 public enum Commands {
-    ATTACK (CommandType.ATTACK),
-    DRAW (CommandType.ACTION),
-    GOLD (CommandType.ACTION),
-    RANDOM_ATTACK (CommandType.ATTACK),
-    SHIELD (CommandType.ACTION),
-    HEAL (CommandType.SPELL),
-    POISON_ITEM  (CommandType.ACTION),
-    MOMENTUM  (CommandType.ACTION),
-    PLAY_TO_PARTY  (CommandType.ACTION),
-    PRONE (CommandType.ACTION),
-    EXHAUST (CommandType.ACTION),
-    EXHAUST_RANDOM (CommandType.ACTION),
-    ADD_CARD (CommandType.ACTION),
+    ATTACK (CommandStatus.build(CommandType.ATTACK).notProne().notSelf().notFriendly()),
+    DRAW (CommandStatus.build(CommandType.ACTION)),
+    GOLD (CommandStatus.build(CommandType.ACTION)),
+    RANDOM_ATTACK (CommandStatus.build(CommandType.ATTACK).notProne().notSelf().notFriendly()),
+    SHIELD (CommandStatus.build(CommandType.SPELL).notEnemy()),
+    HEAL (CommandStatus.build(CommandType.SPELL).notEnemy()),
+    POISON_ITEM  (CommandStatus.build(CommandType.ACTION).notEnemy().notProne().onlyKeywords(Keyword.ITEM)),
+    MOMENTUM  (CommandStatus.build(CommandType.ACTION)),
+    PLAY_TO_PARTY  (CommandStatus.build(CommandType.ACTION)),
+    PRONE (CommandStatus.build(CommandType.ATTACK).notSelf().notFriendly().notProne()),
+    EXHAUST (CommandStatus.build(CommandType.ATTACK).notSelf().notFriendly()),
+    EXHAUST_RANDOM (CommandStatus.build(CommandType.ATTACK).notSelf().notFriendly()),
+    ADD_CARD (CommandStatus.build(CommandType.ACTION)),
     ;
-    private CommandType type;
+    private CommandStatus status;
 
-    Commands(CommandType type) {
-        this.type = type;
+    Commands(CommandStatus status) {
+        this.status = status;
     }
 
-    public CommandType getType() {
-        return type;
+    public CommandStatus getStatus() {
+        return status;
     }
 
-    public void setType(CommandType type) {
-        this.type = type;
+    public void setStatus(CommandStatus status) {
+        this.status = status;
     }
 }

@@ -3,7 +3,6 @@ package net.sachau.deathcrawl.engine;
 import net.sachau.deathcrawl.card.Card;
 import net.sachau.deathcrawl.card.type.Monster;
 import net.sachau.deathcrawl.command.CommandParser;
-import net.sachau.deathcrawl.engine.Player;
 import net.sachau.deathcrawl.card.effect.Armor;
 import net.sachau.deathcrawl.card.effect.Guard;
 import net.sachau.deathcrawl.card.effect.Stealth;
@@ -32,7 +31,7 @@ public class GameAI extends Observable {
 
                 Card target = player.getParty().get(randomNum);
 
-                CommandParser.executeCommand(monsterCard, target);
+                CommandParser.executeCommands(monsterCard, target);
             } else {
 
                 Card target = null;
@@ -63,7 +62,7 @@ public class GameAI extends Observable {
                 }
 
                 if (target != null) {
-                    CommandParser.executeCommand(monsterCard, target);
+                    CommandParser.executeCommands(monsterCard, target);
                 }
             }
 

@@ -4,31 +4,49 @@ import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.card.Card;
 import net.sachau.deathcrawl.card.CardUtils;
 import net.sachau.deathcrawl.card.catalog.Catalog;
+import net.sachau.deathcrawl.card.effect.Prone;
 import net.sachau.deathcrawl.card.type.AdvancedAction;
+import net.sachau.deathcrawl.card.type.LimitedUsage;
 import net.sachau.deathcrawl.engine.GameEngine;
 import net.sachau.deathcrawl.engine.Player;
 import net.sachau.deathcrawl.card.effect.Armor;
 import net.sachau.deathcrawl.card.effect.Exhausted;
 import net.sachau.deathcrawl.card.keyword.Keyword;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class CommandParser {
 
-    public static boolean executeCommand(Card source, Card target) {
+    public static boolean executeCommands(Card source, Card target) {
+        if (source instanceof LimitedUsage) {
+            List<Card> cards = GameEngine.getInstance().getPlayer().getParty();
+            if (cards != null && cards.contains(source)) {
+                LimitedUsage lu = (LimitedUsage) source;
+                return lu.execute(target);
+            }
+        }
+        return executeCommands(source.getCommand(), source, target);
+    }
+
+    public static boolean executeCommands(String commandString, Card source, Card target) {
+
+        if (source == null) {
+            Logger.debug("no source card");
+            return false;
+        }
 
         if (source instanceof AdvancedAction) {
             return ((AdvancedAction) source).execute(target);
         }
 
-        if (source == null || source.getCommand() == null) {
+        if (StringUtils.isEmpty(source.getCommand()) && StringUtils.isEmpty(commandString)) {
+            Logger.debug("no command given");
             return false;
         }
 
-        String[] commands = source.getCommand()
-                .split(";", -1);
+        String cmds = StringUtils.isNotEmpty(commandString) ? commandString : source.getCommand();
+        String[] commands = cmds.trim().toLowerCase().split(";", -1);
 
         if (commands == null || commands.length == 0) {
             return false;
@@ -54,6 +72,16 @@ public class CommandParser {
         Commands command = Commands.valueOf(commands.get(0).toUpperCase()
                 .trim());
 
+        CommandTarget commandTarget = getCommandTarget(commands.size() > 1 ? commands.get(1) : "");
+
+        boolean statusResult = command.getStatus()
+                .check(source, target);
+
+        if (!statusResult) {
+            return false;
+        }
+
+        Logger.debug("$ " + command + " " + commandTarget + " (" + source +", " + target +")");
         switch (command) {
             case DRAW: {
                 int amount = 1;
@@ -70,36 +98,34 @@ public class CommandParser {
                 if (target == null) {
                     return false;
                 }
-                if (target.getOwner() instanceof Player && source.getOwner() instanceof Player) {
-                    return false;
-                }
-                return source.attack(target, source.getDamage());
-            }
-            case RANDOM_ATTACK: {
 
-                List<Card> targets = CardUtils.getPossibleTargets(source);
+                int count = commands.size() >= 3 ? new Integer( commands.get(2)) : 1;
+                List<Card> targets = CardUtils.getPossibleTargets(source, target, commandTarget, count);
                 if (targets.size() == 0) {
                     Logger.debug(source +  " has no targets");
                     return false;
                 }
-                int count = new Integer(commands.get(1));
-                int amount = 1;
 
-                if (commands.size() > 2) {
-                    amount = Integer.parseInt(commands.get(2));
-                }
 
-                for (int i = 0; i < count; i++) {
-                    Card targetCard = targets.get(ThreadLocalRandom.current().nextInt(0, targets.size()));
-                    source.attack(targetCard, amount);
+                boolean result = true;
+                for (Card t : targets) {
+                    result &= source.attack(t, source.getDamage());
+
                 }
-                return true;
+                return result;
             }
             case HEAL: {
+
+                int count = commands.size() >=3 ? new Integer(commands.get(2)) : 1;
+
+                List<Card> targets = CardUtils.getPossibleFriendlyTargets(source, target, commandTarget, count);
+                boolean result = true;
                 if (target != null) {
-                    return target.heal(new Integer(commands.get(1)));
+                    for (Card t : targets) {
+                        result &= source.heal(t, source.getDamage());
+                    }
                 }
-                return false;
+                return result;
             }
             case SHIELD: {
                 if (target != null && target.getKeywords()
@@ -160,18 +186,35 @@ public class CommandParser {
             }
 
             case PRONE: {
+                int count = commands.size() >= 3 ? new Integer( commands.get(2)) : 1;
+                List<Card> targets = CardUtils.getPossibleTargets(source, target, commandTarget, count);
+                if (targets.size() == 0) {
+                    Logger.debug(source + " has no targets");
+                    return false;
+                }
+                for (Card t : targets) {
+                    t.getConditions().add(new Prone());
+                    Logger.debug(source + " prones" + t);
+
+                }
                 return true;
             }
             case EXHAUST: {
-                source.getConditions().add(new Exhausted());
-                return true;
-            }
-            case EXHAUST_RANDOM: {
-                Card card = CardUtils.getRandomCard(CardUtils.getPossibleTargets(GameEngine.getInstance().getPlayer().getParty()));
-                if (card != null) {
-                    card.getConditions().add(new Exhausted());
+                if (target == null) {
+                    return false;
+                }
+                int count = commands.size() >= 3 ? new Integer( commands.get(2)) : 1;
+                List<Card> targets = CardUtils.getPossibleTargets(source, target, commandTarget, count);
+                if (targets.size() == 0) {
+                    Logger.debug(source +  " has no targets");
+                    return false;
+                }
+
+                for (Card t : targets) {
+                    t.getConditions().add(new Exhausted());
                 }
                 return true;
+
             }
 
             case ADD_CARD: {
@@ -194,5 +237,29 @@ public class CommandParser {
         }
 
 
+    }
+
+    private static CommandTarget getCommandTarget(String s) {
+        if (StringUtils.isEmpty(s)) {
+            return CommandTarget.TARGET;
+        }
+        if (s.trim().toLowerCase().contains("all")) {
+            return CommandTarget.ALL;
+        }
+
+        if (s.trim().toLowerCase().contains("self")) {
+            return CommandTarget.SELF;
+        }
+
+        if (s.trim().toLowerCase().contains("rand")) {
+            return CommandTarget.RANDOM;
+        }
+
+        if (s.trim().toLowerCase().contains("adj")) {
+            return CommandTarget.ADJACENT;
+        }
+
+
+        return CommandTarget.TARGET;
     }
 }

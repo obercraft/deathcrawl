@@ -120,7 +120,7 @@ public class CardTile extends CardView {
     }
 
     private void executeCommand(Card sourceCard, int cost, boolean discard) {
-        boolean commandSuccessful = CommandParser.executeCommand(sourceCard, getCard());
+        boolean commandSuccessful = CommandParser.executeCommands(sourceCard, getCard());
         if (commandSuccessful) {
             Creature owner = sourceCard.getOwner();
             if (owner != null && owner instanceof Player) {

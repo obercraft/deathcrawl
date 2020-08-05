@@ -233,6 +233,9 @@ public abstract class Card {
     }
 
     public boolean attack(Card target, int attack) {
+        return attack(target, attack, false);
+    }
+    private  boolean attack(Card target, int attack, boolean isRetaliate) {
 
         if (target == null) {
             Logger.debug("target is null");
@@ -281,7 +284,10 @@ public abstract class Card {
         }
 
         target.setHits(Math.max(0,hits));
-        Logger.debug(target + " hit for " + attack + " damage");
+        Logger.debug(this + (isRetaliate ? " retaliates " : " attacks " ) + target + " for " + attack + " damage");
+        if (target.hasKeyword(Keyword.RETALIATE)) {
+            target.attack(this, target.getDamage(), true);
+        }
         return true;
 
     }
@@ -344,17 +350,17 @@ public abstract class Card {
         return false;
     }
 
-    public boolean heal(int amount) {
+    public boolean heal(Card target, int amount) {
         if (amount <= 0) {
             return true;
         }
-        int h = amount + getHits();
-        if (h <= getMaxHits()) {
-            setHits(h);
+        int h = amount + target.getHits();
+        if (h <= target.getMaxHits()) {
+            target.setHits(h);
         } else {
-            setHits(getMaxHits());
+            target. setHits(getMaxHits());
         }
-        Logger.debug(this + " healed for " + amount);
+        Logger.debug(this + " heals " + target + " for " + amount);
         return true;
     }
 

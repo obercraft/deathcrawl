@@ -2,13 +2,11 @@ package net.sachau.deathcrawl.card;
 
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.card.catalog.Catalog;
-import net.sachau.deathcrawl.card.effect.Armor;
-import net.sachau.deathcrawl.card.effect.Exhausted;
-import net.sachau.deathcrawl.card.effect.Guard;
+import net.sachau.deathcrawl.card.effect.*;
 import net.sachau.deathcrawl.card.type.Action;
 import net.sachau.deathcrawl.card.type.AdvancedAction;
+import net.sachau.deathcrawl.card.type.LimitedUsage;
 import net.sachau.deathcrawl.card.type.StartingCharacter;
-import net.sachau.deathcrawl.card.effect.CardEffect;
 import net.sachau.deathcrawl.card.keyword.Keyword;
 import net.sachau.deathcrawl.command.Command;
 import net.sachau.deathcrawl.command.CommandParser;
@@ -144,9 +142,10 @@ public class CardTest {
         Assert.assertTrue(player.getParty().contains(horse));
 
         Card randomAttack = new Action();
-        randomAttack.setCommand("random_attack 1 2");
+        randomAttack.setCommand("attack random");
+        randomAttack.setDamage(2);
 
-        result = Command.execute(randomAttack, null);
+        result = Command.execute(randomAttack, thief);
         Assert.assertTrue(result);
         Assert.assertTrue((thief.getHits() +2 == thief.getMaxHits()) || (wizard.getHits() +2  == wizard.getMaxHits()));
 
@@ -201,16 +200,67 @@ public class CardTest {
         result = Command.execute(warrior, goblinWithGuard);
         Assert.assertTrue(result);
 
+        // target self?
+        warrior.removeCondition(Exhausted.class);
+        result = Command.execute(warrior, warrior);
+        Assert.assertFalse(result);
+
+        // target friendly?
+        warrior.removeCondition(Exhausted.class);
+        result = Command.execute(warrior, wizard);
+        Assert.assertFalse(false);
+
+        // attack prone?
+        warrior.removeCondition(Exhausted.class);
+        warrior.getConditions().add(new Prone());
+        result = Command.execute(warrior, wizard);
+        Assert.assertFalse(false);
+
+        // retaliate
+        goblinWithGuard.addKeywords(Keyword.RETALIATE);
+        warrior.removeCondition(Prone.class);
+        result = Command.execute(warrior, goblinWithGuard);
+        Assert.assertTrue(result);
+
+        // retaliate with kill
+        goblinWithGuard.addKeywords(Keyword.RETALIATE);
+        goblinWithGuard.setDamage(1000);
+        warrior.removeCondition(Prone.class);
+        warrior.removeCondition(Exhausted.class);
+        result = Command.execute(warrior, goblinWithGuard);
+        Assert.assertTrue(result);
+
+        // attack with prone
+        Card goblinProner = Catalog.copyOf("Goblin");
+        goblinProner.setCommand("attack;prone");
+        goblinProner.setDamage(2);
+        result = Command.execute(healFull, warrior);
+        Assert.assertTrue(result);
+        result = Command.execute(goblinProner, warrior);
+        Assert.assertTrue(result);
+        Assert.assertTrue(warrior.hasCondition(Prone.class));
+        Assert.assertNotEquals(warrior.getHits(), warrior.getMaxHits());
 
 
+        // Limited Usage
+        LimitedUsage limitedUsage = new LimitedUsage();
+        limitedUsage.setOwner(player);
+        limitedUsage.setUses(2);
+        limitedUsage.setDamage(1);
 
+        limitedUsage.setUsageCommand("heal target");
+        player.addToParty(limitedUsage);
 
-
-
-
-
-
-
+        result = Command.execute(limitedUsage, warrior);
+        Assert.assertTrue(result);
+        Assert.assertEquals(warrior.getHits(), warrior.getMaxHits() -1);
+        Assert.assertEquals(1, limitedUsage.getUses());
+        result = Command.execute(limitedUsage, warrior);
+        Assert.assertTrue(result);
+        Assert.assertEquals(warrior.getHits(), warrior.getMaxHits());
+        Assert.assertEquals(0, limitedUsage.getUses());
+        result = Command.execute(limitedUsage, warrior);
+        Assert.assertFalse(result);
 
 
 

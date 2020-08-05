@@ -4,7 +4,6 @@ import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.card.Card;
 import net.sachau.deathcrawl.card.effect.Exhausted;
 import net.sachau.deathcrawl.card.keyword.Keyword;
-import net.sachau.deathcrawl.card.type.AdvancedAction;
 import net.sachau.deathcrawl.engine.GameEngine;
 import net.sachau.deathcrawl.engine.Player;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,7 @@ public class Command {
             if (args.size() > 0) {
                 Commands c = Commands.valueOf(args.get(0));
                 if (c != null) {
-                    return c.getType();
+                    return c.getStatus().getType();
                 }
             }
         }
@@ -45,7 +44,7 @@ public class Command {
         }
 
         if (source.hasKeyword(Keyword.PERMANENT)) {
-            return CommandParser.executeCommand(source, target);
+            return CommandParser.executeCommands(source, target);
         }
 
         if (source.getOwner() instanceof Player) {
@@ -56,7 +55,7 @@ public class Command {
                 return false;
             }
         }
-        boolean result = CommandParser.executeCommand(source, target);
+        boolean result = CommandParser.executeCommands(source, target);
         if (result) {
             if (source.getOwner() instanceof Player) {
                 GameEngine.getInstance().getPlayer().discard(source);

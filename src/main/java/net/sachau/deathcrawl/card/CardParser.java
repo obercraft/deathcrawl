@@ -5,10 +5,7 @@ import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.card.catalog.Catalog;
 import net.sachau.deathcrawl.card.effect.CardEffect;
 import net.sachau.deathcrawl.card.keyword.Keyword;
-import net.sachau.deathcrawl.card.type.Encounter;
-import net.sachau.deathcrawl.card.type.Environment;
-import net.sachau.deathcrawl.card.type.Monster;
-import net.sachau.deathcrawl.card.type.StartingCharacter;
+import net.sachau.deathcrawl.card.type.*;
 import net.sachau.deathcrawl.engine.GameEventContainer;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
@@ -192,6 +189,26 @@ public class CardParser {
                 card.setCommand(cardNode.getTextContent()
                         .trim()
                         .toLowerCase());
+            }
+
+            if (cardNode.getNodeName().toLowerCase()
+                    .equals("usage-command")) {
+                if (card instanceof LimitedUsage) {
+                    LimitedUsage lu = (LimitedUsage) card;
+                    lu.setUsageCommand(cardNode.getTextContent()
+                            .trim()
+                            .toLowerCase());
+                }
+            }
+
+            if (cardNode.getNodeName().toLowerCase()
+                    .equals("uses")) {
+                if (card instanceof LimitedUsage) {
+                    LimitedUsage lu = (LimitedUsage) card;
+                    lu.setUses(new Integer(cardNode.getTextContent()
+                            .trim()
+                            .toLowerCase()));
+                }
             }
 
 
