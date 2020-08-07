@@ -3,6 +3,9 @@ package net.sachau.deathcrawl.gui.map;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -13,7 +16,7 @@ import net.sachau.deathcrawl.engine.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapTile extends Rectangle {
+public class MapTile extends AnchorPane {
 
 
     private MapCoord mapCoord;
@@ -30,11 +33,12 @@ public class MapTile extends Rectangle {
         double x = mapCoord.getX();
         double y = mapCoord.getY();
 
+        this.setX
         this.setX(x);
         this.setY(y);
         this.setWidth(RectMap.TILE_WIDTH);
         this.setHeight(RectMap.TILE_HEIGHT);
-
+        this.
         // set up the visuals and a click listener for the tile
         setFill(mapCoord.getType().getColor());
         setStrokeWidth(1);

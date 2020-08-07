@@ -253,20 +253,22 @@ public abstract class Card {
             return true;
         }
 
-        List<Card> possibleGuards;
-        if (target.getOwner() instanceof Player) {
-            possibleGuards = ((Player) target.getOwner()).getParty();
-        } else {
-            possibleGuards = GameEngine.getInstance()
-                    .getPlayer()
-                    .getHazards();
-        }
+        if (!this.hasOneKeyword(Keyword.RANGED, Keyword.SPELL)) {
+            List<Card> possibleGuards;
+            if (target.getOwner() instanceof Player) {
+                possibleGuards = ((Player) target.getOwner()).getParty();
+            } else {
+                possibleGuards = GameEngine.getInstance()
+                        .getPlayer()
+                        .getHazards();
+            }
 
-        if (possibleGuards != null) {
-            for (Card guard : possibleGuards) {
-                if (guard.isAlive() && guard.getId() != target.getId() && guard.hasCondition(Guard.class)) {
-                    Logger.debug(target + " is guarded by " + guard);
-                    return false;
+            if (possibleGuards != null) {
+                for (Card guard : possibleGuards) {
+                    if (guard.isAlive() && guard.getId() != target.getId() && guard.hasCondition(Guard.class)) {
+                        Logger.debug(target + " is guarded by " + guard);
+                        return false;
+                    }
                 }
             }
         }
@@ -333,6 +335,14 @@ public abstract class Card {
             }
         }
         return false;
+    }
+
+    public boolean hasOneKeyword(Keyword  ...keywords) {
+        Keywords kwds = new Keywords();
+        for (Keyword k : keywords) {
+            kwds.add(k);
+        }
+        return hasOneKeyword(kwds);
     }
 
     public boolean hasOneKeyword(Keywords keywords) {

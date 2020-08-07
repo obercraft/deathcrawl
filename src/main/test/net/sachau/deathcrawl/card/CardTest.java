@@ -162,6 +162,13 @@ public class CardTest {
         result = Command.execute(goblin, wizard);
         Assert.assertFalse(result);
 
+        goblin.addKeywords(Keyword.RANGED);
+        // attacking wizard with ranged goblin
+        result = Command.execute(goblin, wizard);
+        Assert.assertTrue(result);
+
+
+
         // killing warrior
         Card kill = new Action();
         kill.setCommand("attack");

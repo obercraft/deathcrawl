@@ -14,8 +14,8 @@ import java.util.Map;
 public class TileSet {
 
     private static final String[] filenames = new String[] {
-            "icons.png",
-            "icons1.png",
+            "/icons.png",
+            "/icons1.png",
     };
 
     private static TileSet instance;
@@ -32,7 +32,7 @@ public class TileSet {
 
     private TileSet() {
         for (String filename : filenames) {
-            InputStream inputStream = TileSet.class.getResourceAsStream("/icons.png");
+            InputStream inputStream = TileSet.class.getResourceAsStream(filename);
             Image image = new Image(inputStream);
 
             PixelReader reader = image.getPixelReader();

@@ -2,6 +2,7 @@ package net.sachau.deathcrawl.gui.map;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import net.sachau.deathcrawl.gui.images.Tile;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -10,18 +11,26 @@ public class MapCoord implements Serializable {
 
   public enum Type {
     WATER("Water", Color.BLUE),
-    VALLEY("Valley", Color.LIGHTGREEN),
+    VALLEY("Valley", Color.LIGHTGREEN, Tile.PLAINS),
     HILL("Hills", Color.LIGHTGRAY),
     MOUNTAINS ("Mountains", Color.DARKGRAY),
     WOODS ("Woods", Color.DARKGREEN);
 
     private String name;
     private Color color;
+    private Tile tile;
 
     Type(String name, Color paint) {
       this.name = name;
       this.color = paint;
     }
+
+    Type(String name, Color paint, Tile tile) {
+      this.name = name;
+      this.color = paint;
+      this.tile = tile;
+    }
+
 
     public String getName() {
       return name;
@@ -37,6 +46,14 @@ public class MapCoord implements Serializable {
 
     public void setColor(Color color) {
       this.color = color;
+    }
+
+    public Tile getTile() {
+      return tile;
+    }
+
+    public void setTile(Tile tile) {
+      this.tile = tile;
     }
   }
 

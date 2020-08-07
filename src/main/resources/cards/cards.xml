@@ -5,15 +5,15 @@ Weapon
 [x] attack
 [x] draw
 [x] limited-usage
-* ranged
+[*] ranged
 * + damage for each enemy
-* response damage
+[*] response damage (retilate)
 * momentum
 * discard to top
 * cancel damage
-* attack all
-* attack adjacent
-* attack random
+[x] attack all
+[x] attack adjacent
+[x] attack random
 [x] permanent
 [x] permanent with token
 * bonus for condition

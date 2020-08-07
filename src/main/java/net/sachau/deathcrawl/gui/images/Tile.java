@@ -8,7 +8,8 @@ public enum Tile {
     GUARD(0,2, 6),
     STEALTH(0,2,0),
     POISONOUS(0,1, 0),
-    PARTY(0,3,4),
+    PARTY(1,34,29),
+    PLAINS(1,21,9),
 
     MARKED(0,4,3);
 
