@@ -7,21 +7,29 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
-public class CornerValueBox extends HBox {
+public class CornerValueBoxOld extends StackPane {
 
     SimpleIntegerProperty property;
     SimpleIntegerProperty maxProperty;
 
-    public CornerValueBox(SimpleIntegerProperty simpleIntegerProperty, SimpleIntegerProperty maxProperty) {
+    public CornerValueBoxOld(SimpleIntegerProperty simpleIntegerProperty, SimpleIntegerProperty maxProperty, String position, String cssClass) {
 
         super();
         this.property = simpleIntegerProperty;
-        this.maxProperty = maxProperty;
-
+        this.maxProperty = maxProperty; 
+        getStyleClass().add(cssClass);
+        getStyleClass().add("value-" + position);
+    
+        HBox textBox = new HBox();
+        textBox.getStyleClass()
+                .add("value-box-" + position);
         Text hits = new Text(getHitString());
-        hits.getStyleClass().add("card-corner-text");
-
-        getChildren().add(hits);
+        hits.getStyleClass()
+                .add("card-corner-text");
+        //hits.setFont(CardCache.get("card", 12));
+        textBox.getChildren()
+                .add(hits);
+        getChildren().add(textBox);
 
         this.property
                 .addListener(new ChangeListener<Number>() {
@@ -55,7 +63,7 @@ public class CornerValueBox extends HBox {
                             hits.setText(getHitString());
                         }
                     });
-
+            
         }
 
         

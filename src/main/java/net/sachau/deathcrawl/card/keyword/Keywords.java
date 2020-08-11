@@ -1,5 +1,6 @@
 package net.sachau.deathcrawl.card.keyword;
 
+import net.sachau.deathcrawl.gui.images.Tile;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
@@ -14,6 +15,16 @@ public class Keywords extends HashSet<Keyword> {
         }
         return keywords;
     }
+
+    public Tile getCharacterTile() {
+        for (Keyword kw : this) {
+            if (kw.getBorderTile() != null) {
+                return kw.getBorderTile();
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public String toString() {

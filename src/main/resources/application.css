@@ -131,6 +131,12 @@
     -fx-font-weight: bold;
 }
 
+.card-title-text {
+    -fx-fill: #000000;
+    -fx-font-weight: bold;
+}
+
+
 .card-text {
     -fx-fill: #000000;
     -fx-opacity: 1.0;

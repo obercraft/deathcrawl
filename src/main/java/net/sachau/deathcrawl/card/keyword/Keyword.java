@@ -1,14 +1,16 @@
 package net.sachau.deathcrawl.card.keyword;
 
-public enum Keyword {
-    //BASIC, // these are allowed in the starting deck
-    CASTER,
+import net.sachau.deathcrawl.gui.images.Tile;
 
-    FIGHTER(true),
-    ROGUE(true),
-    WIZARD(true),
-    CLERIC(true),
-    PALADIN(true),
+public enum Keyword {
+
+    CASTER(),
+
+    FIGHTER( Tile.FIGHTER),
+    ROGUE(Tile.ROGUE),
+    WIZARD(Tile.WIZARD),
+    CLERIC(Tile.CLERIC),
+    PALADIN(Tile.PALADIN),
 
     SIMPLE, // simple cards can be played by all classes
     ITEM (true),
@@ -23,9 +25,22 @@ public enum Keyword {
 
     private boolean onCard;
 
+    private Tile borderTile;
+
     Keyword(boolean onCard) {
         this.onCard = onCard;
     }
+
+
+    Keyword(boolean onCard, Tile borderTile) {
+        this.onCard = onCard;
+        this.borderTile = borderTile;
+    }
+
+    Keyword(Tile borderTile) {
+        this.borderTile = borderTile;
+    }
+
 
     Keyword() {
     }
@@ -36,5 +51,13 @@ public enum Keyword {
 
     public void setOnCard(boolean onCard) {
         this.onCard = onCard;
+    }
+
+    public Tile getBorderTile() {
+        return borderTile;
+    }
+
+    public void setBorderTile(Tile borderTile) {
+        this.borderTile = borderTile;
     }
 }

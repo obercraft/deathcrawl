@@ -3,6 +3,7 @@ package net.sachau.deathcrawl.gui;
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -15,16 +16,29 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Console extends TextFlow {
+public class Console extends ScrollPane {
 
     private Pattern pattern = Pattern.compile("\\{Card@(\\d+):(.*?)\\}");
 
     private CardInfoWindow cardInfoWindow = new CardInfoWindow();
 
+    private TextFlow textFlow = new TextFlow();
 
 
     public Console() {
         super();
+        this.setFitToHeight(true);
+        this.setFitToWidth(true);
+        this.setContent(textFlow);
+
+        Console pane = this;
+        textFlow.heightProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    textFlow.layout();
+
+                pane.setVvalue( 1.0d );
+                }
+        );
     }
 
     public void appendText(String text) {
@@ -36,7 +50,7 @@ public class Console extends TextFlow {
         for (int i = 0; i< args.length; i ++) {
             tokens.add(createToken(args[i], i == args.length -1));
         }
-        this.getChildren().addAll(tokens);
+        this.textFlow.getChildren().addAll(tokens);
     }
 
     private Node createToken(String arg, boolean isLast) {

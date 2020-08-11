@@ -108,24 +108,24 @@ public class RectMap extends AnchorPane implements Observer {
         return tilesSet.get(randomNum);
     }
 
-    private void fill(List<MapTile> tiles, MapCoord.Type type, int count) {
-        int i = 0;
-        while (i < count) {
-            int randomNum = ThreadLocalRandom.current()
-                    .nextInt(0, tiles.size());
-            if (tiles.get(randomNum)
-                    .getMapCoord()
-                    .getType()
-                    .equals(MapCoord.Type.VALLEY)) {
-                tiles.get(randomNum)
-                        .getMapCoord()
-                        .setType(type);
-                tiles.get(randomNum)
-                        .setFill(type.getColor());
-                i++;
-            }
-        }
-    }
+//    private void fill(List<MapTile> tiles, MapCoord.Type type, int count) {
+//        int i = 0;
+//        while (i < count) {
+//            int randomNum = ThreadLocalRandom.current()
+//                    .nextInt(0, tiles.size());
+//            if (tiles.get(randomNum)
+//                    .getMapCoord()
+//                    .getType()
+//                    .equals(MapCoord.Type.VALLEY)) {
+//                tiles.get(randomNum)
+//                        .getMapCoord()
+//                        .setType(type);
+//                tiles.get(randomNum)
+//                        .setFill(type.getColor());
+//                i++;
+//            }
+//        }
+//    }
 
     @Override
     public void update(Observable o, Object arg) {
