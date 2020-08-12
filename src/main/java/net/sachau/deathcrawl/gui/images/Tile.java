@@ -3,10 +3,10 @@ package net.sachau.deathcrawl.gui.images;
 public enum Tile {
 
     ROGUE(1, 39, 28),
-    FIGHTER(1, 39, 28),
-    CLERIC(1, 39, 28),
-    PALADIN(1, 39, 28),
-    WIZARD(1, 39, 28),
+    FIGHTER(1, 36, 28),
+    CLERIC(1, 27, 28),
+    PALADIN(1, 35, 28),
+    WIZARD(1, 41, 28),
 
     DEATHCRAWL(0,0, 0, 100, 100),
     DEATHCRAWL_SMALL(0, 0, 0),

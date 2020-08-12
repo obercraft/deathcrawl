@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.sachau.deathcrawl.engine.GameEngine;
@@ -15,12 +16,18 @@ import net.sachau.deathcrawl.engine.GameEventContainer;
 import net.sachau.deathcrawl.engine.GameEvent;
 import net.sachau.deathcrawl.gui.screens.GameScreen;
 
+import java.util.List;
+
 public class Main extends Application {
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        Font font = Font.loadFont(Main.class.getResourceAsStream("/fontawesome-solid-900.otf"), 12);
+        String name = font.getName();
+        List<String> families = Font.getFamilies();
+        List<String> fontNames = Font.getFontNames();
         //primaryScreenBounds.getHeight()
         double width = primaryScreenBounds.getWidth() - 100;
         double height = primaryScreenBounds.getHeight() - 100;

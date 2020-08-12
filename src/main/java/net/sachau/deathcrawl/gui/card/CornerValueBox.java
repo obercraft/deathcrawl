@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class CornerValueBox extends HBox {
@@ -20,7 +21,6 @@ public class CornerValueBox extends HBox {
 
         Text hits = new Text(getHitString());
         hits.getStyleClass().add("card-corner-text");
-
         getChildren().add(hits);
 
         this.property

@@ -154,3 +154,14 @@
     -fx-alignment: top-right;
 
 }
+
+.border {
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 1;
+}
+
+
+.icons {
+    -fx-font-family: "Font Awesome 5 Free Solid";
+    -fx-font-size: 12px;
+}
