@@ -288,7 +288,11 @@ public abstract class Card {
         target.setHits(Math.max(0,hits));
         Logger.debug(this + (isRetaliate ? " retaliates " : " attacks " ) + target + " for " + attack + " damage");
         if (target.hasKeyword(Keyword.RETALIATE)) {
-            target.attack(this, target.getDamage(), true);
+            if (this.hasKeyword(Keyword.CREATURE)) {
+                target.attack(this, target.getDamage(), true);
+            } else {
+                Logger.debug("cannot retaliate " + this);
+            }
         }
         return true;
 

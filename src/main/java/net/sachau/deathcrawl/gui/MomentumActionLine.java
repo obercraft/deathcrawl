@@ -10,6 +10,7 @@ import net.sachau.deathcrawl.card.catalog.Catalog;
 import net.sachau.deathcrawl.engine.Player;
 import net.sachau.deathcrawl.gui.card.CardTile;
 import net.sachau.deathcrawl.card.momentum.MomentumAction;
+import net.sachau.deathcrawl.gui.card.DragEvents;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class MomentumActionLine extends HBox {
                 Map<DataFormat, Object> map = new HashMap<>();
                 action.getCard().setOwner(player);
                 Catalog.putById(action.getCard());
-                map.put(CardTile.momentumFormat, action.getCard()
+                map.put(DragEvents.momentumFormat, action.getCard()
                         .getId() + "," +  action.getCost());
                 db.setContent(map);
             }

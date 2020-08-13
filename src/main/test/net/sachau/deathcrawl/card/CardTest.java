@@ -18,6 +18,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
+
 @RunWith(JUnit4.class)
 public class CardTest {
 
@@ -68,11 +70,11 @@ public class CardTest {
     public void testActions() {
         Player player = new Player();
         GameEngine.getInstance().setPlayer(player);
+        GameEngine.getInstance().setInitiativeOrder(new ArrayList<>());
         Catalog.init();
         Card thief = Catalog.copyOf("Thief");
         player.addToParty(thief);
-
-        GameEngine.getInstance().setCurrentCard(thief);
+        GameEngine.getInstance().getInitiativeOrder().add(thief);
 
         Assert.assertEquals(thief.getId(), player.getParty().get(0).getId());
         Assert.assertEquals(player.getParty().get(0).getName(), "Thief");
@@ -81,6 +83,7 @@ public class CardTest {
         Card gold = Catalog.copyOf("Gold");
 
         player.addCardToHand(gold);
+
         Card draw = new Action();
         draw.setOwner(player);
         draw.setCommand("draw 1");
@@ -114,7 +117,8 @@ public class CardTest {
         Card shield = Catalog.copyOf("Shield");
         player.addCardToHand(shield);
 
-        GameEngine.getInstance().setCurrentCard(wizard);
+        GameEngine.getInstance().getInitiativeOrder().add(wizard);
+        GameEngine.getInstance().setCurrentInitiative(1);
         result = Command.execute(shield, wizard);
         Assert.assertTrue(result);
         Assert.assertTrue(wizard.hasCondition(Armor.class));
@@ -269,6 +273,10 @@ public class CardTest {
         result = Command.execute(limitedUsage, warrior);
         Assert.assertFalse(result);
 
+
+        Card magicMissile = Catalog.copyOf("Magic Missile");
+        magicMissile.setOwner(player);
+        Command.execute(magicMissile, goblin);
 
 
 

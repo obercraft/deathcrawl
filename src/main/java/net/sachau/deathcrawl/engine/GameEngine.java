@@ -1,5 +1,6 @@
 package net.sachau.deathcrawl.engine;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import net.sachau.deathcrawl.Logger;
 import net.sachau.deathcrawl.card.Card;
@@ -24,9 +25,7 @@ public class GameEngine  implements Observer {
     Player player;
 
     private List<Card> initiativeOrder;
-    private int currentInitiative;
-    private Card currentCard;
-    private Card lastCard;
+    private SimpleIntegerProperty currentInitiative = new SimpleIntegerProperty(0);
 
     private static GameEngine gameEngine;
 
@@ -80,13 +79,7 @@ public class GameEngine  implements Observer {
                 return;
 
             case NEXTACTION: {
-                if (lastCard != null) {
-                    lastCard.setActive(false);
-                }
-                lastCard = currentCard;
-                currentCard = initiativeOrder
-                        .get(currentInitiative);
-                currentCard.setActive(true);
+
                 Card card = getCurrentCard();
                 if (card.getOwner() instanceof Player) {
                     Logger.debug("waiting for " + getCurrentCard());
@@ -108,9 +101,10 @@ public class GameEngine  implements Observer {
                         .send(GameEventContainer.Type.ACTIONDONE);
                 return;
             case ACTIONDONE: {
-                currentCard.setActive(false);
-                if (currentInitiative < initiativeOrder.size() - 1) {
-                    currentInitiative++;
+                if (getCurrentInitiative() < initiativeOrder.size() - 1) {
+                    int ini = getCurrentInitiative() + 1;
+
+                    setCurrentInitiative(ini);
                     GameEvent.getInstance()
                             .send(GameEventContainer.Type.NEXTACTION);
                 } else {
@@ -158,6 +152,7 @@ public class GameEngine  implements Observer {
                 for (Card card : player.getHazards()) {
                     if (card.getId() == deadCard.getId()) {
                         hazardCard = deadCard;
+                        break;
                     }
                 }
                 if (hazardCard != null) {
@@ -227,7 +222,7 @@ public class GameEngine  implements Observer {
         initiativeOrder.addAll(player.getParty());
         initiativeOrder.addAll(player.getHazards());
         Collections.shuffle(initiativeOrder);
-        currentInitiative = 0;
+        setCurrentInitiative(0);
 
         //trigger phase effects
         triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
@@ -241,7 +236,7 @@ public class GameEngine  implements Observer {
     }
 
     private void startCardPhase() {
-        currentInitiative = 0;
+        setCurrentInitiative(0);
 
         triggerEffects(GameEventContainer.Type.STARTCARDPHASE);
 
@@ -261,11 +256,10 @@ public class GameEngine  implements Observer {
 
 
     public Card getCurrentCard() {
-        return currentCard;
-    }
-
-    public Card getLastCard() {
-        return lastCard;
+        if (getCurrentInitiative() >= initiativeOrder.size() ) {
+            return null;
+        }
+        return initiativeOrder.get(getCurrentInitiative());
     }
 
     public Player getPlayer() {
@@ -285,7 +279,23 @@ public class GameEngine  implements Observer {
         return initialized;
     }
 
-    public void setCurrentCard(Card currentCard) {
-        this.currentCard = currentCard;
+    public int getCurrentInitiative() {
+        return currentInitiative.get();
+    }
+
+    public SimpleIntegerProperty currentInitiativeProperty() {
+        return currentInitiative;
+    }
+
+    public void setCurrentInitiative(int currentInitiative) {
+        this.currentInitiative.set(currentInitiative);
+    }
+
+    public List<Card> getInitiativeOrder() {
+        return initiativeOrder;
+    }
+
+    public void setInitiativeOrder(List<Card> initiativeOrder) {
+        this.initiativeOrder = initiativeOrder;
     }
 }

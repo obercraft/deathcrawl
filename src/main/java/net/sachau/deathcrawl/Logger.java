@@ -57,13 +57,17 @@ public class Logger {
         if (level == null) {
             return;
         }
-        if (logLevel.getPriority() <= level.getPriority()) {
+        if (logLevel.getPriority() >= level.getPriority()) {
             if (GameEngine.getInstance().isInitialized()) {
                 getConsole().appendText(text);
             }
             System.out.println(text);
 
         }
+    }
+
+    public static void error(String text) {
+        log(Level.ERROR, text);
     }
 
     public static void error(String text, Throwable e) {

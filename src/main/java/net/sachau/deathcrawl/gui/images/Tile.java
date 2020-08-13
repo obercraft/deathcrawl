@@ -7,6 +7,7 @@ public enum Tile {
     CLERIC(1, 27, 28),
     PALADIN(1, 35, 28),
     WIZARD(1, 41, 28),
+    ALL_CLASSES(1, 52,24),
 
     DEATHCRAWL(0,0, 0, 100, 100),
     DEATHCRAWL_SMALL(0, 0, 0),

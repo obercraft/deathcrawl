@@ -87,7 +87,8 @@ Weapon
     <card>
         <name>Magic Missile</name>
         <type>Spell</type>
-        <command>random_attack_many 3 1</command>
+        <damage>1</damage>
+        <command>attack random 3</command>
         <keywords>wizard</keywords>
     </card>
 

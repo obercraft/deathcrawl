@@ -87,6 +87,9 @@
 }
 
 
+
+
+
 .value-box-bottom-right {
     width: 50px;
     height: 20px;
@@ -161,7 +164,18 @@
 }
 
 
-.icons {
+.garamond {
+    -fx-font-family: "Garamond";
+    -fx-font-size: 12px;
+
+}
+
+.caslon {
+    -fx-font-family: "Adobe Caslon Pro";
+    -fx-font-size: 12px;
+}
+
+.symbol {
     -fx-font-family: "Font Awesome 5 Free Solid";
     -fx-font-size: 12px;
 }

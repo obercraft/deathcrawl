@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import net.sachau.deathcrawl.engine.GameEngine;
 import net.sachau.deathcrawl.engine.GameEventContainer;
 import net.sachau.deathcrawl.engine.GameEvent;
+import net.sachau.deathcrawl.gui.Fonts;
 import net.sachau.deathcrawl.gui.screens.GameScreen;
 
 import java.util.List;
@@ -24,10 +25,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        Font font = Font.loadFont(Main.class.getResourceAsStream("/fontawesome-solid-900.otf"), 12);
-        String name = font.getName();
-        List<String> families = Font.getFamilies();
-        List<String> fontNames = Font.getFontNames();
+
+        Fonts.getInstance()
+                .load("symbol-12", Main.class.getResourceAsStream("/fontawesome-solid-900.otf"), 12)
+                .load("garamond-12", Main.class.getResourceAsStream("/gara.ttf"), 28)
+                .load("standard",Main.class.getResourceAsStream("/Adobe Caslon Pro Regular.ttf"), 16)
+                .load("bold",Main.class.getResourceAsStream("/caslon-bold.ttf"), 16);
+
         //primaryScreenBounds.getHeight()
         double width = primaryScreenBounds.getWidth() - 100;
         double height = primaryScreenBounds.getHeight() - 100;

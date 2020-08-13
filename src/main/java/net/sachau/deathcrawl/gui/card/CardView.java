@@ -61,19 +61,20 @@ public abstract class CardView extends AnchorPane implements Observer {
         leftBox.setMinWidth(32);
         leftBox.setMinHeight(32);
         leftBox.setAlignment(Pos.CENTER);
-        leftBox.getStyleClass().add("border");
+        leftBox.getStyleClass()
+                .add("border");
         getChildren().add(leftBox);
-        leftBox.relocate(17,270-32);
+        leftBox.relocate(17, 270 - 32);
 
         rightBox.setMaxHeight(32);
         rightBox.setMaxWidth(32);
         rightBox.setMinWidth(32);
         rightBox.setMinHeight(32);
         rightBox.setAlignment(Pos.CENTER);
-        rightBox.getStyleClass().add("border");
+        rightBox.getStyleClass()
+                .add("border");
         getChildren().add(rightBox);
-        rightBox.relocate(190,270-32);
-
+        rightBox.relocate(190, 270 - 32);
 
 
 //            CornerValueBox leftBox = new CornerValueBox(card.damageProperty(), null, "bottom-left", cssClass");
@@ -88,28 +89,28 @@ public abstract class CardView extends AnchorPane implements Observer {
 //        }
 
 
-
-
         Tile borderTile = card.getKeywords()
                 .getCharacterTile();
-        if (borderTile != null) {
-            ImageView border = TileSet.getInstance()
-                    .getTile(borderTile);
-            border.setX(184);
-            border.setY(23);
-            getChildren().add(border);
-
+        if (borderTile == null) {
+            borderTile = Tile.ALL_CLASSES;
         }
 
-        Text cardName = new Text((StringUtils.isNotEmpty(card.getUniqueId()) ? "\u25C6 " : "") + card.getName());
-        cardName.getStyleClass().add("card-title-text");
-        cardName.setX(35);
-        cardName.setY(32);
-        getChildren().add(cardName);
+        ImageView border = TileSet.getInstance()
+                .getTile(borderTile);
+        border.setX(184);
+        border.setY(23);
+        getChildren().add(border);
 
-        TextFlow awesome = CardText.builder().icon(Symbol.FA_CIRCLE).ws().add(card.getName()).write();
-        getChildren().add(awesome);
-        awesome.relocate(100,100);
+
+        CardText builder = CardText.builder();
+        if (!StringUtils.isEmpty(card.getUniqueId())) {
+            builder.symbol(Symbol.FA_DOT_CIRCLE);
+        }
+        builder.add(card.getName());
+
+        TextFlow cardName = builder.write();
+        getChildren().add(cardName);
+        cardName.relocate(35, 16);
 
     }
 

@@ -2,6 +2,7 @@ package net.sachau.deathcrawl.gui;
 
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import net.sachau.deathcrawl.Main;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
@@ -34,25 +35,41 @@ public class CardText {
         return this;
     }
 
+    public CardText bold(String string) {
+        return add(string, "font:bold");
+    }
+
     public CardText add(String string, String ...styleClasses) {
         Text text = new Text(string);
-        if (styleClasses != null) {
+        boolean hasFont = false;
+        if (styleClasses != null && styleClasses.length > 0) {
             for (String styleClass : styleClasses) {
-                if (StringUtils.isNotEmpty(styleClass)) {
-                    text.getStyleClass().add(styleClass);
+                if (styleClass.startsWith("font:")) {
+                    text.setFont(Fonts.getInstance().get(styleClass.replaceFirst("font:", "")));
+                    hasFont = true;
+                } else {
+                    if (StringUtils.isNotEmpty(styleClass)) {
+                        text.getStyleClass()
+                                .add(styleClass);
+                    }
                 }
             }
         }
+        if (!hasFont) {
+            text.setFont(Fonts.getInstance()
+                    .get("standard"));
+        }
+
         parts.add(text);
         if (withWhitespaces) {
-            add(" ");
+            parts.add(new Text(" "));
         }
         return this;
 
     }
 
-    public CardText icon(String symbol) {
-        return add(symbol, "icons");
+    public CardText symbol(String symbol) {
+        return add(symbol, "font:symbol-12");
     }
 
     public TextFlow write() {
