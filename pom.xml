@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sachau</groupId>
-    <artifactId>deathcrawl</artifactId>
+    <artifactId>zarrax</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
-    <name>deathcrawl</name>
+    <name>zarrax</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -44,7 +44,7 @@
     </dependencies>
 
     <build>
-        <finalName>deathcrawl</finalName>
+        <finalName>zarrax</finalName>
 
         <!--
         <resources>

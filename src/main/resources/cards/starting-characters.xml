@@ -72,9 +72,9 @@
 
 <!--
 
-package net.sachau.deathcrawl.card.characters;
+package net.sachau.zarrax.card.characters;
 
-import net.sachau.deathcrawl.card.type.StartingCharacter;
+import net.sachau.zarrax.card.type.StartingCharacter;
 
 public class Warrior extends Character {
 
@@ -92,9 +92,9 @@ public class Warrior extends Character {
 
 }
 
-package net.sachau.deathcrawl.card.characters;
+package net.sachau.zarrax.card.characters;
 
-import net.sachau.deathcrawl.card.type.StartingCharacter;
+import net.sachau.zarrax.card.type.StartingCharacter;
 
 public class Wizard extends Character {
 
