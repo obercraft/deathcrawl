@@ -103,13 +103,13 @@ public abstract class CardView extends AnchorPane implements Observer {
 
         CardText builder = CardText.builder();
         if (!StringUtils.isEmpty(card.getUniqueId())) {
-            builder.symbol(Symbol.FA_DOT_CIRCLE);
+            builder.symbol(Symbol.FA_DOT_CIRCLE.getText());
         }
         builder.add(card.getName());
 
         TextFlow cardName = builder.write();
         getChildren().add(cardName);
-        cardName.relocate(35, 16);
+        cardName.relocate(35, 20);
 
     }
 

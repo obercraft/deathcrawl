@@ -21,9 +21,19 @@
         <!ELEMENT uses (#PCDATA)>
         <!ELEMENT keywords (#PCDATA)>
         <!ELEMENT starting-cards (#PCDATA)>
-        <!ELEMENT text (#PCDATA)>
         <!ELEMENT flavor (#PCDATA)>
 
         <!ELEMENT effects (effect)+>
         <!ELEMENT effect (#PCDATA)>
         <!ATTLIST effect event CDATA "startturn">
+
+        <!ELEMENT text (#PCDATA|h1|p)*>
+
+        <!ELEMENT p (#PCDATA|i)*>
+
+        <!ELEMENT h1 (#PCDATA)>
+        <!ELEMENT i (#PCDATA)>
+
+
+        <!ENTITY exhausted "$EXHAUSTED$">
+

@@ -103,7 +103,7 @@
 
                     <archive>
                         <manifest>
-                            <mainClass>com.capita.europe.utils.KhorosStatisticsApplication</mainClass>
+                            <mainClass>net.sachau.zarrax.Main</mainClass>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>

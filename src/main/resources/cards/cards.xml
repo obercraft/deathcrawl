@@ -20,6 +20,20 @@ Weapon
 -->
 <cards>
     <card>
+        <name>intro</name>
+        <type>TextCard</type>
+        <text>
+            <h1>Wrath of Zarrax</h1>
+            <p>
+                Hallo Standard
+            </p>
+            <p>
+                asdf &exhausted;
+            </p>
+        </text>
+    </card>
+
+    <card>
         <name>Knife</name>
         <type>item</type>
         <damage>1</damage>

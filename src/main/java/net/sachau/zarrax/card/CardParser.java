@@ -6,6 +6,8 @@ import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.*;
 import net.sachau.zarrax.engine.GameEventContainer;
+import net.sachau.zarrax.gui.text.CardText;
+import net.sachau.zarrax.gui.text.TextParser;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 import org.w3c.dom.*;
@@ -291,6 +293,13 @@ public class CardParser {
 
                 }
 
+            }
+
+            if (cardNode.getNodeName()
+                    .equals("text")) {
+                CardText cardText = CardText.builder();
+                TextParser.parse(cardNode, cardText);
+                Catalog.putText(card.getName(), cardText.write());
             }
 
             /*

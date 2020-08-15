@@ -15,6 +15,7 @@ import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.gui.Fonts;
 import net.sachau.zarrax.gui.screens.GameScreen;
+import net.sachau.zarrax.gui.text.TextParser;
 
 public class Main extends Application {
 
@@ -27,6 +28,7 @@ public class Main extends Application {
                 .load("symbol-12", Main.class.getResourceAsStream("/fontawesome-solid-900.otf"), 12)
                 .load("garamond-12", Main.class.getResourceAsStream("/gara.ttf"), 28)
                 .load("standard",Main.class.getResourceAsStream("/Adobe Caslon Pro Regular.ttf"), 16)
+                .load("h1",Main.class.getResourceAsStream("/Adobe Caslon Pro Regular.ttf"), 32)
                 .load("bold",Main.class.getResourceAsStream("/caslon-bold.ttf"), 16);
 
         //primaryScreenBounds.getHeight()

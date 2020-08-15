@@ -1,6 +1,8 @@
 package net.sachau.zarrax.gui.text;
 
 import javafx.scene.text.TextFlow;
+import net.sachau.zarrax.gui.Symbol;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -9,7 +11,7 @@ import java.util.Set;
 
 public class CardText {
 
-    List<StyledText> parts;
+    List<StyledText> parts = new LinkedList<>();
     boolean withWhitespaces = true;
     Set<String> styles = new HashSet<>();
 
@@ -39,7 +41,17 @@ public class CardText {
     }
 
     public CardText add(String string) {
-        parts.add(new StyledText(string + (withWhitespaces ? " " :""), new HashSet<>(styles)));
+        if (StringUtils.isEmpty(string)) {
+            return this;
+        }
+        String[] args = string.split("\\s+", -1);
+        for (String arg : args) {
+            if ("$EXHAUSTED$".equals(arg)) {
+                    symbol(Symbol.FA_HAND_HOLDING.getText());
+            } else {
+                parts.add(new StyledText(arg + (withWhitespaces ? " " : ""), new HashSet<>(styles)));
+            }
+        }
         return this;
 
     }
@@ -58,7 +70,7 @@ public class CardText {
     }
 
     public TextFlow writeln() {
-        parts.add(new StyledText("\n"));
+        nl();
         return write();
     }
 
@@ -70,6 +82,22 @@ public class CardText {
         }
         return this;
     }
+    public void reset() {
+        styles.removeAll(styles);
+    }
 
+    public CardText nl() {
+        return nl(false);
+    }
 
+    public CardText nl(boolean force) {
+        try {
+            if (force || parts.size() == 0 || !parts.get(parts.size() - 1).getText().endsWith("\n")) {
+                parts.add(new StyledText("\n"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
 }

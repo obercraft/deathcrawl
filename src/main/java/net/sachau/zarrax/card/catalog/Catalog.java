@@ -4,6 +4,7 @@ import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import javafx.scene.text.TextFlow;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.CardParser;
@@ -16,6 +17,8 @@ public class Catalog {
     private final Map<Class<? extends Card>, CardCache> caches = new HashMap<>();
 
     private final CardCache allCards = new CardCache();
+
+    private final Map<String, TextFlow> texts = new HashMap<>();
 
     private MapProperty<Long, Card> idCache;
     //private Map<Long, Card> idCache = new HashMap<>();
@@ -131,6 +134,13 @@ public class Catalog {
 
     public static Card copyOf(String name) {
         return CardUtils.copyCard(Catalog.getInstance().get(name));
+    }
+
+    public static void putText(String name, TextFlow textFlow) {
+        getInstance().texts.put(name, textFlow);
+    }
+    public static TextFlow getText(String name) {
+        return getInstance().texts.get(name);
     }
 
 }
