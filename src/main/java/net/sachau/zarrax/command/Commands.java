@@ -13,8 +13,8 @@ public enum Commands {
     MOMENTUM  (CommandStatus.build(CommandType.ACTION)),
     PLAY_TO_PARTY  (CommandStatus.build(CommandType.ACTION)),
     PRONE (CommandStatus.build(CommandType.ATTACK).notSelf().notFriendly().notProne()),
-    EXHAUST (CommandStatus.build(CommandType.ATTACK).notSelf().notFriendly()),
-    EXHAUST_RANDOM (CommandStatus.build(CommandType.ATTACK).notSelf().notFriendly()),
+    EXHAUST (CommandStatus.build(CommandType.ACTION)), // exhaust self
+    EXHAUST_ATTACK (CommandStatus.build(CommandType.ATTACK).notSelf().notFriendly()),
     ADD_CARD (CommandStatus.build(CommandType.ACTION)),
     ;
     private CommandStatus status;

@@ -5,10 +5,9 @@
 <cards>
     <card>
         <name uniqueId="Thief">Thief</name>
-        <type>StartingCharacter</type>
+        <type>Character</type>
         <hits>7</hits>
-        <damage>1</damage>
-        <command>attack;exhaust self</command>
+        <level-cards>Basic Attack</level-cards>
         <starting-cards>Knife,ThrowingKnife,Knife</starting-cards>
         <keywords>creature, rogue</keywords>
         <effects>
@@ -19,10 +18,9 @@
 
     <card>
         <name uniqueId="Wizard">Wizard</name>
-        <type>StartingCharacter</type>
+        <type>Character</type>
         <hits>6</hits>
-        <damage>1</damage>
-        <command>attack;exhaust self</command>
+        <level-cards>Basic Attack</level-cards>
         <starting-cards>Knife,MagicMissile,Knife</starting-cards>
         <keywords>creature, wizard, caster</keywords>
         <flavor>A Wizard!</flavor>
@@ -31,10 +29,9 @@
     
     <card>
         <name uniqueId="Cleric">Cleric</name>
-        <type>StartingCharacter</type>
+        <type>Character</type>
         <hits>7</hits>
-        <damage>1</damage>
-        <command>attack;exhaust self</command>
+        <level-cards>Basic Attack</level-cards>
         <starting-cards>Knife,Healing Touch,Knife</starting-cards>
         <keywords>creature, cleric, caster</keywords>
         <flavor>A Wizard!</flavor>
@@ -42,10 +39,9 @@
 
     <card>
         <name uniqueId="Paladin">Paladin</name>
-        <type>StartingCharacter</type>
+        <type>Character</type>
         <hits>8</hits>
-        <damage>1</damage>
-        <command>attack;exhaust self</command>
+        <level-cards>Basic Attack</level-cards>
         <starting-cards>Knife,Horse,Knife</starting-cards>
         <keywords>creature, paladin, caster</keywords>
         <flavor>A Paladin!</flavor>
@@ -53,10 +49,9 @@
 
     <card>
         <name uniqueId="Warrior">Warrior</name>
-        <type>StartingCharacter</type>
+        <type>Character</type>
         <hits>9</hits>
-        <damage>1</damage>
-        <command>attack;exhaust self</command>
+        <level-cards>Basic Attack</level-cards>
         <starting-cards>Knife,short sword,Knife</starting-cards>
         <keywords>creature, fighter</keywords>
         <effects>
@@ -74,7 +69,7 @@
 
 package net.sachau.zarrax.card.characters;
 
-import net.sachau.zarrax.card.type.StartingCharacter;
+import net.sachau.zarrax.card.type.Character;
 
 public class Warrior extends Character {
 
@@ -94,7 +89,7 @@ public class Warrior extends Character {
 
 package net.sachau.zarrax.card.characters;
 
-import net.sachau.zarrax.card.type.StartingCharacter;
+import net.sachau.zarrax.card.type.Character;
 
 public class Wizard extends Character {
 

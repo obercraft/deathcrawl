@@ -24,12 +24,18 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
+        int fontSize = 12;
         Fonts.getInstance()
                 .load("symbol-12", Main.class.getResourceAsStream("/fontawesome-solid-900.otf"), 12)
                 .load("garamond-12", Main.class.getResourceAsStream("/gara.ttf"), 28)
-                .load("standard",Main.class.getResourceAsStream("/Adobe Caslon Pro Regular.ttf"), 16)
+                .load("standardx",Main.class.getResourceAsStream("/Adobe Caslon Pro Regular.ttf"), 16)
                 .load("h1",Main.class.getResourceAsStream("/Adobe Caslon Pro Regular.ttf"), 32)
-                .load("bold",Main.class.getResourceAsStream("/caslon-bold.ttf"), 16);
+                .load("boldx",Main.class.getResourceAsStream("/caslon-bold.ttf"), 16)
+                .load("standard",Main.class.getResourceAsStream("/fonts/LibreBaskerville-Regular.ttf"), fontSize)
+                .load("italic",Main.class.getResourceAsStream("/fonts/LibreBaskerville-Italic.ttf"), fontSize)
+                .load("bold",Main.class.getResourceAsStream("/fonts/LibreBaskerville-Bold.ttf"), fontSize)
+
+        ;
 
         //primaryScreenBounds.getHeight()
         double width = primaryScreenBounds.getWidth() - 100;

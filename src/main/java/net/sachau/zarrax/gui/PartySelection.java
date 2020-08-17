@@ -7,7 +7,7 @@ import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.card.type.StartingCharacter;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.Deck;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.card.CardSelect;
@@ -45,12 +45,17 @@ public class PartySelection extends VBox implements Observer {
         DeckPane partyArea = new DeckPane(player.partyProperty(), length, "card-small");
         try {
             List<Card> basic = Catalog.getInstance()
-                    .get(StartingCharacter.class);
+                    .get(Character.class);
             for (Card b : basic) {
-                StartingCharacter card = (StartingCharacter) b;
+                Character card = (Character) b;
                 card.setVisible(true);
+                if (card.getLevelCards() != null) {
+                    for (Card c : card.getLevelCards()) {
+                        c.setOwner(player);
+                    }
+                }
                 available.getChildren().add(new CardSelect(this, card, player.partyProperty(), cssClass));
-                availableCharacters.add(new StartingCharacter(card));
+                availableCharacters.add(new Character(card));
             }
             getChildren().addAll(available, partyArea);
         } catch (Exception e) {

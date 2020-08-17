@@ -68,7 +68,7 @@ public class Catalog {
 
 
             List<Card> basic = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/starting-characters.xml"));
+                    .getResourceAsStream("/cards/characters.xml"));
             Catalog.getInstance()
                     .add(basic);
 

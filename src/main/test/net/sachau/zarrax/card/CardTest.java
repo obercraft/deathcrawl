@@ -5,8 +5,8 @@ import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.effect.*;
 import net.sachau.zarrax.card.type.Action;
 import net.sachau.zarrax.card.type.AdvancedAction;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.LimitedUsage;
-import net.sachau.zarrax.card.type.StartingCharacter;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.command.Command;
 import net.sachau.zarrax.engine.GameEngine;
@@ -25,11 +25,11 @@ public class CardTest {
     @Test
     public void copyCard() {
 
-        StartingCharacter char1 = new StartingCharacter();
+        Character char1 = new Character();
         char1.setName("Char2");
 
 
-        StartingCharacter char2 = new StartingCharacter(char1);
+        Character char2 = new Character(char1);
 
         char1.setName("Char1");
         char1.setHits(2);

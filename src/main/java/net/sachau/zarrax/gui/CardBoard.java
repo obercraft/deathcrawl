@@ -20,8 +20,6 @@ public class CardBoard extends VBox {
         ActiveCardPane activeCardPane = new ActiveCardPane();
 
 
-        MomentumBox momentumBox = new MomentumBox(player);
-
         row1.getChildren().addAll(partyPane, playArea);
         row2.getChildren().addAll(activeCardPane, hand);
         row3.getChildren().addAll(Logger.getConsole());

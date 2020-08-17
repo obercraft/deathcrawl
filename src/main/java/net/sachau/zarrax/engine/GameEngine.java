@@ -4,8 +4,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Monster;
-import net.sachau.zarrax.card.type.StartingCharacter;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.effect.Exhausted;
 import net.sachau.zarrax.card.keyword.Keyword;
@@ -48,8 +48,8 @@ public class GameEngine  implements Observer {
         switch(GameEvent.getType(arg)) {
             case PARTYDONE: {
                 for (Card c : player.getParty()) {
-                    StartingCharacter startingCharacter = (StartingCharacter) c;
-                    for (Card startingCard : startingCharacter.getStartingCards()) {
+                    Character character = (Character) c;
+                    for (Card startingCard : character.getStartingCards()) {
                         startingCard.setOwner(player);
                         player.getDraw()
                                 .add(startingCard);
@@ -120,6 +120,12 @@ public class GameEngine  implements Observer {
                 for (Card card : player.getParty()) {
                     card.removeCondition(Exhausted.class);
                 }
+                for (Card card : player.getHand()) {
+                    card.removeCondition(Exhausted.class);
+                }
+                for (Card card : player.getDraw().getDiscards()) {
+                    card.removeCondition(Exhausted.class);
+                }
 
                 if (hazardsDefeated()) {
                     GameEvent.getInstance().send(GameEventContainer.Type.STARTTURN);
@@ -144,7 +150,7 @@ public class GameEngine  implements Observer {
                 }
 
                 for (Card card : player.getParty()) {
-                    if (card instanceof StartingCharacter) {
+                    if (card instanceof Character) {
                         totalHealth += Math.max(0, card.getHits());
                     }
                 }

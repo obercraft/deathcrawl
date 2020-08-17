@@ -1,8 +1,13 @@
 package net.sachau.zarrax.gui.card;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.*;
+import javafx.util.StringConverter;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.command.CommandParser;
 import net.sachau.zarrax.card.Creature;
 import net.sachau.zarrax.engine.Player;
@@ -22,6 +27,33 @@ public class CardTile extends CardView {
         Tooltip keywords = new Tooltip(tp);
         Tooltip.install(this, keywords);
 
+        ChoiceBox<Card> actionChoices = null;
+        if (card instanceof Character) {
+            Character characterCard = (Character) card;
+            actionChoices = new ChoiceBox<>(characterCard.getLevelCards());
+            actionChoices.getSelectionModel().getSelectedItem();
+            actionChoices.setValue(characterCard.getSelectedCard());
+            actionChoices.setConverter(new StringConverter<Card>() {
+                @Override
+                public String toString(Card card) {
+                    return card.getName();
+                }
+
+                @Override
+                public Card fromString(String cardName) {
+                    return null;
+                }
+            });
+            actionChoices.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                    characterCard.setSelectedLevelCard(newValue.intValue());
+                }
+            });
+
+            getChildren().add(actionChoices);
+            actionChoices.relocate(50,50);
+        }
 
         setOnMouseClicked(event -> {
             if (event.getButton()

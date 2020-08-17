@@ -33,6 +33,14 @@ Weapon
         </text>
     </card>
 
+
+    <card>
+        <name>Basic Attack</name>
+        <type>Action</type>
+        <damage>1</damage>
+        <command>attack; exhaust</command>
+    </card>
+
     <card>
         <name>Knife</name>
         <type>item</type>

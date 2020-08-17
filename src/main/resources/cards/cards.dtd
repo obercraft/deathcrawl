@@ -1,7 +1,7 @@
 <?xml encoding="UTF-8"?>
 
         <!ELEMENT cards (card)+>
-        <!ELEMENT card (name|type|deck?|hits?|damage?|skill?|threat?|experience?|gold?|command?|usage-command?|uses?|starting-cards?|keywords?|effects?|text?|flavor?)*>
+        <!ELEMENT card (name|type|deck?|hits?|damage?|skill?|threat?|experience?|gold?|level-cards?|command?|usage-command?|uses?|starting-cards?|keywords?|effects?|text?|flavor?)*>
 
         <!ELEMENT name (#PCDATA)>
         <!ATTLIST name
@@ -16,6 +16,7 @@
         <!ELEMENT experience (#PCDATA)>
         <!ELEMENT gold (#PCDATA)>
 
+        <!ELEMENT level-cards (#PCDATA)>
         <!ELEMENT command (#PCDATA)>
         <!ELEMENT usage-command (#PCDATA)>
         <!ELEMENT uses (#PCDATA)>

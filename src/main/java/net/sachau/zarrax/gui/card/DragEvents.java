@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.command.Command;
 
 import java.util.HashMap;
@@ -15,53 +16,45 @@ public class DragEvents {
     public static final DataFormat momentumFormat = new DataFormat("momentum");
 
     public EventHandler<? super MouseEvent> dragDetected(Node node, Card card) {
-        return new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (card.isPlayable()) {
-                    Dragboard db = node.startDragAndDrop(TransferMode.ANY);
-                    Map<DataFormat, Object> map = new HashMap<>();
-                    map.put(cardFormat, card.getId());
-                    db.setContent(map);
-                }
-                event.consume();
-
+        return (EventHandler<MouseEvent>) event -> {
+            if (card.isPlayable()) {
+                Dragboard db = node.startDragAndDrop(TransferMode.ANY);
+                Map<DataFormat, Object> map = new HashMap<>();
+                map.put(cardFormat, card.getId());
+                db.setContent(map);
             }
+            event.consume();
+
         };
 
     }
 
 
     public EventHandler<? super DragEvent> dragOver() {
-        return new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if (event.getDragboard()
-                        .hasContent(cardFormat)) {
-                    event.acceptTransferModes(TransferMode.ANY);
-                }
-
-                if (event.getDragboard()
-                        .hasContent(momentumFormat)) {
-                    event.acceptTransferModes(TransferMode.ANY);
-                }
-                event.consume();
+        return (EventHandler<DragEvent>) event -> {
+            if (event.getDragboard()
+                    .hasContent(cardFormat)) {
+                event.acceptTransferModes(TransferMode.ANY);
             }
+
+            if (event.getDragboard()
+                    .hasContent(momentumFormat)) {
+                event.acceptTransferModes(TransferMode.ANY);
+            }
+            event.consume();
         };
 
     }
 
     public EventHandler<? super DragEvent> dragDropped(Card targetCard) {
-        return new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
+        return (EventHandler<DragEvent>) event -> {
+            Dragboard db = event.getDragboard();
 
-                if (db.getContent(cardFormat) != null) {
-                    CardTile sourceTile = CardTileCache.getTile((Long) db.getContent(cardFormat));
-                    Card sourceCard = sourceTile.getCard();
-                    Command.execute(sourceCard, targetCard);
-                }
+            if (db.getContent(cardFormat) != null) {
+                CardTile sourceTile = CardTileCache.getTile((Long) db.getContent(cardFormat));
+                Card sourceCard = sourceTile.getCard();
+                Command.execute(sourceCard instanceof Character ? ((Character)sourceCard).getSelectedCard() : sourceCard, targetCard);
+            }
 // TODO msachau momentum
 //                else if (db.getContent(momentumFormat) != null) {
 //                    String[] args = ((String) db.getContent(momentumFormat)).split(",", -1);
@@ -79,8 +72,7 @@ public class DragEvents {
 //                }
 //            }
 
-                event.consume();
-            }
+            event.consume();
         };
 
     }

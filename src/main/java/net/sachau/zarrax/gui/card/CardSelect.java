@@ -5,7 +5,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
-import net.sachau.zarrax.card.type.StartingCharacter;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.gui.PartySelection;
 
 import java.util.Observable;
@@ -13,7 +13,7 @@ import java.util.Observable;
 public class CardSelect extends CardView {
 
 
-    public CardSelect(PartySelection partySelection, StartingCharacter card, SimpleListProperty<Card> target, String cssClass) {
+    public CardSelect(PartySelection partySelection, Character card, SimpleListProperty<Card> target, String cssClass) {
         super(card, cssClass);
 
 

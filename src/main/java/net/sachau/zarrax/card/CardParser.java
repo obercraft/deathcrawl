@@ -5,6 +5,7 @@ import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.*;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.gui.text.CardText;
 import net.sachau.zarrax.gui.text.TextParser;
@@ -220,15 +221,15 @@ public class CardParser {
 
             if (cardNode.getNodeName()
                     .equals("starting-cards")) {
-                if (card instanceof StartingCharacter) {
+                if (card instanceof Character) {
 
                     String[] cards = cardNode.getTextContent()
                             .trim()
                             .split(",", -1);
-                    StartingCharacter startingCharacterCard = (StartingCharacter) card;
+                    Character characterCard = (Character) card;
                     for (String startingCard : cards) {
                         try {
-                            startingCharacterCard.getStartingCards()
+                            characterCard.getStartingCards()
                                     .add(CardUtils.copyCard(Catalog.getInstance()
                                             .get(startingCard)));
                         } catch (Exception e) {
@@ -238,6 +239,27 @@ public class CardParser {
                 }
 
             }
+
+            if (cardNode.getNodeName()
+                    .equals("level-cards")) {
+                if (card instanceof Character) {
+
+                    String[] cards = cardNode.getTextContent()
+                            .trim()
+                            .split(",", -1);
+                    Character characterCard = (Character) card;
+                    for (String levelCard : cards) {
+                        try {
+                            characterCard.addLevelCard(CardUtils.copyCard(Catalog.getInstance()
+                                            .get(levelCard)));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+
 
 
             if (cardNode.getNodeName()

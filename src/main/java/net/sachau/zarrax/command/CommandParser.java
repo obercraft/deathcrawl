@@ -200,6 +200,10 @@ public class CommandParser {
                 return true;
             }
             case EXHAUST: {
+                source.getConditions().add(new Exhausted());
+                return true;
+            }
+            case EXHAUST_ATTACK: {
                 if (target == null) {
                     return false;
                 }
