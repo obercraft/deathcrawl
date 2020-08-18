@@ -8,6 +8,9 @@
                 uniqueId CDATA "">
 
         <!ELEMENT hits (#PCDATA)>
+        <!ATTLIST hits regenerate CDATA "">
+
+
         <!ELEMENT type (#PCDATA)>
         <!ELEMENT deck (#PCDATA)>
         <!ELEMENT damage (#PCDATA)>
@@ -28,12 +31,18 @@
         <!ELEMENT effect (#PCDATA)>
         <!ATTLIST effect event CDATA "startturn">
 
-        <!ELEMENT text (#PCDATA|h1|p)*>
+        <!ELEMENT text (#PCDATA|h1|p|color)*>
 
         <!ELEMENT p (#PCDATA|i)*>
 
-        <!ELEMENT h1 (#PCDATA)>
-        <!ELEMENT i (#PCDATA)>
+        <!ELEMENT h1 (#PCDATA)*>
+        <!ELEMENT h2 (#PCDATA)*>
+        <!ELEMENT h3 (#PCDATA)*>
+        <!ELEMENT i (#PCDATA)*>
+
+        <!ELEMENT color (#PCDATA|h1|h2|h3|p)*>
+        <!ATTLIST color
+                name CDATA "">
 
 
         <!ENTITY exhausted "$EXHAUSTED$">

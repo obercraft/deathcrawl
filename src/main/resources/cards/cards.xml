@@ -23,15 +23,36 @@ Weapon
         <name>intro</name>
         <type>TextCard</type>
         <text>
-            <h1>Wrath of Zarrax</h1>
-            <p>
-                Hallo Standard
-            </p>
-            <p>
-                asdf &exhausted;
-            </p>
+            <color name="white">
+                <h1>Wrath of Zarrax</h1>
+
+                <h3>
+                    Hallo
+                </h3>
+                <p>
+                    asdf &exhausted;
+                </p>
+            </color>
         </text>
     </card>
+
+    <card>
+        <name>intro1</name>
+        <type>TextCard</type>
+        <text>
+            <color name="white">
+                <h1>Wrath of Zarrax</h1>
+
+                <h3>
+                    Hallo
+                </h3>
+                <p>
+                    asdf &exhausted;
+                </p>
+            </color>
+        </text>
+    </card>
+
 
 
     <card>
@@ -100,7 +121,7 @@ Weapon
 
     <card>
         <name>Healing Touch</name>
-        <type>Spell</type>
+        <type>Action</type>
         <damage>2</damage>
         <command>heal target</command>
         <keywords>cleric</keywords>
@@ -108,7 +129,7 @@ Weapon
 
     <card>
         <name>Magic Missile</name>
-        <type>Spell</type>
+        <type>Action</type>
         <damage>1</damage>
         <command>attack random 3</command>
         <keywords>wizard</keywords>
@@ -116,7 +137,7 @@ Weapon
 
     <card>
         <name>Shield</name>
-        <type>Spell</type>
+        <type>Action</type>
         <command>shield 1</command>
         <keywords>wizard</keywords>
     </card>

@@ -45,6 +45,7 @@ public class Catalog {
     }
 
     public static void init() {
+        Logger.debug("reading catalog");
         try {
             List<Card> allCards = CardParser.parse(Catalog.class
                     .getResourceAsStream("/cards/cards.xml"));
@@ -72,6 +73,7 @@ public class Catalog {
             Catalog.getInstance()
                     .add(basic);
 
+            Logger.debug("reading catalog done");
         } catch (Exception e) {
             Logger.error("init catalog failed", e);
         }

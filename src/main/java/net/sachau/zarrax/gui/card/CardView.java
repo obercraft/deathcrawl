@@ -34,36 +34,24 @@ public abstract class CardView extends AnchorPane implements Observer {
                 .addObserver(this);
 
         Image image = new Image(this.getClass()
-                .getResourceAsStream("/card5.png"));
+                .getResourceAsStream("/images/card5.png"));
 
         this.setHeight(HEIGHT);
         this.setWidth(WIDTH);
         this.getChildren()
                 .add(new ImageView(image));
 
-        HBox leftBox, rightBox;
+        HBox rightBox;
 
 
         if (card.getKeywords()
                 .contains(Keyword.CREATURE)) {
 
-            leftBox = new CornerValueBox(card.damageProperty(), null);
-
             rightBox = new CornerValueBox(card.hitsProperty(), card.maxHitsProperty());
         } else {
-            leftBox = new HBox();
             rightBox = new HBox();
         }
 
-        leftBox.setMaxHeight(32);
-        leftBox.setMaxWidth(32);
-        leftBox.setMinWidth(32);
-        leftBox.setMinHeight(32);
-        leftBox.setAlignment(Pos.CENTER);
-        leftBox.getStyleClass()
-                .add("border");
-        getChildren().add(leftBox);
-        leftBox.relocate(17, 270 - 32);
 
         rightBox.setMaxHeight(32);
         rightBox.setMaxWidth(32);

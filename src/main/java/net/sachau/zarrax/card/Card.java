@@ -244,7 +244,6 @@ public abstract class Card {
 
         if (hasCondition(Prone.class)) {
             Logger.debug(this + " is prone");
-            ;
             return false;
         }
 
@@ -253,7 +252,11 @@ public abstract class Card {
             return true;
         }
 
-        if (!this.hasOneKeyword(Keyword.RANGED, Keyword.SPELL)) {
+        if (target.hasKeyword(Keyword.FLYING) && !this.hasKeyword(Keyword.RANGED)) {
+            Logger.debug("cannot attack flying target with ranged");
+        }
+
+        if (!this.hasOneKeyword(Keyword.RANGED)) {
             List<Card> possibleGuards;
             if (target.getOwner() instanceof Player) {
                 possibleGuards = ((Player) target.getOwner()).getParty();

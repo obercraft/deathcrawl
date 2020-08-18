@@ -14,8 +14,8 @@ import java.util.Map;
 public class TileSet {
 
     private static final String[] filenames = new String[] {
-            "/icons.png",
-            "/icons1.png",
+            "/images/icons.png",
+            "/images/icons1.png",
     };
 
     private static TileSet instance;

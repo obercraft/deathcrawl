@@ -1,10 +1,13 @@
 package net.sachau.zarrax.gui.card;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.*;
+import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.type.Character;
@@ -18,6 +21,8 @@ import java.util.Observable;
 public class CardTile extends CardView {
 
     private Card card;
+
+    private SimpleIntegerProperty damage = new SimpleIntegerProperty(0);
 
     public CardTile(Card card, String cssClass) {
         super(card, cssClass);
@@ -33,6 +38,7 @@ public class CardTile extends CardView {
             actionChoices = new ChoiceBox<>(characterCard.getLevelCards());
             actionChoices.getSelectionModel().getSelectedItem();
             actionChoices.setValue(characterCard.getSelectedCard());
+            damage.set(characterCard.getSelectedCard().getDamage());
             actionChoices.setConverter(new StringConverter<Card>() {
                 @Override
                 public String toString(Card card) {
@@ -48,12 +54,26 @@ public class CardTile extends CardView {
                 @Override
                 public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                     characterCard.setSelectedLevelCard(newValue.intValue());
+                    damage.set(characterCard.getSelectedCard().getDamage());
                 }
             });
 
             getChildren().add(actionChoices);
             actionChoices.relocate(50,50);
+        } else {
+            damage.set(card.getDamage());
         }
+
+        HBox leftBox = new CornerValueBox(damage, null);
+        leftBox.setMaxHeight(32);
+        leftBox.setMaxWidth(32);
+        leftBox.setMinWidth(32);
+        leftBox.setMinHeight(32);
+        leftBox.setAlignment(Pos.CENTER);
+        getChildren().add(leftBox);
+        leftBox.relocate(17, 270 - 32);
+
+
 
         setOnMouseClicked(event -> {
             if (event.getButton()

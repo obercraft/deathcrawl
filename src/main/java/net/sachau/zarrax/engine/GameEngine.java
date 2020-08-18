@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.level.Levels;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.card.effect.CardEffect;
@@ -46,6 +47,9 @@ public class GameEngine  implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         switch(GameEvent.getType(arg)) {
+            case WELCOME:
+                Logger.debug("WELCOME!");
+                break;
             case PARTYDONE: {
                 for (Card c : player.getParty()) {
                     Character character = (Character) c;
@@ -127,13 +131,20 @@ public class GameEngine  implements Observer {
                     card.removeCondition(Exhausted.class);
                 }
 
-                if (hazardsDefeated()) {
-                    GameEvent.getInstance().send(GameEventContainer.Type.STARTTURN);
+                if (regenerateMonstersAndCheckDefeated()) {
+                    GameEvent.getInstance().send(GameEventContainer.Type.ENDTURN);
                 } else {
                     GameEvent.getInstance().send(GameEventContainer.Type.STARTCARDPHASE);
                 }
 
                 return;
+            case ENDTURN: {
+                Levels.getInstance()
+                        .gainLevel(player);
+                    GameEvent.getInstance()
+                            .send(GameEventContainer.Type.STARTTURN);
+                return;
+            }
             case CHARACTERDEATH: {
                 int totalHealth = 0;
                 Card deadCard = GameEvent.getInstance()
@@ -193,16 +204,24 @@ public class GameEngine  implements Observer {
         }
     }
 
-    private boolean hazardsDefeated() {
+    private boolean regenerateMonstersAndCheckDefeated() {
         if (player.getHazards() == null ||player.getHazards().size() == 0) {
             return true;
         }
+        int monstersAlive = 0;
         for (Card card : player.getHazards()) {
             if (card instanceof Monster) {
-                return false;
+                Monster monster = (Monster) card;
+                if (monster.isAlive()) {
+                    if (monster.getRegenerate() > 0) {
+                        monster.heal(monster, monster.getRegenerate());
+                    }
+                    monstersAlive ++;
+                }
             }
         }
-        return true;
+        // all monsters are dead
+        return monstersAlive == 0;
     }
 
     private void startEncounter() {
@@ -215,7 +234,7 @@ public class GameEngine  implements Observer {
         }
 
         // generate an encounter and assign it to player
-        player.setHazards(FXCollections.observableArrayList(EncounterGenerator.build()));
+        player.setHazards(FXCollections.observableArrayList(EncounterGenerator.builder().addRandomEnvironment().addRandomEvent().getCards()));
 
         // check if every card in hazards is visible and not owned by player
         for (Card card : player.getHazards()) {

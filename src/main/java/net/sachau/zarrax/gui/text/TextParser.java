@@ -1,8 +1,11 @@
 package net.sachau.zarrax.gui.text;
 
 
+import net.sachau.zarrax.XmlUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class TextParser {
 
@@ -10,27 +13,36 @@ public class TextParser {
         if (node == null) {
             return;
         }
+        if (node.getChildNodes() == null ||node.getChildNodes().getLength() == 0) {
+          // textBuilder.add(node.getTextContent().trim());
+          return;
+        }
 
-        if (node.getChildNodes().getLength() == 0) {
-            String txt = node.getTextContent().trim();
-            if (StringUtils.isNotEmpty(txt)) {
-                textBuilder.add(txt);
-            }
-            return;
-        } else {
-            for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-                Node child = node.getChildNodes().item(i);
-                String nodeName = child.getNodeName();
-                if ("h1".equals(nodeName)) {
-                    textBuilder.toggleStyle("font:h1").add(child.getTextContent().trim()).writeln();
-                } else if ("p".equals(nodeName)) {
-                    textBuilder.nl().add(child.getTextContent().trim()).nl().write();
-                } else {
-                    textBuilder.reset();
-                    parse(child, textBuilder);
-                }
+        for (int i = 0; i < node.getChildNodes()
+                .getLength(); i++) {
+            Node child = node.getChildNodes()
+                    .item(i);
+            String nodeName = child.getNodeName();
+            if (nodeName.matches("h\\d+")) {
+                textBuilder.styleOn("font:" + nodeName);
+                parse(child, textBuilder);
+                textBuilder.nl().styleOff("font:" + nodeName);
 
+            } else if ("p".equals(nodeName)) {
+                textBuilder.nl();
+                parse(child, textBuilder);
+                textBuilder.nl();
+            } else if ("color".equalsIgnoreCase(nodeName)) {
+                String colorName = XmlUtils.getAttributes(child).get("name");
+                textBuilder.styleOn("color:" +colorName);
+                parse(child, textBuilder);
+                textBuilder.styleOff("color:" +colorName);
+            } else {
+                textBuilder.add(child.getTextContent().trim());
+                parse(child, textBuilder);
             }
+
         }
     }
+
 }

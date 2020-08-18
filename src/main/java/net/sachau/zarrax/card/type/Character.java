@@ -16,6 +16,10 @@ public class Character extends Card {
     private SimpleListProperty<Card> levelCards;
     private SimpleIntegerProperty selectedLevelCard = new SimpleIntegerProperty();
 
+    private SimpleIntegerProperty level = new SimpleIntegerProperty(1);
+    private SimpleIntegerProperty availableBuyPoints = new SimpleIntegerProperty(0);
+    private int hitsPerLevel;
+
     public Character() {
         super();
         addKeywords(Keyword.CREATURE);
@@ -73,5 +77,37 @@ public class Character extends Card {
 
     public Card getSelectedCard() {
         return getLevelCards().get(getSelectedLevelCard());
+    }
+
+    public int getLevel() {
+        return level.get();
+    }
+
+    public SimpleIntegerProperty levelProperty() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level.set(level);
+    }
+
+    public int getAvailableBuyPoints() {
+        return availableBuyPoints.get();
+    }
+
+    public SimpleIntegerProperty availableBuyPointsProperty() {
+        return availableBuyPoints;
+    }
+
+    public void setAvailableBuyPoints(int availableBuyPoints) {
+        this.availableBuyPoints.set(availableBuyPoints);
+    }
+
+    public int getHitsPerLevel() {
+        return hitsPerLevel;
+    }
+
+    public void setHitsPerLevel(int hitsPerLevel) {
+        this.hitsPerLevel = hitsPerLevel;
     }
 }

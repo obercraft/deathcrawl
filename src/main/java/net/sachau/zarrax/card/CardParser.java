@@ -1,6 +1,8 @@
 package net.sachau.zarrax.card;
 
 
+import net.sachau.zarrax.Logger;
+import net.sachau.zarrax.XmlUtils;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
@@ -10,6 +12,7 @@ import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.gui.text.CardText;
 import net.sachau.zarrax.gui.text.TextParser;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.reflections.Reflections;
 import org.w3c.dom.*;
 import org.xml.sax.EntityResolver;
@@ -20,9 +23,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CardParser {
 
@@ -62,6 +69,7 @@ public class CardParser {
     }
 
     private static Card parse(Node node) throws IllegalAccessException, InstantiationException {
+        Long start = new Date().getTime();
         Card card = null;
 
         String cardType = "Action";
@@ -123,19 +131,7 @@ public class CardParser {
                     .equals("deck")) {
                 if (card instanceof Encounter) {
                     Encounter encounter = (Encounter) card;
-                    String[] cards = cardNode.getTextContent()
-                            .trim()
-                            .split(",", -1);
-                    for (String cardName : cards) {
-                        try {
-                            Card c = Catalog.getInstance()
-                                    .get(cardName);
-                            c.setVisible(true);
-                            encounter.getCardList().add(CardUtils.copyCard(c));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    encounter.setCardString(cardNode.getTextContent().trim());
                 }
             }
 
@@ -145,6 +141,12 @@ public class CardParser {
                 int h = Integer.parseInt(cardNode.getTextContent()
                         .trim());
                 card.initHits(h);
+
+                if (card instanceof Monster) {
+                    Monster monster = (Monster) card;
+                    String regenerateString = XmlUtils.getAttributes(cardNode).get("regenerate");
+                    monster.setRegenerate(NumberUtils.toInt(regenerateString, 0));
+                }
             }
 
             if (cardNode.getNodeName()
@@ -364,6 +366,8 @@ public class CardParser {
             Catalog.getInstance()
                     .add(card);
         }
+
+        Logger.debug(card.getName() + ": " + Math.abs(new Date().getTime() - start));
         return card;
     }
 }

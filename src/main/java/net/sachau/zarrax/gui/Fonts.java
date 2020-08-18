@@ -1,6 +1,9 @@
 package net.sachau.zarrax.gui;
 
+import javafx.concurrent.Task;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Font;
+import net.sachau.zarrax.InitTask;
 import net.sachau.zarrax.Logger;
 
 import java.io.InputStream;
@@ -32,8 +35,14 @@ public class Fonts {
     }
 
     public Font get(String mapName) {
-        return fontMap.get(mapName);
+        Font font = fontMap.get(mapName);
+        return font != null ? font : fontMap.get("standard");
     }
 
 
+
+    public Fonts progress(InitTask initTask, int i) {
+        initTask.update(i);
+        return this;
+    }
 }

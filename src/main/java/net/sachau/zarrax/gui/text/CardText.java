@@ -36,10 +36,6 @@ public class CardText {
         return this;
     }
 
-    public CardText b() {
-        return toggleStyle("bold");
-    }
-
     public CardText add(String string) {
         if (StringUtils.isEmpty(string)) {
             return this;
@@ -57,7 +53,21 @@ public class CardText {
     }
 
     public CardText symbol(String symbol) {
-        parts.add(new StyledText(symbol, "font:symbol-12"));
+        styleOffAllFonts();
+        styleOn("font:symbol-12");
+        parts.add(new StyledText(symbol, new HashSet<>(styles)));
+        styleOff("font:symbol-12");
+        return this;
+    }
+
+    private CardText styleOffAllFonts() {
+        Set<String> fontStyles = new HashSet<>();
+        for (String style : styles) {
+            if (style.startsWith("font:")) {
+                fontStyles.add(style);
+            }
+        }
+        styles.removeAll(fontStyles);
         return this;
     }
 
@@ -74,14 +84,16 @@ public class CardText {
         return write();
     }
 
-    public CardText toggleStyle(String style) {
-        if (styles.contains(style)) {
-            styles.remove(style);
-        } else {
-            styles.add(style);
-        }
+    public CardText styleOn(String style) {
+        styles.add(style);
         return this;
     }
+
+    public CardText styleOff(String style) {
+        styles.remove(style);
+        return this;
+    }
+
     public void reset() {
         styles.removeAll(styles);
     }

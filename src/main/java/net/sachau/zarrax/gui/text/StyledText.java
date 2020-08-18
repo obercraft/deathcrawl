@@ -1,5 +1,6 @@
 package net.sachau.zarrax.gui.text;
 
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import net.sachau.zarrax.gui.Fonts;
 
@@ -28,20 +29,26 @@ public class StyledText {
 
     public Text get() {
         Text styleText = new Text(text);
+        styleText.setFill(Color.BLACK);
+        styleText.setFont(Fonts.getInstance().get("standard"));
         if (styles != null) {
-            boolean hasFont = false;
             for (String style : styles) {
                 if (style.startsWith("font:")) {
-                    styleText.setFont(Fonts.getInstance().get(style.replaceFirst("font:", "")));
-                    hasFont = true;
+                    styleText.setFont(Fonts.getInstance()
+                            .get(style.replaceFirst("font:", "")));
+                }else if (style.startsWith("color:")) {
+                    String colorName = style.replaceFirst("color:", "").toUpperCase().trim();
+                    Color color = Color.valueOf(colorName);
+                    if (color != null) {
+                        styleText.setFill(color);
+                    } else {
+                        styleText.setFill(Color.BLACK);
+                    }
                 } else {
                     styleText.getStyleClass()
                             .add(style);
 
                 }
-            }
-            if (! hasFont) {
-                styleText.setFont(Fonts.getInstance().get("standard"));
             }
         }
 

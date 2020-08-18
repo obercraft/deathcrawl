@@ -7,6 +7,7 @@ public class Monster extends Card {
 
     private int xp;
     private int gold;
+    private int regenerate;
 
     public Monster() {
         addKeywords(Keyword.CREATURE);
@@ -14,9 +15,10 @@ public class Monster extends Card {
 
     public Monster(Monster card) {
         super(card);
-        addKeywords(Keyword.CREATURE);
+        addKeywords(Keyword.CREATURE, Keyword.MONSTER);
         this.xp = card.xp;
         this.gold = card.gold;
+        this.regenerate = card.regenerate;
     }
 
     public int getXp() {
@@ -33,5 +35,13 @@ public class Monster extends Card {
 
     public void setGold(int gold) {
         this.gold = gold;
+    }
+
+    public int getRegenerate() {
+        return regenerate;
+    }
+
+    public void setRegenerate(int regenerate) {
+        this.regenerate = regenerate;
     }
 }

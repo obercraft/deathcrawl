@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Encounter extends Card {
 
-    private List<Card> cardList = new ArrayList<>();
+    private String cardString;
 
     public Encounter() {
         super();
@@ -15,14 +15,14 @@ public class Encounter extends Card {
 
     public Encounter(Encounter card) {
         super(card);
-        this.cardList = new ArrayList<>(card.getCardList());
+        this.cardString = card.getCardString();
     }
 
-    public List<Card> getCardList() {
-        return cardList;
+    public String getCardString() {
+        return cardString;
     }
 
-    public void setCardList(List<Card> cardList) {
-        this.cardList = cardList;
+    public void setCardString(String cardString) {
+        this.cardString = cardString;
     }
 }

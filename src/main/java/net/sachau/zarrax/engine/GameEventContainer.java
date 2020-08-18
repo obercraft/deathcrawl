@@ -10,6 +10,7 @@ public class GameEventContainer {
 
 
         STARTTURN,
+        ENDTURN,
         STARTENCOUNTER,
         STARTCARDPHASE,
         ENDCARDPHASE, GUI_STARTENCOUNTER, EXPERIENCEPHASE, PARTYMOVE, CHARACTERDEATH, GAMEOVER,
@@ -20,7 +21,7 @@ public class GameEventContainer {
 
         GUI_NEXTACTION,
         ENVIROMENTDEATH,
-        ;
+        WELCOME;
 
     }
 

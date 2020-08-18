@@ -1,6 +1,9 @@
 package net.sachau.zarrax.gui.screens;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.CardBoard;
@@ -12,12 +15,11 @@ import java.util.Observer;
 
 public class MainRegion extends VBox implements Observer {
 
-    private final PartySelection partySelection;
+    private PartySelection partySelection;
+    private Player player;
+    private CardBoard cardBoard;
+    private RectMap rectMap;
 
-    WelcomeScreen welcomeScreen;
-    Player player;
-    CardBoard cardBoard;
-    RectMap rectMap;
     public MainRegion(double gameWidth, double gameHeight, Player player) {
         super();
         this.player =  player;
@@ -25,19 +27,23 @@ public class MainRegion extends VBox implements Observer {
         setMinHeight(gameHeight);
         setMinWidth(gameWidth);
 
-        partySelection = new PartySelection(player, 5, "card");
-
-        welcomeScreen = new WelcomeScreen(gameWidth, gameHeight);
-        getChildren()
-                .addAll(welcomeScreen);
-
     }
 
     @Override
     public void update(Observable o, Object arg) {
         switch (GameEvent.getType(arg)) {
+            case WELCOME:
+                getChildren().clear();
+                HBox welcome = new HBox();
+                welcome.setAlignment(Pos.BASELINE_CENTER);
+                welcome.getChildren().add(Catalog.getText("intro"));
+                getChildren().add(welcome);
+                break;
             case NEWGAME:
-                getChildren().remove(welcomeScreen);
+                getChildren().clear();
+                if (partySelection == null) {
+                    partySelection = new PartySelection(player, 5, "card");
+                }
                 getChildren().add(partySelection);
                 return;
             case PARTYDONE:
@@ -51,7 +57,9 @@ public class MainRegion extends VBox implements Observer {
                 getChildren().add(rectMap);
                 return;
             case GUI_STARTENCOUNTER:
-                cardBoard = new CardBoard(player);
+                if (cardBoard == null) {
+                    cardBoard = new CardBoard(player);
+                }
                 getChildren().remove(0, getChildren().size());
                 getChildren().add(cardBoard);
                 return;

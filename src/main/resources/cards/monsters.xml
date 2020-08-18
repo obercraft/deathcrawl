@@ -39,5 +39,16 @@
         <flavor>A Goblin Leader!</flavor>
     </card>
 
+    <card>
+        <name>Troll</name>
+        <type>Monster</type>
+        <hits regenerate="2">12</hits>
+        <damage>3</damage>
+        <experience>4</experience>
+        <gold>4</gold>
+        <command>attack</command>
+        <flavor>A Troll!</flavor>
+    </card>
+
 
 </cards>

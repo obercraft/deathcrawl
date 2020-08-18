@@ -49,7 +49,7 @@ public class SideRegion extends VBox implements Observer {
 
 
 
-        buttons.getChildren().addAll(toolButtons, newGame);
+        // buttons.getChildren().addAll(toolButtons, newGame);
 
         getChildren().addAll(buttons);
 
@@ -88,6 +88,10 @@ public class SideRegion extends VBox implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         switch (GameEvent.getType(arg)) {
+            case WELCOME:
+                buttons.getChildren().clear();
+                buttons.getChildren().add(newGame);
+                break;
             case NEWGAME:
                 buttons.getChildren().remove(newGame);
                 buttons.getChildren().addAll(partyClear, partyDone, randomParty);

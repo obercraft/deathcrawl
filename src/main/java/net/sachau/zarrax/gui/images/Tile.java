@@ -9,6 +9,8 @@ public enum Tile {
     WIZARD(1, 41, 28),
     ALL_CLASSES(1, 52,24),
 
+    MONSTER(1,32,28),
+
     DEATHCRAWL(0,0, 0, 100, 100),
     DEATHCRAWL_SMALL(0, 0, 0),
     ARMOR(0,1, 7),
