@@ -2,7 +2,7 @@ package net.sachau.zarrax.engine;
 
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.type.Monster;
-import net.sachau.zarrax.command.CommandParser;
+import net.sachau.zarrax.card.command.CommandParser;
 import net.sachau.zarrax.card.effect.Armor;
 import net.sachau.zarrax.card.effect.Guard;
 import net.sachau.zarrax.card.effect.Stealth;

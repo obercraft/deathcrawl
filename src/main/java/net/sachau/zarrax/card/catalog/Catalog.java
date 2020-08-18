@@ -8,7 +8,7 @@ import javafx.scene.text.TextFlow;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.CardParser;
-import net.sachau.zarrax.card.CardUtils;
+import net.sachau.zarrax.util.CardUtils;
 
 import java.util.*;
 

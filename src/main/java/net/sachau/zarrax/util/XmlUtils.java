@@ -1,4 +1,4 @@
-package net.sachau.zarrax;
+package net.sachau.zarrax.util;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

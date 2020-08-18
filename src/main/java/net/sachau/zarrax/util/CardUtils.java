@@ -1,8 +1,9 @@
-package net.sachau.zarrax.card;
+package net.sachau.zarrax.util;
 
 import net.sachau.zarrax.Logger;
+import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.command.CommandTarget;
+import net.sachau.zarrax.card.command.CommandTarget;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.Player;
 

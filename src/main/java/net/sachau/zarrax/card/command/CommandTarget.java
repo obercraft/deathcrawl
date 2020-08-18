@@ -1,4 +1,4 @@
-package net.sachau.zarrax.command;
+package net.sachau.zarrax.card.command;
 
 public enum CommandTarget {
     SELF,

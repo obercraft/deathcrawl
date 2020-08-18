@@ -1,5 +1,6 @@
 package net.sachau.zarrax.card.effect;
 
+import net.sachau.zarrax.card.type.Goblin;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
@@ -18,8 +19,7 @@ public class GoblinLeader extends CardEffect {
         Player player = GameEngine.getInstance().getPlayer();
         if (player != null && player.getHazards() != null) {
             for (Card card : player.getHazards()) {
-                if (card instanceof Monster && card.getKeywords()
-                        .contains(Keyword.GOBLIN)) {
+                if (card instanceof Goblin) {
                     int d = card.getDamage() + 1;
                     card.setDamage(d);
                     card.getConditions()

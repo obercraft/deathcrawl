@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.type.Character;
-import net.sachau.zarrax.command.CommandParser;
+import net.sachau.zarrax.card.command.CommandParser;
 import net.sachau.zarrax.card.Creature;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.card.keyword.Keyword;

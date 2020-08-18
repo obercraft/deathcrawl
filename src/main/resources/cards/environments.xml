@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE cards SYSTEM "cards.dtd">
 <cards>
+    <!--
     <card>
         <name>Swarm of Crows</name>
         <type>Environment</type>
@@ -9,4 +10,15 @@
             <effect event="STARTCARDPHASE">EnvironmentDamage</effect>
         </effects>
     </card>
+    -->
+
+    <card>
+        <name>Goblin Cave</name>
+        <type>Environment</type>
+        <threat>10</threat>
+        <effects>
+            <effect event="ENDCARDPHASE">GoblinSpawn</effect>
+        </effects>
+    </card>
+
 </cards>

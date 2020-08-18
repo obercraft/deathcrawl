@@ -1,11 +1,8 @@
 package net.sachau.zarrax.gui.text;
 
 
-import net.sachau.zarrax.XmlUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.NamedNodeMap;
+import net.sachau.zarrax.util.XmlUtils;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class TextParser {
 

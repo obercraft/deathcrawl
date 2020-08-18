@@ -8,7 +8,7 @@ import net.sachau.zarrax.card.type.AdvancedAction;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.LimitedUsage;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.command.Command;
+import net.sachau.zarrax.card.command.Command;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;

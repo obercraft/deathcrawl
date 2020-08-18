@@ -17,7 +17,7 @@ public enum Keyword {
     WEAPON (true),
     POTION (true),
     MONSTER(Tile.MONSTER), CREATURE, ACTION, MOMENTUM,
-    RANGED(true), PERMANENT(), GOBLIN(),
+    RANGED(true), PERMANENT(),
     RETALIATE(true),
     FLYING(true)
 

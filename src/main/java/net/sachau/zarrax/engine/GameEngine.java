@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.UniqueCardList;
 import net.sachau.zarrax.card.level.Levels;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Monster;
@@ -119,6 +120,7 @@ public class GameEngine  implements Observer {
             }
 
             case ENDCARDPHASE:
+                triggerEffects(GameEventContainer.Type.ENDCARDPHASE);
                 player.getDraw().draw(player.getHand(), player.getHandSize() - player.getHand().size());
 
                 for (Card card : player.getParty()) {
@@ -271,11 +273,15 @@ public class GameEngine  implements Observer {
 
 
     public void triggerEffects(GameEventContainer.Type eventType) {
+        player.setSpawnCards(new UniqueCardList());
         for (Card card : player.getHazards()) {
             card.triggerPhaseEffects(eventType);
         }
         for (Card card : player.getParty()) {
             card.triggerPhaseEffects(eventType);
+        }
+        if (player.getSpawnCards().size() > 0) {
+            player.getHazards().addAll(player.getSpawnCards());
         }
     }
 

@@ -2,7 +2,8 @@ package net.sachau.zarrax.card;
 
 
 import net.sachau.zarrax.Logger;
-import net.sachau.zarrax.XmlUtils;
+import net.sachau.zarrax.util.CardUtils;
+import net.sachau.zarrax.util.XmlUtils;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
@@ -27,13 +28,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CardParser {
 
-    private static final String typePrefix = Card.class.getCanonicalName().replace("Card", "type");
+    public static final String typePrefix = Card.class.getCanonicalName().replace("Card", "type");
     private static final String effectPrefix = Card.class.getCanonicalName().replace("Card", "effect");
 
     public static List<Card> parse(InputStream inputStream) throws Exception {

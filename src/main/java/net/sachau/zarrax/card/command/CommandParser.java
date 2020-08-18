@@ -1,8 +1,8 @@
-package net.sachau.zarrax.command;
+package net.sachau.zarrax.card.command;
 
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
-import net.sachau.zarrax.card.CardUtils;
+import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.effect.Prone;
 import net.sachau.zarrax.card.type.AdvancedAction;

@@ -8,6 +8,7 @@ import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.Creature;
 import net.sachau.zarrax.card.Deck;
+import net.sachau.zarrax.card.UniqueCardList;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.gui.map.MapCoord;
 import org.apache.commons.lang3.StringUtils;
@@ -31,15 +32,17 @@ public class Player extends Creature {
 
 	private MapCoord mapCoord;
 
+	private UniqueCardList spawnCards;
+
 	private SimpleIntegerProperty momentum = new SimpleIntegerProperty(0);
 
 
 	public Player() {
 		super();
 
-		party = new SimpleListProperty<>(FXCollections.observableArrayList());
+		party = new SimpleListProperty<>(FXCollections.observableArrayList(new UniqueCardList()));
 		hand = new SimpleListProperty<>(FXCollections.observableArrayList());
-		hazards = new SimpleListProperty<>(FXCollections.observableArrayList());
+		hazards = new SimpleListProperty<>(FXCollections.observableArrayList(new UniqueCardList()));
 
 		draw = new Deck();
 		draw.setVisible(false);
@@ -194,5 +197,13 @@ public class Player extends Creature {
 	public void addToHazards(Card card) {
 		card.setOwner(null);
 		this.getHazards().add(card);
+	}
+
+	public UniqueCardList getSpawnCards() {
+		return spawnCards;
+	}
+
+	public void setSpawnCards(UniqueCardList spawnCards) {
+		this.spawnCards = spawnCards;
 	}
 }

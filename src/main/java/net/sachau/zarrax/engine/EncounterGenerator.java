@@ -1,17 +1,19 @@
 package net.sachau.zarrax.engine;
 
-import net.sachau.zarrax.DiceUtils;
 import net.sachau.zarrax.Logger;
-import net.sachau.zarrax.card.CardUtils;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.CardParser;
+import net.sachau.zarrax.card.UniqueCardList;
 import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.card.type.Environment;
 import net.sachau.zarrax.card.type.Encounter;
+import net.sachau.zarrax.card.type.Environment;
+import net.sachau.zarrax.util.CardUtils;
+import net.sachau.zarrax.util.DiceUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +25,7 @@ public class EncounterGenerator {
     private final List<Card> eventCards;
     private final List<Card> environments;
 
-    private final List<Card> hazards;
+    private final UniqueCardList hazards;
 
     private EncounterGenerator(){
         eventCards = Catalog.getInstance()
@@ -32,7 +34,7 @@ public class EncounterGenerator {
         environments = Catalog.getInstance()
                 .get(Environment.class);
 
-        hazards = new LinkedList<>();
+        hazards = new UniqueCardList();
 
     }
 
@@ -47,9 +49,11 @@ public class EncounterGenerator {
     }
 
     public EncounterGenerator addRandomEnvironment() {
+        /*
         if (DiceUtils.percentage(50)) {
             return this;
         }
+         */
         this.hazards.add(CardUtils.copyCard(DiceUtils.getRandomCard(environments)));
         return this;
     }
@@ -62,9 +66,8 @@ public class EncounterGenerator {
 
     private List<Card> createEncounterCards(String cardString) {
         String[] cards = cardString.trim().split(",", -1);
-        List<Card> encounter = new LinkedList<>();
+        UniqueCardList encounter = new UniqueCardList();
         for (String cardName : cards) {
-
             int amount = 1;
             Matcher matcher = countMatcher.matcher(cardName.trim());
             if (matcher.find()) {
@@ -75,10 +78,32 @@ public class EncounterGenerator {
                 Logger.debug("adding " + cardName + " " + amount + " times");
             }
 
+            List<Card> typeSelection = null;
+            if (cardName.trim().startsWith("type:")) {
+                String type = cardName.trim().replaceFirst("type:", "");
+                Reflections reflections = new Reflections(CardParser.typePrefix);
+                Set<Class<? extends Card>> allClasses = reflections.getSubTypesOf(Card.class);
+                for (Class<? extends Card> clazz : allClasses) {
+                    if (clazz.getSimpleName()
+                            .toLowerCase()
+                            .matches(type.toLowerCase())) {
+                        typeSelection = Catalog.getInstance().get(clazz);
+                        break;
+
+                    }
+                }
+            }
+            
+            
             try {
                 for (int r = 0; r < amount; r++) {
-                    Card c = Catalog.getInstance()
-                            .get(cardName);
+                    Card c;
+                    if (typeSelection != null && typeSelection.size() > 0) {
+                        c = DiceUtils.getRandomCard(typeSelection);
+                    } else {
+                        c = Catalog.getInstance()
+                                .get(cardName);
+                    }
                     c.setVisible(true);
                     c.setOwner(null);
                     encounter.add(CardUtils.copyCard(c));

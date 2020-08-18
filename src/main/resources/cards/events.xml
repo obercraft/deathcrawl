@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE cards SYSTEM "cards.dtd">
 <cards>
-    <!--
+
     <card>
         <name>Goblins Attack!</name>
         <type>Encounter</type>
-        <deck>Goblin Leader,[2-3] Goblin</deck>
+        <deck>Goblin Leader,[3-6] type:Goblin</deck>
     </card>
-    -->
 
+    <!--
     <card>
         <name>Trolls</name>
         <type>Encounter</type>
         <deck>[1-2] Troll</deck>
     </card>
+    -->
 
 </cards>

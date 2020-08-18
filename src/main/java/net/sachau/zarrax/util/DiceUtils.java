@@ -1,4 +1,4 @@
-package net.sachau.zarrax;
+package net.sachau.zarrax.util;
 
 import net.sachau.zarrax.card.Card;
 

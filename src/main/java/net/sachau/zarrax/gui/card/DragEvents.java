@@ -5,7 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.input.*;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.type.Character;
-import net.sachau.zarrax.command.Command;
+import net.sachau.zarrax.card.command.Command;
 
 import java.util.HashMap;
 import java.util.Map;

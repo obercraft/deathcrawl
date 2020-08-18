@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE cards SYSTEM "cards.dtd">
 <cards>
-    <card>
-        <name>Kobold</name>
-        <type>Monster</type>
-        <hits>3</hits>
-        <damage>1</damage>
-        <experience>1</experience>
-        <gold>1</gold>
-        <command>attack</command>
-        <flavor>A Kobold!</flavor>
-    </card>
 
     <card>
         <name>Goblin</name>
-        <type>Monster</type>
+        <type>Goblin</type>
         <hits>3</hits>
         <damage>1</damage>
         <experience>2</experience>
         <gold>1</gold>
         <command>attack</command>
-        <keywords>goblin</keywords>
         <flavor>A Goblin!</flavor>
     </card>
 
     <card>
-        <name>Goblin Leader</name>
-        <type>Monster</type>
+        <name>Goblin with Spear</name>
+        <type>Goblin</type>
+        <hits>3</hits>
+        <damage>1</damage>
+        <experience>2</experience>
+        <gold>1</gold>
+        <command>attack</command>
+        <keywords>Ranged</keywords>
+        <flavor>A Goblin!</flavor>
+    </card>
+
+    <card>
+        <name>Goblin with Axe</name>
+        <type>Goblin</type>
+        <hits>3</hits>
+        <damage>3</damage>
+        <experience>2</experience>
+        <gold>1</gold>
+        <command>attack</command>
+        <flavor>A Goblin!</flavor>
+    </card>
+
+
+    <card>
+        <name uniqueId="GoblinLeader">Goblin Leader</name>
+        <type>Goblin</type>
         <hits>4</hits>
         <damage>2</damage>
         <experience>3</experience>
         <gold>2</gold>
         <command>attack</command>
-        <keywords>goblin</keywords>
         <effects>
             <effect event="STARTENCOUNTER">GoblinLeader</effect>
         </effects>

@@ -3,7 +3,7 @@ package net.sachau.zarrax.card.type;
 import javafx.beans.property.SimpleIntegerProperty;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
-import net.sachau.zarrax.command.CommandParser;
+import net.sachau.zarrax.card.command.CommandParser;
 
 public class LimitedUsage extends Card {
 
