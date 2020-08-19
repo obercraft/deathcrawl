@@ -63,6 +63,14 @@ Weapon
     </card>
 
     <card>
+        <name>Attack</name>
+        <type>Action</type>
+        <damage>1</damage>
+        <command>attack</command>
+    </card>
+
+
+    <card>
         <name>Knife</name>
         <type>item</type>
         <damage>1</damage>

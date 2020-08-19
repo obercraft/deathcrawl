@@ -9,6 +9,8 @@ public class Monster extends Card {
     private int gold;
     private int regenerate;
 
+    private Card targetedCard;
+
     public Monster() {
         addKeywords(Keyword.CREATURE);
     }
@@ -43,5 +45,13 @@ public class Monster extends Card {
 
     public void setRegenerate(int regenerate) {
         this.regenerate = regenerate;
+    }
+
+    public Card getTargetedCard() {
+        return targetedCard;
+    }
+
+    public void setTargetedCard(Card targetedCard) {
+        this.targetedCard = targetedCard;
     }
 }

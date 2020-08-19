@@ -178,17 +178,6 @@ public class GameEngine  implements Observer {
                     player.getHazards()
                             .remove(hazardCard);
                 }
-                Card turnCard = null;
-                if (initiativeOrder != null) {
-                    for (Card card : initiativeOrder) {
-                        if (card.getId() == deadCard.getId()) {
-                            turnCard = card;
-                        }
-                    }
-                }
-                if (turnCard != null) {
-                    initiativeOrder.remove(turnCard);
-                }
 
 
                 // ALL DEAD
@@ -198,6 +187,29 @@ public class GameEngine  implements Observer {
                             .send(GameEventContainer.Type.GAMEOVER);
                     return;
                 }
+
+                Card turnCard = null;
+                int initiativeId = -1, i =0;
+                if (initiativeOrder != null) {
+                    for (Card card : initiativeOrder) {
+                        if (card.getId() == deadCard.getId()) {
+                            turnCard = card;
+                            initiativeId = i;
+                        }
+                        i++;
+
+                    }
+                }
+                if (turnCard != null) {
+                    initiativeOrder.remove(turnCard);
+
+                }
+
+                if (initiativeId >= initiativeOrder.size()) {
+                    GameEvent.getInstance()
+                            .send(GameEventContainer.Type.ENDCARDPHASE);
+                }
+
                 return;
             }
             default:

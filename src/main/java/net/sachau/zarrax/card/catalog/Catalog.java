@@ -45,31 +45,40 @@ public class Catalog {
     }
 
     public static void init() {
+        init(true);
+    }
+
+    public static void initForTesting() {
+        init(false);
+    }
+
+
+    private static void init(boolean withTexts) {
         Logger.debug("reading catalog");
         try {
             List<Card> allCards = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/cards.xml"));
+                    .getResourceAsStream("/cards/cards.xml"), withTexts);
             Catalog.getInstance()
                     .add(allCards);
 
             List<Card> monsters = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/monsters.xml"));
+                    .getResourceAsStream("/cards/monsters.xml"), withTexts);
             Catalog.getInstance()
                     .add(monsters);
 
             List<Card> environments = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/environments.xml"));
+                    .getResourceAsStream("/cards/environments.xml"), withTexts);
             Catalog.getInstance()
                     .add(environments);
 
             List<Card> events = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/events.xml"));
+                    .getResourceAsStream("/cards/events.xml"), withTexts);
             Catalog.getInstance()
                     .add(events);
 
 
             List<Card> basic = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/characters.xml"));
+                    .getResourceAsStream("/cards/characters.xml"), withTexts);
             Catalog.getInstance()
                     .add(basic);
 

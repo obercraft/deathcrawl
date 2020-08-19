@@ -9,7 +9,7 @@ public class DiceUtils {
 
     public static boolean percentage(int percent) {
 
-        return percent <= ThreadLocalRandom.current().nextInt(1, 101);
+        return percent >= ThreadLocalRandom.current().nextInt(1, 101);
 
     }
 

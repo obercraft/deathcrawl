@@ -4,6 +4,8 @@ import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.effect.Exhausted;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.card.type.Character;
+import net.sachau.zarrax.card.type.LimitedUsage;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.Player;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +44,15 @@ public class Command {
             Logger.debug(source + " is exhausted");
             return false;
         }
+
+
+        if (source instanceof Character) {
+            Character character = (Character) source;
+            return execute(character.getSelectedCard(), target);
+        } else if (source instanceof LimitedUsage) {
+            return ((LimitedUsage) source).execute(target);
+        }
+
 
         if (source.hasKeyword(Keyword.PERMANENT)) {
             return CommandParser.executeCommands(source, target);

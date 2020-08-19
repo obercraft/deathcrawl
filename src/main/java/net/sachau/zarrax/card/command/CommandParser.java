@@ -2,6 +2,7 @@ package net.sachau.zarrax.card.command;
 
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.effect.Prone;
@@ -18,35 +19,39 @@ import java.util.List;
 
 public class CommandParser {
 
-    public static boolean executeCommands(Card source, Card target) {
-        if (source instanceof LimitedUsage) {
-            List<Card> cards = GameEngine.getInstance().getPlayer().getParty();
-            if (cards != null && cards.contains(source)) {
-                LimitedUsage lu = (LimitedUsage) source;
-                return lu.execute(target);
-            }
-        }
-        return executeCommands(source.getCommand(), source, target);
-    }
+//    public static boolean executeCommands(Card source, Card target) {
+//        if (source instanceof LimitedUsage) {
+//            List<Card> cards = GameEngine.getInstance().getPlayer().getParty();
+//            if (cards != null && cards.contains(source)) {
+//                LimitedUsage lu = (LimitedUsage) source;
+//                return lu.execute(target);
+//            }
+//        }
+//        return executeCommands(source.getCommand(), source, target);
+//    }
 
-    public static boolean executeCommands(String commandString, Card source, Card target) {
+    public static boolean executeCommands(Card source, Card target) {
 
         if (source == null) {
             Logger.debug("no source card");
             return false;
         }
 
+        if (source instanceof Character) {
+            Character character = (Character) source;
+            return executeCommands(character.getSelectedCard(), target);
+        }
+
         if (source instanceof AdvancedAction) {
             return ((AdvancedAction) source).execute(target);
         }
 
-        if (StringUtils.isEmpty(source.getCommand()) && StringUtils.isEmpty(commandString)) {
+        if (StringUtils.isEmpty(source.getCommand())) {
             Logger.debug("no command given");
             return false;
         }
 
-        String cmds = StringUtils.isNotEmpty(commandString) ? commandString : source.getCommand();
-        String[] commands = cmds.trim().toLowerCase().split(";", -1);
+        String[] commands = source.getCommand().trim().toLowerCase().split(";", -1);
 
         if (commands == null || commands.length == 0) {
             return false;

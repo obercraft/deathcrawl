@@ -3,13 +3,16 @@ package net.sachau.zarrax.card.type;
 import javafx.beans.property.SimpleIntegerProperty;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.card.command.Command;
 import net.sachau.zarrax.card.command.CommandParser;
 
 public class LimitedUsage extends Card {
 
     private static final int UNLIMITED =  -1;
     private SimpleIntegerProperty uses = new SimpleIntegerProperty();
-    private String usageCommand;
+    private String usageCardName;
+    private Card usageCard;
 
     public LimitedUsage() {
         super();
@@ -17,11 +20,22 @@ public class LimitedUsage extends Card {
 
     public LimitedUsage(LimitedUsage card) {
         super(card);
+        this.uses.set(card.getUses());
+        this.usageCardName = card.getUsageCardName();
+        this.usageCard = card.getUsageCard();
     }
 
     public boolean execute(Card target) {
+
+        if (usageCard == null) {
+            Card card = Catalog.copyOf(this.getUsageCardName());
+            card.setOwner(this.getOwner());
+            card.setVisible(true);
+            this.usageCard = card;
+        }
+
         if (getUses() > 0 || getUses() == UNLIMITED) {
-            boolean result = CommandParser.executeCommands(usageCommand, this, target);
+            boolean result = Command.execute(usageCard, target);
             if (result) {
                 if (getUses() != UNLIMITED) {
                     setUses(getUses() - 1);
@@ -46,11 +60,19 @@ public class LimitedUsage extends Card {
         this.uses.set(uses);
     }
 
-    public String getUsageCommand() {
-        return usageCommand;
+    public Card getUsageCard() {
+        return usageCard;
     }
 
-    public void setUsageCommand(String usageCommand) {
-        this.usageCommand = usageCommand;
+    public void setUsageCard(Card usageCard) {
+        this.usageCard = usageCard;
+    }
+
+    public String getUsageCardName() {
+        return usageCardName;
+    }
+
+    public void setUsageCardName(String usageCardName) {
+        this.usageCardName = usageCardName;
     }
 }

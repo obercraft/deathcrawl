@@ -16,10 +16,12 @@ public enum Keyword {
     ITEM (true),
     WEAPON (true),
     POTION (true),
-    MONSTER(Tile.MONSTER), CREATURE, ACTION, MOMENTUM,
+    MONSTER(Tile.MONSTER), CREATURE, ACTION,
     RANGED(true), PERMANENT(),
     RETALIATE(true),
-    FLYING(true)
+    FLYING(true),
+    VICIOUS(true),
+    SMALL(true),
 
     ;
 

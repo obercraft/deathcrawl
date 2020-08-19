@@ -70,7 +70,7 @@ public class CardTest {
         Player player = new Player();
         GameEngine.getInstance().setPlayer(player);
         GameEngine.getInstance().setInitiativeOrder(new ArrayList<>());
-        Catalog.init();
+        Catalog.initForTesting();
         Card thief = Catalog.copyOf("Thief");
         player.addToParty(thief);
         GameEngine.getInstance().getInitiativeOrder().add(thief);
@@ -103,7 +103,7 @@ public class CardTest {
         Assert.assertTrue(result);
         Assert.assertNotEquals(goblin.getHits(), goblin.getMaxHits());
         Assert.assertTrue(player.getDraw().getDiscards().contains(gold));
-        Assert.assertTrue(thief.hasCondition(Exhausted.class));
+        Assert.assertTrue(((Character)thief).getSelectedCard().hasCondition(Exhausted.class));
 
         // try again will fail (exhaustion)
         result = Command.execute(thief, goblin);
@@ -258,9 +258,11 @@ public class CardTest {
         limitedUsage.setUses(2);
         limitedUsage.setDamage(1);
 
-        limitedUsage.setUsageCommand("heal target");
+        limitedUsage.setUsageCardName("Healing Potion");
         player.addToParty(limitedUsage);
 
+
+        GameEngine.getInstance().setCurrentInitiative(0);
         result = Command.execute(limitedUsage, warrior);
         Assert.assertTrue(result);
         Assert.assertEquals(warrior.getHits(), warrior.getMaxHits() -1);

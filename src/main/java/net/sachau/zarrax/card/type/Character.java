@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.engine.GameEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,8 @@ public class Character extends Card {
         }
         levelCards = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
         for (Card c : character.getLevelCards()) {
+            c.setVisible(true);
+            c.setOwner(GameEngine.getInstance().getPlayer());
             levelCards.add(c);
         }
     }

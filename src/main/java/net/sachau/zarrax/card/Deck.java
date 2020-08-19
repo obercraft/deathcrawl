@@ -89,7 +89,7 @@ public class Deck {
             }
             discards.removeAll(removedCards);
             shuffe();
-            draw(Math.min(size(), amount - limit), targetHand);
+            draw(Math.min(size() -1, amount - limit), targetHand);
         }
 
     }

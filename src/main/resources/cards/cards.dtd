@@ -1,7 +1,7 @@
 <?xml encoding="UTF-8"?>
 
         <!ELEMENT cards (card)+>
-        <!ELEMENT card (name|type|deck?|hits?|damage?|skill?|threat?|experience?|gold?|level-cards?|command?|usage-command?|uses?|starting-cards?|keywords?|effects?|text?|flavor?)*>
+        <!ELEMENT card (name|type|deck?|hits?|damage?|skill?|threat?|experience?|gold?|level-cards?|command?|illumination?|usage-command?|uses?|starting-cards?|keywords?|effects?|text?|flavor?)*>
 
         <!ELEMENT name (#PCDATA)>
         <!ATTLIST name
@@ -27,9 +27,11 @@
         <!ELEMENT starting-cards (#PCDATA)>
         <!ELEMENT flavor (#PCDATA)>
 
+        <!ELEMENT illumination (#PCDATA)>
+
         <!ELEMENT effects (effect)+>
         <!ELEMENT effect (#PCDATA)>
-        <!ATTLIST effect event CDATA "startturn">
+        <!ATTLIST effect event CDATA "">
 
         <!ELEMENT text (#PCDATA|h1|p|color)*>
 

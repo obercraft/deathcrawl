@@ -8,12 +8,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.effect.*;
+import net.sachau.zarrax.card.type.Character;
+import net.sachau.zarrax.card.type.Illumination;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.keyword.Keywords;
+import net.sachau.zarrax.util.DiceUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -252,11 +255,53 @@ public abstract class Card {
             return true;
         }
 
-        if (target.hasKeyword(Keyword.FLYING) && !this.hasKeyword(Keyword.RANGED)) {
+
+        boolean ranged = this.hasKeyword(Keyword.RANGED);
+
+        if (ranged) {
+            int rangeHitChance = 100; // percent
+            if (target.hasKeyword(Keyword.SMALL)) {
+                rangeHitChance -= 25;
+            }
+            boolean hasBadLight = false;
+            if (this.hasCondition(Blind.class)) {
+                rangeHitChance -= 60;
+                hasBadLight = true;
+            } else if (this.hasCondition(Darkness.class)) {
+                rangeHitChance -= 30;
+                hasBadLight = true;
+            }
+            if (hasBadLight) {
+                Player player = GameEngine.getInstance().getPlayer();
+                if (this.owner instanceof Player) {
+
+                    for (Card c : player.getParty()) {
+                        if (c instanceof Illumination) {
+                            rangeHitChance += ((Illumination) c).getIlluminationValue();
+                        }
+                    }
+                } else {
+                    for (Card c : player.getHazards()) {
+                        if (c instanceof Illumination) {
+                            rangeHitChance += ((Illumination) c).getIlluminationValue();
+                        }
+                    }
+
+                }
+            }
+
+            int hitChance = Math.min(100, rangeHitChance);
+            if (!DiceUtils.percentage(hitChance)) {
+                Logger.debug("ranged " + this + "attack on "+ target + " failed [" + hitChance + "%]");
+                return true;
+            }
+        }
+
+        if (target.hasKeyword(Keyword.FLYING) && !ranged) {
             Logger.debug("cannot attack flying target with ranged");
         }
 
-        if (!this.hasOneKeyword(Keyword.RANGED)) {
+        if (!ranged) {
             List<Card> possibleGuards;
             if (target.getOwner() instanceof Player) {
                 possibleGuards = ((Player) target.getOwner()).getParty();
@@ -291,10 +336,12 @@ public abstract class Card {
         target.setHits(Math.max(0,hits));
         Logger.debug(this + (isRetaliate ? " retaliates " : " attacks " ) + target + " for " + attack + " damage");
         if (target.hasKeyword(Keyword.RETALIATE)) {
-            if (this.hasKeyword(Keyword.CREATURE)) {
-                target.attack(this, target.getDamage(), true);
+
+            Card retaliateTarget = GameEngine.getInstance().getCurrentCard();
+            if (retaliateTarget != null && retaliateTarget.hasKeyword(Keyword.CREATURE)) {
+                target.attack(retaliateTarget, target.getDamage(), true);
             } else {
-                Logger.debug("cannot retaliate " + this);
+                Logger.debug("cannot retaliate " + retaliateTarget);
             }
         }
         return true;
@@ -477,7 +524,7 @@ public abstract class Card {
     }
 
 
-    public CardEffect removeCondition(Class<? extends CardEffect> clazz) {
+    public void removeCondition(Class<? extends CardEffect> clazz) {
         CardEffect removeCondition = null;
         for (CardEffect cardEffect : getConditions()) {
             if (cardEffect.getClass()
@@ -490,7 +537,30 @@ public abstract class Card {
             removeCondition.remove(this);
             getConditions().remove(removeCondition);
         }
-        return removeCondition;
+
+
+        if (this instanceof Character) {
+
+            Character character = (Character) this;
+            for (Card card : character.getLevelCards()) {
+                removeCondition = null;
+                for (CardEffect cardEffect : card.getConditions()) {
+                    if (cardEffect.getClass()
+                            .equals(clazz)) {
+                        removeCondition = cardEffect;
+                    }
+                }
+                if (removeCondition != null) {
+                    Logger.debug("remove " + clazz + " from " + card);
+                    removeCondition.remove(card);
+                    card.getConditions().remove(removeCondition);
+                }
+
+
+            }
+
+
+        }
     }
 
 
