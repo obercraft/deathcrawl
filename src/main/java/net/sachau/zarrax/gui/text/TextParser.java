@@ -2,6 +2,7 @@ package net.sachau.zarrax.gui.text;
 
 
 import net.sachau.zarrax.util.XmlUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Node;
 
 public class TextParser {
@@ -21,9 +22,12 @@ public class TextParser {
                     .item(i);
             String nodeName = child.getNodeName();
             if (nodeName.matches("h\\d+")) {
-                textBuilder.styleOn("font:" + nodeName);
+                textBuilder.styleOn("font", "standard");
+                int size = 12 * (4 - NumberUtils.toInt(nodeName.replace("h", ""), 1));
+                textBuilder.styleOn("size", "" + size);
                 parse(child, textBuilder);
-                textBuilder.nl().styleOff("font:" + nodeName);
+                textBuilder.nl().styleOff("font").styleOff("size");
+
 
             } else if ("p".equals(nodeName)) {
                 textBuilder.nl();
@@ -31,9 +35,9 @@ public class TextParser {
                 textBuilder.nl();
             } else if ("color".equalsIgnoreCase(nodeName)) {
                 String colorName = XmlUtils.getAttributes(child).get("name");
-                textBuilder.styleOn("color:" +colorName);
+                textBuilder.styleOn("color" , colorName);
                 parse(child, textBuilder);
-                textBuilder.styleOff("color:" +colorName);
+                textBuilder.styleOff("color");
             } else {
                 textBuilder.add(child.getTextContent().trim());
                 parse(child, textBuilder);

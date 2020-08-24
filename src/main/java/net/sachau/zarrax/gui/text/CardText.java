@@ -4,16 +4,13 @@ import javafx.scene.text.TextFlow;
 import net.sachau.zarrax.gui.Symbol;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CardText {
 
     List<StyledText> parts = new LinkedList<>();
     boolean withWhitespaces = true;
-    Set<String> styles = new HashSet<>();
+    Map<String, String> styles = new HashMap<>();
 
     public CardText() {
         this.parts = new LinkedList<>();
@@ -45,7 +42,7 @@ public class CardText {
             if ("$EXHAUSTED$".equals(arg)) {
                     symbol(Symbol.FA_HAND_HOLDING.getText());
             } else {
-                parts.add(new StyledText(arg + (withWhitespaces ? " " : ""), new HashSet<>(styles)));
+                parts.add(new StyledText(arg + (withWhitespaces ? " " : ""), new HashMap<>(styles)));
             }
         }
         return this;
@@ -54,20 +51,23 @@ public class CardText {
 
     public CardText symbol(String symbol) {
         styleOffAllFonts();
-        styleOn("font:symbol-12");
-        parts.add(new StyledText(symbol, new HashSet<>(styles)));
-        styleOff("font:symbol-12");
+        styleOn("font", "symbol");
+        if (!styles.containsKey("size")) {
+            styleOn("size", "12");
+        }
+        parts.add(new StyledText(symbol, new HashMap<>(styles)));
+        styleOff("font");
+        styleOff("size");
         return this;
     }
 
     private CardText styleOffAllFonts() {
-        Set<String> fontStyles = new HashSet<>();
-        for (String style : styles) {
-            if (style.startsWith("font:")) {
-                fontStyles.add(style);
+        for (Map.Entry<String, String> style : styles.entrySet()) {
+            if (style.getKey().equalsIgnoreCase("font")) {
+                styles.remove(style.getKey());
             }
         }
-        styles.removeAll(fontStyles);
+
         return this;
     }
 
@@ -84,8 +84,8 @@ public class CardText {
         return write();
     }
 
-    public CardText styleOn(String style) {
-        styles.add(style);
+    public CardText styleOn(String style, String value) {
+        styles.put(style, value);
         return this;
     }
 
@@ -95,7 +95,9 @@ public class CardText {
     }
 
     public void reset() {
-        styles.removeAll(styles);
+        for (String key : styles.keySet()) {
+            styles.remove(key);
+        }
     }
 
     public CardText nl() {
