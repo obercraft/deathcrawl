@@ -44,14 +44,14 @@ public class CardTest {
         Assert.assertNotEquals(char1.getDamage(), char2.getDamage());
 
         Assert.assertEquals(char1.getKeywords(), char1.getKeywords());
-        char1.addKeywords(Keyword.SIMPLE);
+        char1.addKeyword(Keyword.SIMPLE);
         Assert.assertNotEquals(char1.getKeywords(), char2.getKeywords());
 
-        Assert.assertEquals(char1.getConditions(), char2.getConditions());
+        Assert.assertEquals(char1.getEffects(), char2.getEffects());
 
-        char1.getConditions().add(new CardEffect() {
+        char1.getEffects().add(new CardEffect() {
             @Override
-            public void trigger(Card sourceCard, Card targetCard) {
+            public void trigger(Card targetCard) {
 
             }
 
@@ -62,7 +62,7 @@ public class CardTest {
 
         });
 
-        Assert.assertNotEquals(char1.getConditions(), char2.getConditions());
+        Assert.assertNotEquals(char1.getEffects(), char2.getEffects());
 
     }
     @Test
@@ -86,7 +86,7 @@ public class CardTest {
         Card draw = new Action();
         draw.setOwner(player);
         draw.setCommand("draw 1");
-        draw.addKeywords(Keyword.SIMPLE);
+        draw.addKeyword(Keyword.SIMPLE);
 
         // Draw
         boolean result = Command.execute(draw, null);
@@ -103,7 +103,7 @@ public class CardTest {
         Assert.assertTrue(result);
         Assert.assertNotEquals(goblin.getHits(), goblin.getMaxHits());
         Assert.assertTrue(player.getDraw().getDiscards().contains(gold));
-        Assert.assertTrue(((Character)thief).getSelectedCard().hasCondition(Exhausted.class));
+        Assert.assertTrue(((Character)thief).getSelectedCard().hasKeyword(Keyword.EXHAUSTED));
 
         // try again will fail (exhaustion)
         result = Command.execute(thief, goblin);
@@ -120,12 +120,12 @@ public class CardTest {
         GameEngine.getInstance().setCurrentInitiative(1);
         result = Command.execute(shield, wizard);
         Assert.assertTrue(result);
-        Assert.assertTrue(wizard.hasCondition(Armor.class));
+        Assert.assertTrue(wizard.hasKeyword(Keyword.ARMOR));
 
         // Attacking Shield
         result = Command.execute(goblin, wizard);
         Assert.assertTrue(result);
-        Assert.assertFalse(wizard.hasCondition(Armor.class));
+        Assert.assertFalse(wizard.hasKeyword(Keyword.ARMOR));
         Assert.assertEquals(wizard.getHits(), wizard.getMaxHits());
 
         result = Command.execute(goblin, wizard);
@@ -155,17 +155,17 @@ public class CardTest {
         Card warrior = Catalog.copyOf("Warrior");
         // trigger events without warrior being in party
         GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
-        Assert.assertFalse(warrior.hasCondition(Guard.class));
+        Assert.assertFalse(warrior.hasKeyword(Keyword.ARMOR));
         // trigger again with warrior being in party, this time warrior should have guard
         player.addToParty(warrior);
         GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
-        Assert.assertTrue(warrior.hasCondition(Guard.class));
+        Assert.assertTrue(warrior.hasKeyword(Keyword.ARMOR));
 
         // attacking wizard with warrior guard should fail
         result = Command.execute(goblin, wizard);
         Assert.assertFalse(result);
 
-        goblin.addKeywords(Keyword.RANGED);
+        goblin.addKeyword(Keyword.RANGED);
         // attacking wizard with ranged goblin
         result = Command.execute(goblin, wizard);
         Assert.assertTrue(result);
@@ -198,9 +198,7 @@ public class CardTest {
 
         // some reverse test
         Card goblinWithGuard = Catalog.copyOf("Goblin");
-        goblinWithGuard.getConditions().add(new Guard());
-        goblinWithGuard.getConditions().add(new Armor());
-
+        goblinWithGuard.hasKeyword(Keyword.GUARDED);
 
         player.addToHazards(goblin);
         player.addToHazards(goblinWithGuard);
@@ -211,32 +209,32 @@ public class CardTest {
         Assert.assertTrue(result);
 
         // target self?
-        warrior.removeCondition(Exhausted.class);
+        warrior.getKeywords().remove(Keyword.EXHAUSTED);
         result = Command.execute(warrior, warrior);
         Assert.assertFalse(result);
 
         // target friendly?
-        warrior.removeCondition(Exhausted.class);
+        warrior.getKeywords().remove(Keyword.EXHAUSTED);
         result = Command.execute(warrior, wizard);
-        Assert.assertFalse(false);
+        Assert.assertFalse(result);
 
         // attack prone?
-        warrior.removeCondition(Exhausted.class);
-        warrior.getConditions().add(new Prone());
+        warrior.getKeywords().remove(Keyword.EXHAUSTED);
+        warrior.addKeyword(Keyword.PRONE);
         result = Command.execute(warrior, wizard);
-        Assert.assertFalse(false);
+        Assert.assertFalse(result);
 
         // retaliate
-        goblinWithGuard.addKeywords(Keyword.RETALIATE);
-        warrior.removeCondition(Prone.class);
+        goblinWithGuard.addKeyword(Keyword.RETALIATE);
+        warrior.getKeywords().remove(Keyword.PRONE);
         result = Command.execute(warrior, goblinWithGuard);
         Assert.assertTrue(result);
 
         // retaliate with kill
-        goblinWithGuard.addKeywords(Keyword.RETALIATE);
+        goblinWithGuard.addKeyword(Keyword.RETALIATE);
         goblinWithGuard.setDamage(1000);
-        warrior.removeCondition(Prone.class);
-        warrior.removeCondition(Exhausted.class);
+        warrior.getKeywords().remove(Keyword.PRONE);
+        warrior.getKeywords().remove(Keyword.EXHAUSTED);
         result = Command.execute(warrior, goblinWithGuard);
         Assert.assertTrue(result);
 
@@ -248,7 +246,7 @@ public class CardTest {
         Assert.assertTrue(result);
         result = Command.execute(goblinProner, warrior);
         Assert.assertTrue(result);
-        Assert.assertTrue(warrior.hasCondition(Prone.class));
+        Assert.assertTrue(warrior.hasKeyword(Keyword.PRONE));
         Assert.assertNotEquals(warrior.getHits(), warrior.getMaxHits());
 
 

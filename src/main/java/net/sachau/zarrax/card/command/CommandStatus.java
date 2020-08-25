@@ -2,9 +2,10 @@ package net.sachau.zarrax.card.command;
 
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
-import net.sachau.zarrax.card.effect.Prone;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.card.keyword.Keywords;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class CommandStatus {
 
@@ -14,7 +15,7 @@ public class CommandStatus {
     private boolean targetSelf = true;
     private boolean targetEnemy = true;
     // null means all
-    private Keywords allowedKeywords = null;
+    private List<Keyword> allowedKeywords = null;
     
     private CommandStatus(CommandType commandType) {
         this.type = commandType;
@@ -25,7 +26,7 @@ public class CommandStatus {
     }
 
     public boolean check(Card source, Card target) {
-        if (!prone && source.hasCondition(Prone.class)) {
+        if (!prone && source.hasKeyword(Keyword.PRONE)) {
             Logger.debug(source + " is prone");
             return false;
         }
@@ -43,7 +44,7 @@ public class CommandStatus {
             return false;
         }
 
-        if (allowedKeywords != null && !target.hasAllKeywords(allowedKeywords)) {
+        if (allowedKeywords != null && target != null && !target.hasAllKeywords(allowedKeywords)) {
             Logger.debug(source + " must have " + allowedKeywords);
             return false;
         }
@@ -112,16 +113,19 @@ public class CommandStatus {
         return setTargetEnemy(false);
     }
 
-    public Keywords getAllowedKeywords() {
-        return allowedKeywords;
-    }
 
-    public CommandStatus setAllowedKeywords(Keywords allowedKeywords) {
+    public CommandStatus setAllowedKeywords(List<Keyword> allowedKeywords) {
         this.allowedKeywords = allowedKeywords;
         return this;
     }
 
     public CommandStatus onlyKeywords(Keyword...keywords) {
-        return setAllowedKeywords(Keywords.build(keywords));
+        if (keywords != null && keywords.length > 0) {
+            this.allowedKeywords = new LinkedList<>();
+            for (Keyword k : keywords) {
+                this.allowedKeywords.add(k);
+            }
+        }
+        return this;
     }
 }

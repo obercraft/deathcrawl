@@ -189,7 +189,7 @@ public class Player extends Creature {
 			}
 		}
 		card.setOwner(this);
-		card.addKeywords(Keyword.PERMANENT);
+		card.addKeyword(Keyword.PERMANENT);
 		this.getParty().add(card);
 		return true;
 	}

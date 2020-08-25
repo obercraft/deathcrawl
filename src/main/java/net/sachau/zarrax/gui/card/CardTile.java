@@ -28,7 +28,7 @@ public class CardTile extends CardView {
         super(card, cssClass);
         this.card = card;
 
-        String tp = card.getCardKeyWords(true);
+        String tp = card.getCardKeywords(true);
         Tooltip keywords = new Tooltip(tp);
         Tooltip.install(this, keywords);
 

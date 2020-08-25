@@ -7,7 +7,7 @@
         <type>Environment</type>
         <damage>1</damage>
         <effects>
-            <effect event="STARTCARDPHASE">EnvironmentDamage</effect>
+            <effect start="STARTCARDPHASE">EnvironmentDamage</effect>
         </effects>
     </card>
     -->
@@ -17,7 +17,7 @@
         <type>Environment</type>
         <threat>10</threat>
         <effects>
-            <effect event="ENDCARDPHASE">GoblinSpawn</effect>
+            <effect start="ENDCARDPHASE">GoblinSpawn</effect>
         </effects>
     </card>
 

@@ -23,13 +23,13 @@ public class Character extends Card {
 
     public Character() {
         super();
-        addKeywords(Keyword.CREATURE);
+        addKeyword(Keyword.CREATURE);
         levelCards = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
     }
 
     public Character(Character character) {
         super(character);
-        addKeywords(Keyword.CREATURE);
+        addKeyword(Keyword.CREATURE);
         if (character.startingCards != null) {
             startingCards.addAll(character.getStartingCards());
         }
@@ -62,7 +62,7 @@ public class Character extends Card {
     }
 
     public void addLevelCard(Card card) {
-        card.addKeywords(Keyword.PERMANENT);
+        card.addKeyword(Keyword.PERMANENT);
         levelCardsProperty().add(card);
     }
 

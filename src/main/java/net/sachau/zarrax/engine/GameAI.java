@@ -1,11 +1,10 @@
 package net.sachau.zarrax.engine;
 
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.card.command.CommandParser;
-import net.sachau.zarrax.card.effect.Armor;
-import net.sachau.zarrax.card.effect.Guard;
-import net.sachau.zarrax.card.effect.Stealth;
+
 
 import java.util.Observable;
 import java.util.concurrent.ThreadLocalRandom;
@@ -38,7 +37,7 @@ public class GameAI extends Observable {
 
                 // first check for guards
                 for (Card character : player.getParty()) {
-                    if (character.isAlive() && character.hasCondition(Guard.class)) {
+                    if (character.isAlive() && character.hasKeyword(Keyword.GUARDED)) {
                         target = character;
                     }
                 }
@@ -46,7 +45,7 @@ public class GameAI extends Observable {
                 // 2. then attack armor
                 if (target == null) {
                     for (Card character : player.getParty()) {
-                        if (character.isAlive() && character.hasCondition(Armor.class)) {
+                        if (character.isAlive() && character.hasKeyword(Keyword.ARMOR)) {
                             target = character;
                         }
                     }
@@ -55,7 +54,7 @@ public class GameAI extends Observable {
                 // 3. attack non-stealth
                 if (target == null) {
                     for (Card character : player.getParty()) {
-                        if (character.isAlive() && !character.hasCondition(Stealth.class)) {
+                        if (character.isAlive() && !character.hasKeyword(Keyword.STEALTH)) {
                             target = character;
                         }
                     }

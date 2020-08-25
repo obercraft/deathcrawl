@@ -46,7 +46,7 @@
         <gold>2</gold>
         <command>attack</command>
         <effects>
-            <effect event="STARTENCOUNTER">GoblinLeader</effect>
+            <effect start="STARTENCOUNTER">GoblinLeader</effect>
         </effects>
         <flavor>A Goblin Leader!</flavor>
     </card>

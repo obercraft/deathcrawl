@@ -31,7 +31,10 @@
 
         <!ELEMENT effects (effect)+>
         <!ELEMENT effect (#PCDATA)>
-        <!ATTLIST effect event CDATA "">
+        <!ATTLIST effect
+                start CDATA ""
+                keyword CDATA ""
+                end CDATA "">
 
         <!ELEMENT text (#PCDATA|h1|p|color)*>
 

@@ -1,5 +1,7 @@
 package net.sachau.zarrax.card.type;
 
+import net.sachau.zarrax.card.effect.EffectTiming;
+import net.sachau.zarrax.card.effect.Riding;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.effect.CardEffect;
@@ -18,26 +20,13 @@ public class Horse extends Card {
 	}
 
 	private void init() {
-		addKeywords(Keyword.SIMPLE, Keyword.ITEM, Keyword.PERMANENT);
+		addKeyword(Keyword.SIMPLE);
+		addKeyword(Keyword.ITEM);
+		addKeyword(Keyword.PERMANENT);
 
 		setCommand("play_to_party");
 
-		addEffect(GameEventContainer.Type.STARTTURN, new CardEffect() {
-			@Override
-			public void trigger(Card sourceCard, Card targetCard) {
-
-				Player p = getPlayer();
-				if (p != null) {
-					int m = p.getMomentum() + 1;
-					p.setMomentum(m);
-				}
-			}
-
-			@Override
-			public void remove(Card card) {
-
-			}
-		});
+		this.getEffects().add(new Riding());
 
 
 	}

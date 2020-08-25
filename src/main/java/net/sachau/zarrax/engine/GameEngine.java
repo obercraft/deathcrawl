@@ -9,7 +9,6 @@ import net.sachau.zarrax.card.level.Levels;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.card.effect.CardEffect;
-import net.sachau.zarrax.card.effect.Exhausted;
 import net.sachau.zarrax.card.keyword.Keyword;
 
 import java.util.*;
@@ -69,7 +68,7 @@ public class GameEngine  implements Observer {
 
                 // trigger events
                 for (Card card : player.getParty()) {
-                    card.triggerPhaseEffects(GameEventContainer.Type.STARTTURN);
+                    // TODO msachau trigger card.triggerPhaseEffects(GameEventContainer.Type.STARTTURN);
                 }
 
                 return;
@@ -124,13 +123,13 @@ public class GameEngine  implements Observer {
                 player.getDraw().draw(player.getHand(), player.getHandSize() - player.getHand().size());
 
                 for (Card card : player.getParty()) {
-                    card.removeCondition(Exhausted.class);
+                    card.getKeywords().remove(Keyword.EXHAUSTED);
                 }
                 for (Card card : player.getHand()) {
-                    card.removeCondition(Exhausted.class);
+                    card.getKeywords().remove(Keyword.EXHAUSTED);
                 }
                 for (Card card : player.getDraw().getDiscards()) {
-                    card.removeCondition(Exhausted.class);
+                    card.getKeywords().remove(Keyword.EXHAUSTED);
                 }
 
                 if (regenerateMonstersAndCheckDefeated()) {
@@ -153,12 +152,12 @@ public class GameEngine  implements Observer {
                         .getStage()
                         .getCard();
 
-                for (CardEffect condition : deadCard.getConditions()) {
+                for (CardEffect cardEffect : deadCard.getEffects()) {
                     for (Card card : player.getHazards()) {
-                        card.removeCondition(condition);
+                         card.removeEffect(cardEffect);
                     }
                     for (Card card : player.getParty()) {
-                        card.removeCondition(condition);
+                        card.removeEffect(cardEffect);
                     }
                 }
 
@@ -244,7 +243,7 @@ public class GameEngine  implements Observer {
         for (Card card : player.getParty()) {
             card.setOwner(player);
             card.setVisible(true);
-            card.addKeywords(Keyword.PERMANENT);
+            card.addKeyword(Keyword.PERMANENT);
         }
 
         // generate an encounter and assign it to player
@@ -287,13 +286,13 @@ public class GameEngine  implements Observer {
     public void triggerEffects(GameEventContainer.Type eventType) {
         player.setSpawnCards(new UniqueCardList());
         for (Card card : player.getHazards()) {
-            card.triggerPhaseEffects(eventType);
+            // TODO msachau card.triggerPhaseEffects(eventType);
         }
         for (Card card : player.getParty()) {
-            card.triggerPhaseEffects(eventType);
+            // TODO msachau card.triggerPhaseEffects(eventType);
         }
         if (player.getSpawnCards().size() > 0) {
-            player.getHazards().addAll(player.getSpawnCards());
+            // TODO msachau player.getHazards().addAll(player.getSpawnCards());
         }
     }
 

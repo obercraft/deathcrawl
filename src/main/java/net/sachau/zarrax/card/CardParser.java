@@ -2,6 +2,8 @@ package net.sachau.zarrax.card;
 
 
 import net.sachau.zarrax.Logger;
+import net.sachau.zarrax.card.effect.EffectTiming;
+import net.sachau.zarrax.card.effect.KeywordEffect;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.util.XmlUtils;
 import net.sachau.zarrax.card.catalog.Catalog;
@@ -31,8 +33,10 @@ import java.util.Set;
 
 public class CardParser {
 
-    public static final String typePrefix = Card.class.getCanonicalName().replace("Card", "type");
-    private static final String effectPrefix = Card.class.getCanonicalName().replace("Card", "effect");
+    public static final String typePrefix = Card.class.getCanonicalName()
+            .replace("Card", "type");
+    private static final String effectPrefix = Card.class.getCanonicalName()
+            .replace("Card", "effect");
 
     public static List<Card> parse(InputStream inputStream, boolean withTexts) throws Exception {
 
@@ -84,7 +88,6 @@ public class CardParser {
         }
 
 
-
         Reflections reflections = new Reflections(typePrefix);
         Set<Class<? extends Card>> allClasses = reflections.getSubTypesOf(Card.class);
         for (Class<? extends Card> clazz : allClasses) {
@@ -110,7 +113,8 @@ public class CardParser {
 
                     e.printStackTrace();
                 }
-                String uniqueId =XmlUtils.getAttributes(cardNode).get("uniqueId");
+                String uniqueId = XmlUtils.getAttributes(cardNode)
+                        .get("uniqueId");
                 if (StringUtils.isNotEmpty(uniqueId)) {
                     card.setUniqueId(uniqueId);
                 }
@@ -132,7 +136,8 @@ public class CardParser {
 
                 if (card instanceof Monster) {
                     Monster monster = (Monster) card;
-                    String regenerateString = XmlUtils.getAttributes(cardNode).get("regenerate");
+                    String regenerateString = XmlUtils.getAttributes(cardNode)
+                            .get("regenerate");
                     monster.setRegenerate(NumberUtils.toInt(regenerateString, 0));
                 }
             }
@@ -158,7 +163,6 @@ public class CardParser {
             }
 
 
-
             if (cardNode.getNodeName()
                     .equals("experience")) {
                 if (card instanceof Monster) {
@@ -178,10 +182,12 @@ public class CardParser {
 
             if (cardNode.getNodeName()
                     .equals("command")) {
-                card.setCommand(XmlUtils.getValue(cardNode).toLowerCase());
+                card.setCommand(XmlUtils.getValue(cardNode)
+                        .toLowerCase());
             }
 
-            if (cardNode.getNodeName().toLowerCase()
+            if (cardNode.getNodeName()
+                    .toLowerCase()
                     .equals("usage-card")) {
                 if (card instanceof LimitedUsage) {
                     LimitedUsage lu = (LimitedUsage) card;
@@ -189,7 +195,8 @@ public class CardParser {
                 }
             }
 
-            if (cardNode.getNodeName().toLowerCase()
+            if (cardNode.getNodeName()
+                    .toLowerCase()
                     .equals("uses")) {
                 if (card instanceof LimitedUsage) {
                     LimitedUsage lu = (LimitedUsage) card;
@@ -232,7 +239,7 @@ public class CardParser {
                     for (String levelCard : cards) {
                         try {
                             characterCard.addLevelCard(CardUtils.copyCard(Catalog.getInstance()
-                                            .get(levelCard)));
+                                    .get(levelCard)));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -247,7 +254,7 @@ public class CardParser {
                         .toUpperCase()
                         .split(",", -1);
                 for (String kw : keyWordsArgs) {
-                    card.addKeywords(Keyword.valueOf(kw.trim()));
+                    card.addKeyword(Keyword.valueOf(kw.trim()));
                 }
             }
 
@@ -259,22 +266,37 @@ public class CardParser {
                         Node effectNode = effectNodes.item(i);
                         if ("effect".equals(effectNode.getNodeName())) {
 
-                            String event = XmlUtils.getAttributes(effectNode).get("event").toUpperCase();
-                            if (!StringUtils.isEmpty(event)) {
-                                String effectName = XmlUtils.getValue(effectNode)
-                                        .trim()
-                                        .toLowerCase();
+                            String startEvent = XmlUtils.getAttributes(effectNode)
+                                    .get("start");
+                            String endEvent = XmlUtils.getAttributes(effectNode)
+                                    .get("end");
+                            String effectName = XmlUtils.getValue(effectNode)
+                                    .trim()
+                                    .toLowerCase();
 
-                                Reflections refEffect = new Reflections(effectPrefix);
-                                Set<Class<? extends CardEffect>> effects = refEffect.getSubTypesOf(CardEffect.class);
-                                for (Class<? extends CardEffect> effectClass : effects) {
-                                    if (effectClass.getSimpleName()
-                                            .toLowerCase()
-                                            .equals(effectName)) {
-                                        card.addEffect(GameEventContainer.Type.valueOf(event), effectClass.newInstance());
+                            Reflections refEffect = new Reflections(effectPrefix);
+                            Set<Class<? extends CardEffect>> effects = refEffect.getSubTypesOf(CardEffect.class);
+                            for (Class<? extends CardEffect> effectClass : effects) {
+                                if (effectClass.getSimpleName()
+                                        .toLowerCase()
+                                        .equals(effectName)) {
+                                    EffectTiming timing = new EffectTiming(!StringUtils.isEmpty(startEvent) ?
+                                            GameEventContainer.Type.valueOf(startEvent.trim().toUpperCase()) : null,
+                                            !StringUtils.isEmpty(endEvent) ? GameEventContainer.Type.valueOf(endEvent.trim().toUpperCase()) : null);
+
+                                    CardEffect effect = effectClass.newInstance();
+                                    effect.setEffectTiming(timing);
+                                    if (effect instanceof KeywordEffect) {
+                                        String keyword = XmlUtils.getAttributes(effectNode)
+                                                .get("keyword");
+                                        ((KeywordEffect) effect).setKeyword(Keyword.valueOf(keyword.trim().toUpperCase()));
                                     }
+
+                                    card.getEffects()
+                                            .add(effect);
                                 }
                             }
+
                         }
                     }
                 }
@@ -290,7 +312,8 @@ public class CardParser {
             if (cardNode.getNodeName()
                     .equals("illumination")) {
                 if (card instanceof Illumination) {
-                    ((Illumination) card).setIlluminationValue(NumberUtils.toInt(cardNode.getTextContent().trim()));
+                    ((Illumination) card).setIlluminationValue(NumberUtils.toInt(cardNode.getTextContent()
+                            .trim()));
                 }
             }
 

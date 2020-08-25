@@ -12,12 +12,14 @@ public class Monster extends Card {
     private Card targetedCard;
 
     public Monster() {
-        addKeywords(Keyword.CREATURE);
+        addKeyword(Keyword.MONSTER);
+        addKeyword(Keyword.CREATURE);
     }
 
     public Monster(Monster card) {
         super(card);
-        addKeywords(Keyword.CREATURE, Keyword.MONSTER);
+        addKeyword(Keyword.CREATURE);
+        addKeyword(Keyword.MONSTER);
         this.xp = card.xp;
         this.gold = card.gold;
         this.regenerate = card.regenerate;

@@ -76,8 +76,10 @@ public abstract class CardView extends AnchorPane implements Observer {
 //        }
 
 
-        Tile borderTile = card.getKeywords()
-                .getCharacterTile();
+        // TODO msachau bordertile
+        Tile borderTile = null;
+//                card.getKeywords()
+//                .getCharacterTile();
         if (borderTile == null) {
             borderTile = Tile.ALL_CLASSES;
         }

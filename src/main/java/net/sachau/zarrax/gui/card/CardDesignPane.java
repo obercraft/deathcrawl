@@ -44,8 +44,6 @@ public class CardDesignPane extends VBox {
         text.getStyleClass().add("card-text");
 
 
-        text.getChildren().add(new ConditionFlow(card));
-
         TextFlow cardText = Catalog.getText(card.getName());
         if (cardText != null) {
             text.getChildren().addAll(cardText);

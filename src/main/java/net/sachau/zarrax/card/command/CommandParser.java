@@ -2,16 +2,13 @@ package net.sachau.zarrax.card.command;
 
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.effect.KeywordEffect;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.card.effect.Prone;
 import net.sachau.zarrax.card.type.AdvancedAction;
-import net.sachau.zarrax.card.type.LimitedUsage;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.Player;
-import net.sachau.zarrax.card.effect.Armor;
-import net.sachau.zarrax.card.effect.Exhausted;
 import net.sachau.zarrax.card.keyword.Keyword;
 import org.apache.commons.lang3.StringUtils;
 
@@ -135,8 +132,7 @@ public class CommandParser {
             case SHIELD: {
                 if (target != null && target.getKeywords()
                         .contains(Keyword.CREATURE)) {
-                    target.getConditions()
-                            .add(new Armor());
+                    target.getEffects().add(new KeywordEffect(Keyword.ARMOR, target));
                 }
                 return true;
             }
@@ -172,7 +168,7 @@ public class CommandParser {
             case PLAY_TO_PARTY: {
                 Player p = source.getPlayer();
                 if (p != null) {
-                    source.addKeywords(Keyword.PERMANENT);
+                    source.getEffects().add(new KeywordEffect(Keyword.PERMANENT));
                     p.getParty()
                             .add(source);
                     //source.getDeck().remove(source);
@@ -198,14 +194,13 @@ public class CommandParser {
                     return false;
                 }
                 for (Card t : targets) {
-                    t.getConditions().add(new Prone());
+                    t.getEffects().add(new KeywordEffect(Keyword.PRONE));
                     Logger.debug(source + " prones" + t);
-
                 }
                 return true;
             }
             case EXHAUST: {
-                source.getConditions().add(new Exhausted());
+                source.getEffects().add(new KeywordEffect(Keyword.EXHAUSTED));
                 return true;
             }
             case EXHAUST_ATTACK: {
@@ -220,7 +215,7 @@ public class CommandParser {
                 }
 
                 for (Card t : targets) {
-                    t.getConditions().add(new Exhausted());
+                    t.getEffects().add(new KeywordEffect(Keyword.EXHAUSTED));
                 }
                 return true;
 

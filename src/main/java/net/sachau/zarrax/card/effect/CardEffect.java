@@ -10,16 +10,29 @@ import java.util.Objects;
 
 public abstract class CardEffect {
 
+	private CardEffect sourceEffect;
+	private Card sourceCard;
+	private EffectTiming effectTiming;
 	private long id;
 	private Tile tile;
 	private int amount = 1;
-	private GameEventContainer ends;
+	private int ticks = 0;
 
 	public CardEffect() {
 		super();
 		id = GameEngine.createId();
 	}
-	abstract public void trigger(Card sourceCard, Card targetCard);
+
+	public boolean tick(Card card) {
+		if (ticks > 0) {
+			ticks --;
+			return false;
+		}
+		remove(card);
+		return true;
+	}
+
+	abstract public void trigger(Card targetCard);
 	abstract public void remove(Card card);
 
 	public Tile getTile() {
@@ -38,21 +51,53 @@ public abstract class CardEffect {
 		this.amount = amount;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		CardEffect that = (CardEffect) o;
-		return id == that.id;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
 	public long getId() {
 		return id;
 	}
 
+	public int getTicks() {
+		return ticks;
+	}
+
+	public void setTicks(int ticks) {
+		this.ticks = ticks;
+	}
+
+	public EffectTiming getEffectTiming() {
+		return effectTiming;
+	}
+
+	public void setEffectTiming(EffectTiming effectTiming) {
+		this.effectTiming = effectTiming;
+	}
+
+	public Card getSourceCard() {
+		return sourceCard;
+	}
+
+	public void setSourceCard(Card sourceCard) {
+		this.sourceCard = sourceCard;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CardEffect effect = (CardEffect) o;
+		return Objects.equals(sourceCard, effect.sourceCard) &&
+				Objects.equals(effectTiming, effect.effectTiming);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(sourceCard, effectTiming);
+	}
+
+	public CardEffect getSourceEffect() {
+		return sourceEffect;
+	}
+
+	public void setSourceEffect(CardEffect sourceEffect) {
+		this.sourceEffect = sourceEffect;
+	}
 }

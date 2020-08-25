@@ -9,7 +9,7 @@ public class Illumination extends Card {
 
     public Illumination() {
         super();
-        addKeywords(Keyword.ITEM);
+        addKeyword(Keyword.ITEM);
     }
 
     public Illumination(Illumination action) {

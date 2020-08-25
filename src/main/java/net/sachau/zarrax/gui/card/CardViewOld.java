@@ -49,13 +49,13 @@ public abstract class CardViewOld extends StackPane implements Observer {
 //
 //        }
 
-        Tile borderTile = card.getKeywords().getCharacterTile();
-        if (borderTile != null) {
-            ImageView image = TileSet.getInstance()
-                    .getTile(borderTile);
-            getChildren().add(image);
-            //image.relocate(0,0);
-        }
+//        Tile borderTile = card.getKeywords().getCharacterTile();
+//        if (borderTile != null) {
+//            ImageView image = TileSet.getInstance()
+//                    .getTile(borderTile);
+//            getChildren().add(image);
+//            //image.relocate(0,0);
+//        }
 
     }
 

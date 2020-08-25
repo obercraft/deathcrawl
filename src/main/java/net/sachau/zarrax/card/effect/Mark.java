@@ -10,10 +10,10 @@ public class Mark extends CardEffect {
     }
 
     @Override
-    public void trigger(Card sourceCard, Card targetCard) {
+    public void trigger(Card targetCard) {
         int amount = 1;
-        if (sourceCard != null) {
-            amount = Math.max(1, sourceCard.getDamage());
+        if (targetCard != null) {
+            amount = Math.max(1, targetCard.getDamage());
         }
     }
 

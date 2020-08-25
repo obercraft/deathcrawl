@@ -23,6 +23,11 @@ public enum Keyword {
     VICIOUS(true),
     SMALL(true),
 
+    BLIND(true), DARKNESS(true),
+
+
+    EXHAUSTED(true), GUARDED(true), PRONE(true), ARMOR(true),
+    STEALTH(true)
     ;
 
     private boolean onCard;

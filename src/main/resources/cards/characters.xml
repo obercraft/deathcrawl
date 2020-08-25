@@ -11,7 +11,7 @@
         <starting-cards>Knife,ThrowingKnife,Knife</starting-cards>
         <keywords>creature, rogue</keywords>
         <effects>
-            <effect event="startturn">stealthy</effect>
+            <effect start="startturn">stealthy</effect>
         </effects>
         <flavor>A Thief!</flavor>
     </card>
@@ -55,7 +55,7 @@
         <starting-cards>Knife,short sword,Knife</starting-cards>
         <keywords>creature, fighter</keywords>
         <effects>
-            <effect event="STARTENCOUNTER">Guard</effect>
+            <effect start="STARTENCOUNTER" end="ENDENCOUNTER">Guard</effect>
         </effects>
         <flavor>A Fighter!</flavor>
     </card>

@@ -7,11 +7,11 @@ public class Item extends Card {
 
     public Item() {
         super();
-        addKeywords(Keyword.ITEM);
+        addKeyword(Keyword.ITEM);
     }
 
     public Item(Item card) {
         super(card);
-        addKeywords(Keyword.ITEM);
+        addKeyword(Keyword.ITEM);
     }
 }

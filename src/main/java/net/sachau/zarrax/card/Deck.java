@@ -165,14 +165,6 @@ public class Deck {
         cards.remove(card);
     }
 
-    public Set<Keyword> getKeywords() {
-        Set<Keyword> keywords = new HashSet<>();
-        for (Card c : cards) {
-            keywords.addAll(c.getKeywords());
-        }
-        return keywords;
-    }
-
     public Card getRandomCard() {
 
         if (cards.size() == 0) {

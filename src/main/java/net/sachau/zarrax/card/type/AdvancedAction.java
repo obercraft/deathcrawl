@@ -7,7 +7,7 @@ public abstract class AdvancedAction extends Action {
 
     public AdvancedAction() {
         super();
-        addKeywords(Keyword.ACTION);
+        addKeyword(Keyword.ACTION);
     }
 
     public AdvancedAction(AdvancedAction action) {

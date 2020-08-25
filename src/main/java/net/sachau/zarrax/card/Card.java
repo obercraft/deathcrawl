@@ -1,21 +1,16 @@
 package net.sachau.zarrax.card;
 
-import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleSetProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableSet;
-import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.card.effect.*;
-import net.sachau.zarrax.card.type.Character;
-import net.sachau.zarrax.card.type.Illumination;
-import net.sachau.zarrax.engine.GameEventContainer;
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.Logger;
-import net.sachau.zarrax.engine.Player;
+import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.card.effect.CardEffect;
+import net.sachau.zarrax.card.effect.KeywordEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.card.keyword.Keywords;
+import net.sachau.zarrax.card.type.Illumination;
+import net.sachau.zarrax.engine.GameEngine;
+import net.sachau.zarrax.engine.GameEventContainer;
+import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.util.DiceUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -33,8 +28,7 @@ public abstract class Card {
     private long id;
     private String name;
     private String uniqueId;
-    private Map<GameEventContainer.Type, List<CardEffect>> effects;
-    private Keywords keywords = new Keywords();
+    private Set<CardEffect> effects;
     private String command;
 
 
@@ -47,15 +41,12 @@ public abstract class Card {
 
     private Creature owner;
     private Source source;
-    private SetProperty<CardEffect> conditions;
 
     public Card() {
         super();
         initHits(1);
         this.id = GameEngine.createId();
-        this.effects = new HashMap<>();
-        ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
-        this.conditions = new SimpleSetProperty<>(observableSet);
+        this.effects = new HashSet<>();
 
         this.hitsProperty()
                 .addListener(new HitsListener(this));
@@ -88,20 +79,13 @@ public abstract class Card {
     public Card(Card card) {
         super();
         this.id = GameEngine.createId();
-        this.effects = new HashMap<>();
+
         this.name = card.name;
         this.uniqueId = card.uniqueId;
         if (card.effects != null) {
-            this.effects = new HashMap<>();
-            for (Map.Entry<GameEventContainer.Type, List<CardEffect>> entry : card.effects.entrySet()) {
-                this.effects.put(entry.getKey(), entry.getValue());
-            }
-        }
-        this.keywords = new Keywords();
-        if (card.keywords != null) {
-            for (Keyword kw : card.getKeywords()) {
-                this.keywords.add(kw);
-            }
+            this.effects = new HashSet<>(card.getEffects());
+        } else {
+            this.effects = new HashSet<>();
         }
 
         this.command = card.command;
@@ -113,14 +97,6 @@ public abstract class Card {
 
         this.owner = card.owner;
         this.source = card.source;
-
-        ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
-        this.conditions = new SimpleSetProperty<>(observableSet);
-        if (card.conditions != null) {
-            for (CardEffect condition : card.conditions) {
-                this.conditions.add(condition);
-            }
-        }
 
         this.setActive(card.isActive());
 
@@ -135,38 +111,36 @@ public abstract class Card {
         initHits(initialHits);
         initDamage(initialDamage);
         this.id = GameEngine.createId();
-        this.effects = new HashMap<>();
-        ObservableSet<CardEffect> observableSet = FXCollections.observableSet(new HashSet<>());
-        this.conditions = new SimpleSetProperty<>(observableSet);
+        this.effects = new HashSet<>();
+
 
     }
 
-    private List<CardEffect> getPhaseEffects(GameEventContainer.Type event) {
-        return effects.get(event) != null ? effects.get(event) : new LinkedList<>();
-    }
-
-    public void triggerPhaseEffects(GameEventContainer.Type event) {
-        List<CardEffect> phaseCardEffects = getPhaseEffects(event);
-        if (phaseCardEffects != null) {
-            for (CardEffect e : phaseCardEffects) {
-                e.trigger(null, this);
+    public void triggerStartEffects(GameEventContainer.Type event) {
+        if (effects ==  null || effects.size() == 0) {
+            return;
+        }
+        for (CardEffect effect : effects) {
+            if (effect.getEffectTiming() != null && event.equals(effect.getEffectTiming().getStartPhase())) {
+                effect.trigger(this);
             }
         }
+
     }
 
-
-    public void addEffect(GameEventContainer.Type event, CardEffect cardEffect) {
-        if (effects.get(event) == null) {
-            effects.put(event, new LinkedList<>());
+    public void triggerEndEffects(GameEventContainer.Type event) {
+        if (effects ==  null || effects.size() == 0) {
+            return;
         }
-        effects.get(event)
-                .add(cardEffect);
+        for (CardEffect effect : effects) {
+            if (effect.getEffectTiming() != null && event.equals(effect.getEffectTiming().getEndPhase())) {
+                effect.tick(this);
+
+            }
+        }
 
     }
 
-    public void setEffects(Map<GameEventContainer.Type, List<CardEffect>> effects) {
-        this.effects = effects;
-    }
 
     public String getCommand() {
         return command;
@@ -245,7 +219,7 @@ public abstract class Card {
             return false;
         }
 
-        if (hasCondition(Prone.class)) {
+        if (hasKeyword(Keyword.PRONE)) {
             Logger.debug(this + " is prone");
             return false;
         }
@@ -264,10 +238,10 @@ public abstract class Card {
                 rangeHitChance -= 25;
             }
             boolean hasBadLight = false;
-            if (this.hasCondition(Blind.class)) {
+            if (this.hasKeyword(Keyword.BLIND)) {
                 rangeHitChance -= 60;
                 hasBadLight = true;
-            } else if (this.hasCondition(Darkness.class)) {
+            } else if (this.hasKeyword(Keyword.DARKNESS)) {
                 rangeHitChance -= 30;
                 hasBadLight = true;
             }
@@ -313,7 +287,7 @@ public abstract class Card {
 
             if (possibleGuards != null) {
                 for (Card guard : possibleGuards) {
-                    if (guard.isAlive() && guard.getId() != target.getId() && guard.hasCondition(Guard.class)) {
+                    if (guard.isAlive() && guard.getId() != target.getId() && guard.hasKeyword(Keyword.GUARDED)) {
                         Logger.debug(target + " is guarded by " + guard);
                         return false;
                     }
@@ -321,8 +295,8 @@ public abstract class Card {
             }
         }
 
-        if (target.hasCondition(Armor.class)) {
-            target.removeCondition(Armor.class);
+        if (target.hasKeyword(Keyword.ARMOR)) {
+            target.removeKeyword(Keyword.ARMOR);
             Logger.debug(target + " saved by armor");
             return true;
         }
@@ -348,6 +322,20 @@ public abstract class Card {
 
     }
 
+    public void removeKeyword(Keyword keyword) {
+        Set<CardEffect> removeEffect = new HashSet<>();
+        for (CardEffect effect : getEffects()) {
+            if (effect instanceof KeywordEffect) {
+                if (((KeywordEffect) effect).getKeyword().equals(keyword)) {
+                    removeEffect.add(effect);
+                }
+            }
+        }
+        if (removeEffect.size() > 0) {
+            getEffects().removeAll(removeEffect);
+        }
+    }
+
 
     public Source getSource() {
         return source;
@@ -357,19 +345,23 @@ public abstract class Card {
         this.source = source;
     }
 
-    public Keywords getKeywords() {
+    public Set<Keyword> getKeywords() {
+        Set<Keyword> keywords = new HashSet<>();
+        for (CardEffect cardEffect : effects) {
+            if (cardEffect instanceof KeywordEffect) {
+                keywords.add(((KeywordEffect) cardEffect).getKeyword());
+            }
+        }
         return keywords;
     }
 
-    public void addKeywords(Keyword... keywords) {
-        for (Keyword k : keywords) {
-            this.keywords.add(k);
-        }
+    public void addKeyword(Keyword keyword) {
+        this.getEffects().add(new KeywordEffect(keyword));
     }
 
     public boolean isPlayable() {
 
-        if (this.hasCondition(Exhausted.class)) {
+        if (this.hasKeyword(Keyword.EXHAUSTED)) {
             Logger.debug(this + " is exhausted");
             return false;
         }
@@ -391,23 +383,15 @@ public abstract class Card {
         return false;
     }
 
-    public boolean hasOneKeyword(Keyword  ...keywords) {
-        Keywords kwds = new Keywords();
-        for (Keyword k : keywords) {
-            kwds.add(k);
-        }
-        return hasOneKeyword(kwds);
-    }
-
-    public boolean hasOneKeyword(Keywords keywords) {
+    public boolean hasOneKeyword(Set<Keyword> keywords) {
         if (keywords == null || keywords.size() == 0) {
             return true;
         }
-        if (keywords.contains(Keyword.SIMPLE)) {
-            return true;
-        }
         for (Keyword kw : keywords) {
-            if (getKeywords().contains(kw)) {
+            if (Keyword.SIMPLE.equals(kw)) {
+                return true;
+            }
+            if (getKeywords().contains(kw)){
                 return true;
             }
         }
@@ -452,9 +436,6 @@ public abstract class Card {
         this.damage.set(damage);
     }
 
-    public void setKeywords(Keywords keywords) {
-        this.keywords = keywords;
-    }
 
     public void initHits(int hits) {
         setHits(hits);
@@ -481,10 +462,8 @@ public abstract class Card {
         return false;
     }
 
-    public String getCardKeyWords(boolean all) {
-        if (this.getKeywords() == null) {
-            return "";
-        }
+    public String getCardKeywords(boolean all) {
+
         Set<String> words = new TreeSet<>();
         for (Keyword k : this.getKeywords()) {
             if (all || k.isOnCard()) {
@@ -496,71 +475,7 @@ public abstract class Card {
     }
 
     public boolean isRanged() {
-        return keywords.contains(Keyword.RANGED);
-    }
-
-    public boolean hasCondition(Class<? extends CardEffect> clazz) {
-        for (CardEffect cardEffect : getConditions()) {
-            if (cardEffect.getClass()
-                    .equals(clazz)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public CardEffect removeCondition(CardEffect effect) {
-        CardEffect removeCondition = null;
-        for (CardEffect cardEffect : getConditions()) {
-            if (cardEffect == effect) {
-                removeCondition = cardEffect;
-            }
-        }
-        if (removeCondition != null) {
-            removeCondition.remove(this);
-            getConditions().remove(removeCondition);
-        }
-        return removeCondition;
-    }
-
-
-    public void removeCondition(Class<? extends CardEffect> clazz) {
-        CardEffect removeCondition = null;
-        for (CardEffect cardEffect : getConditions()) {
-            if (cardEffect.getClass()
-                    .equals(clazz)) {
-                removeCondition = cardEffect;
-            }
-        }
-        if (removeCondition != null) {
-            Logger.debug("remove " + clazz + " from " + this);
-            removeCondition.remove(this);
-            getConditions().remove(removeCondition);
-        }
-
-
-        if (this instanceof Character) {
-
-            Character character = (Character) this;
-            for (Card card : character.getLevelCards()) {
-                removeCondition = null;
-                for (CardEffect cardEffect : card.getConditions()) {
-                    if (cardEffect.getClass()
-                            .equals(clazz)) {
-                        removeCondition = cardEffect;
-                    }
-                }
-                if (removeCondition != null) {
-                    Logger.debug("remove " + clazz + " from " + card);
-                    removeCondition.remove(card);
-                    card.getConditions().remove(removeCondition);
-                }
-
-
-            }
-
-
-        }
+        return getKeywords().contains(Keyword.RANGED);
     }
 
 
@@ -589,18 +504,6 @@ public abstract class Card {
 
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
-    }
-
-    public ObservableSet<CardEffect> getConditions() {
-        return conditions.get();
-    }
-
-    public SetProperty<CardEffect> conditionsProperty() {
-        return conditions;
-    }
-
-    public void setConditions(ObservableSet<CardEffect> conditions) {
-        this.conditions.set(conditions);
     }
 
     public boolean hasKeyword(Keyword keyword) {
@@ -637,6 +540,43 @@ public abstract class Card {
         this.setSkill(skill);
     }
 
+    public Set<CardEffect> getEffects() {
+        return effects;
+    }
+
+    public void setEffects(Set<CardEffect> effects) {
+        this.effects = effects;
+    }
+
+    public boolean hasAllKeywords(List<Keyword> allowedKeywords) {
+        if (allowedKeywords == null || allowedKeywords.size() == 0) {
+            return true;
+        }
+        for (Keyword allowedKeyword : allowedKeywords) {
+            if (!this.hasKeyword(allowedKeyword)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void removeEffect(CardEffect cardEffect) {
+        if (this.effects.contains(cardEffect)) {
+            cardEffect.remove(this);
+        }
+    }
+
+    public void removeEffectWithSourceId(long id) {
+        CardEffect removeEffect = null;
+        for (CardEffect cardEffect : getEffects()) {
+            if (cardEffect.getSourceEffect() != null && id == cardEffect.getSourceEffect().getId()) {
+                removeEffect = cardEffect;
+            }
+        }
+        if (removeEffect != null) {
+            getEffects().remove(removeEffect);
+        }
+    }
 
 }
 
