@@ -1,7 +1,11 @@
 package net.sachau.zarrax.card.type;
 
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.command.CommandStage;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.util.DiceUtils;
+
+import java.util.List;
 
 public class Monster extends Card {
 
@@ -10,6 +14,10 @@ public class Monster extends Card {
     private int regenerate;
 
     private Card targetedCard;
+
+    private List<CommandStage> commandStages;
+
+    private List<String> randomCommands;
 
     public Monster() {
         addKeyword(Keyword.MONSTER);
@@ -24,6 +32,25 @@ public class Monster extends Card {
         this.gold = card.gold;
         this.regenerate = card.regenerate;
     }
+
+    @Override
+    public String getCommand() {
+        if (randomCommands != null && randomCommands.size() > 0) {
+            int index = DiceUtils.get(randomCommands.size());
+            return randomCommands.get(index);
+        } else if (commandStages != null && commandStages.size() > 0) {
+            int currentHits = getHits();
+            for (CommandStage commandStage : commandStages) {
+                if (currentHits >= commandStage.getHits()) {
+                    return commandStage.getCommand();
+                }
+            }
+            return commandStages.get(0).getCommand();
+        } else {
+            return super.getCommand();
+        }
+    }
+
 
     public int getXp() {
         return xp;
@@ -55,5 +82,21 @@ public class Monster extends Card {
 
     public void setTargetedCard(Card targetedCard) {
         this.targetedCard = targetedCard;
+    }
+
+    public List<CommandStage> getCommandStages() {
+        return commandStages;
+    }
+
+    public void setCommandStages(List<CommandStage> commandStages) {
+        this.commandStages = commandStages;
+    }
+
+    public List<String> getRandomCommands() {
+        return randomCommands;
+    }
+
+    public void setRandomCommands(List<String> randomCommands) {
+        this.randomCommands = randomCommands;
     }
 }

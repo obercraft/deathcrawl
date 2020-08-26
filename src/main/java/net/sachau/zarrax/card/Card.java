@@ -4,9 +4,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.effect.CardEffect;
+import net.sachau.zarrax.card.effect.Guard;
 import net.sachau.zarrax.card.effect.KeywordEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Illumination;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
@@ -17,6 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 public abstract class Card {
+
+
 
     public enum Source {
         NONE,
@@ -209,24 +214,21 @@ public abstract class Card {
         this.hits.set(hits);
     }
 
-    public boolean attack(Card target, int attack) {
+    public CommandResult attack(Card target, int attack) {
         return attack(target, attack, false);
     }
-    private  boolean attack(Card target, int attack, boolean isRetaliate) {
+    private  CommandResult attack(Card target, int attack, boolean isRetaliate) {
 
         if (target == null) {
-            Logger.debug("target is null");
-            return false;
+            return CommandResult.notAllowed("target is null");
         }
 
         if (hasKeyword(Keyword.PRONE)) {
-            Logger.debug(this + " is prone");
-            return false;
+            return CommandResult.notAllowed(this + " is prone");
         }
 
         if (attack <= 0) {
-            Logger.debug("damage is less than 1");
-            return true;
+            return CommandResult.notAllowed("damage is less than 1");
         }
 
 
@@ -266,39 +268,43 @@ public abstract class Card {
 
             int hitChance = Math.min(100, rangeHitChance);
             if (!DiceUtils.percentage(hitChance)) {
-                Logger.debug("ranged " + this + "attack on "+ target + " failed [" + hitChance + "%]");
-                return true;
+                return CommandResult.notSuccessful("ranged " + this + "attack on "+ target + " failed", hitChance);
             }
         }
 
         if (target.hasKeyword(Keyword.FLYING) && !ranged) {
-            Logger.debug("cannot attack flying target with ranged");
+            return CommandResult.notAllowed("cannot attack flying target with ranged");
         }
 
-        if (!ranged) {
-            List<Card> possibleGuards;
-            if (target.getOwner() instanceof Player) {
-                possibleGuards = ((Player) target.getOwner()).getParty();
-            } else {
-                possibleGuards = GameEngine.getInstance()
-                        .getPlayer()
-                        .getHazards();
-            }
-
-            if (possibleGuards != null) {
-                for (Card guard : possibleGuards) {
-                    if (guard.isAlive() && guard.getId() != target.getId() && guard.hasKeyword(Keyword.GUARDED)) {
-                        Logger.debug(target + " is guarded by " + guard);
-                        return false;
-                    }
-                }
-            }
+        // not ranged and target is not a guard and target and target is guarded
+        if (!ranged && !target.hasEffect(Guard.class) && target.hasKeyword(Keyword.GUARDED)) {
+            return CommandResult.notAllowed(target + " is guarded");
         }
+
+
+//
+//            List<Card> possibleGuards;
+//            if (target.getOwner() instanceof Player) {
+//                possibleGuards = ((Player) target.getOwner()).getParty();
+//            } else {
+//                possibleGuards = GameEngine.getInstance()
+//                        .getPlayer()
+//                        .getHazards();
+//            }
+//
+//            if (possibleGuards != null) {
+//                for (Card guard : possibleGuards) {
+//                    if (guard.isAlive() && guard.getId() != target.getId() && guard.hasKeyword(Keyword.GUARDED)) {
+//                        Logger.debug(target + " is guarded by " + guard);
+//                        return false;
+//                    }
+//                }
+//            }
+//        }
 
         if (target.hasKeyword(Keyword.ARMOR)) {
             target.removeKeyword(Keyword.ARMOR);
-            Logger.debug(target + " saved by armor");
-            return true;
+            return CommandResult.successful(target + " saved by armor");
         }
 
         int hits = target.getHits();
@@ -318,7 +324,7 @@ public abstract class Card {
                 Logger.debug("cannot retaliate " + retaliateTarget);
             }
         }
-        return true;
+        return CommandResult.successful();
 
     }
 
@@ -398,9 +404,9 @@ public abstract class Card {
         return false;
     }
 
-    public boolean heal(Card target, int amount) {
+    public CommandResult heal(Card target, int amount) {
         if (amount <= 0) {
-            return true;
+            return CommandResult.successful();
         }
         int h = amount + target.getHits();
         if (h <= target.getMaxHits()) {
@@ -408,8 +414,7 @@ public abstract class Card {
         } else {
             target. setHits(getMaxHits());
         }
-        Logger.debug(this + " heals " + target + " for " + amount);
-        return true;
+        return CommandResult.successful(this + " heals " + target + " for " + amount);
     }
 
     public int getMaxHits() {
@@ -577,6 +582,27 @@ public abstract class Card {
             getEffects().remove(removeEffect);
         }
     }
+
+
+    public boolean hasEffect(Class<? extends CardEffect> cardEffect) {
+        for (CardEffect c : getEffects()) {
+            if (c.getClass() == cardEffect) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void reset() {
+        this.removeKeyword(Keyword.EXHAUSTED);
+        if (this instanceof Character) {
+            Character character = (Character) this;
+            for (Card card : character.getLevelCards()) {
+                card.reset();
+            }
+        }
+    }
+
 
 }
 

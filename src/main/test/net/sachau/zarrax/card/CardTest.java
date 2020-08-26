@@ -2,25 +2,37 @@ package net.sachau.zarrax.card;
 
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.card.command.CommandResult;
+import net.sachau.zarrax.card.command.CommandStage;
 import net.sachau.zarrax.card.effect.*;
-import net.sachau.zarrax.card.type.Action;
-import net.sachau.zarrax.card.type.AdvancedAction;
-import net.sachau.zarrax.card.type.Character;
-import net.sachau.zarrax.card.type.LimitedUsage;
+import net.sachau.zarrax.card.type.*;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.command.Command;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(JUnit4.class)
 public class CardTest {
+
+    Player player;
+
+    @Before
+    public void init() {
+        player = new Player();
+        GameEngine.getInstance().setPlayer(player);
+        GameEngine.getInstance().setInitiativeOrder(new ArrayList<>());
+        Catalog.initForTesting();
+    }
 
     @Test
     public void copyCard() {
@@ -43,11 +55,12 @@ public class CardTest {
         Assert.assertNotEquals(char1.getMaxHits(), char2.getMaxHits());
         Assert.assertNotEquals(char1.getDamage(), char2.getDamage());
 
-        Assert.assertEquals(char1.getKeywords(), char1.getKeywords());
+        Assert.assertEquals(char1.getKeywords(), char2.getKeywords());
         char1.addKeyword(Keyword.SIMPLE);
         Assert.assertNotEquals(char1.getKeywords(), char2.getKeywords());
 
-        Assert.assertEquals(char1.getEffects(), char2.getEffects());
+        Assert.assertEquals(2, char1.getEffects().size());
+        Assert.assertEquals(1, char2.getEffects().size());
 
         char1.getEffects().add(new CardEffect() {
             @Override
@@ -62,15 +75,13 @@ public class CardTest {
 
         });
 
-        Assert.assertNotEquals(char1.getEffects(), char2.getEffects());
+        Assert.assertEquals(3, char1.getEffects().size());
+        Assert.assertEquals(1, char2.getEffects().size());
 
     }
     @Test
     public void testActions() {
-        Player player = new Player();
-        GameEngine.getInstance().setPlayer(player);
-        GameEngine.getInstance().setInitiativeOrder(new ArrayList<>());
-        Catalog.initForTesting();
+
         Card thief = Catalog.copyOf("Thief");
         player.addToParty(thief);
         GameEngine.getInstance().getInitiativeOrder().add(thief);
@@ -89,25 +100,25 @@ public class CardTest {
         draw.addKeyword(Keyword.SIMPLE);
 
         // Draw
-        boolean result = Command.execute(draw, null);
-        Assert.assertTrue(result);
+        CommandResult commandResult = Command.execute(draw, null);
+        Assert.assertTrue(commandResult.isSuccessful());
 
         // Gold
-        result = Command.execute(player.getHand().get(0), null);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(player.getHand().get(0), null);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertEquals(1, player.getGold());
 
         // Attack
         Card goblin = Catalog.copyOf("Goblin");
-        result = Command.execute(thief, goblin);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(thief, goblin);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertNotEquals(goblin.getHits(), goblin.getMaxHits());
         Assert.assertTrue(player.getDraw().getDiscards().contains(gold));
         Assert.assertTrue(((Character)thief).getSelectedCard().hasKeyword(Keyword.EXHAUSTED));
 
         // try again will fail (exhaustion)
-        result = Command.execute(thief, goblin);
-        Assert.assertFalse(result);
+        commandResult = Command.execute(thief, goblin);
+        Assert.assertFalse(commandResult.isSuccessful());
 
 
         // Shield
@@ -118,38 +129,38 @@ public class CardTest {
 
         GameEngine.getInstance().getInitiativeOrder().add(wizard);
         GameEngine.getInstance().setCurrentInitiative(1);
-        result = Command.execute(shield, wizard);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(shield, wizard);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertTrue(wizard.hasKeyword(Keyword.ARMOR));
 
         // Attacking Shield
-        result = Command.execute(goblin, wizard);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(goblin, wizard);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertFalse(wizard.hasKeyword(Keyword.ARMOR));
         Assert.assertEquals(wizard.getHits(), wizard.getMaxHits());
 
-        result = Command.execute(goblin, wizard);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(goblin, wizard);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertNotEquals(wizard.getHits(), wizard.getMaxHits());
 
         Card potion = Catalog.copyOf("Healing Potion");
         player.addCardToHand(potion);
-        result = Command.execute(potion, wizard);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(potion, wizard);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertEquals(wizard.getHits(), wizard.getMaxHits());
 
         Card horse = Catalog.copyOf("Horse");
         player.addCardToHand(horse);
-        result = Command.execute(horse, null);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(horse, null);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertTrue(player.getParty().contains(horse));
 
         Card randomAttack = new Action();
         randomAttack.setCommand("attack random");
         randomAttack.setDamage(2);
 
-        result = Command.execute(randomAttack, thief);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(randomAttack, thief);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertTrue((thief.getHits() +2 == thief.getMaxHits()) || (wizard.getHits() +2  == wizard.getMaxHits()));
 
         Card warrior = Catalog.copyOf("Warrior");
@@ -159,16 +170,17 @@ public class CardTest {
         // trigger again with warrior being in party, this time warrior should have guard
         player.addToParty(warrior);
         GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
-        Assert.assertTrue(warrior.hasKeyword(Keyword.ARMOR));
+        Assert.assertTrue(warrior.hasEffect(Guard.class));
+
 
         // attacking wizard with warrior guard should fail
-        result = Command.execute(goblin, wizard);
-        Assert.assertFalse(result);
+        commandResult = Command.execute(goblin, wizard);
+        Assert.assertFalse(commandResult.isSuccessful());
 
         goblin.addKeyword(Keyword.RANGED);
         // attacking wizard with ranged goblin
-        result = Command.execute(goblin, wizard);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(goblin, wizard);
+        Assert.assertTrue(commandResult.isSuccessful());
 
 
 
@@ -176,76 +188,85 @@ public class CardTest {
         Card kill = new Action();
         kill.setCommand("attack");
         kill.setDamage(1000);
-        result = Command.execute(kill, warrior);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(kill, warrior);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertEquals(0, warrior.getHits());
         // and attacking again
-        result = Command.execute(goblin, wizard);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(goblin, wizard);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertNotEquals(wizard.getHits(), wizard.getMaxHits());
 
         AdvancedAction healFull = new AdvancedAction() {
             @Override
-            public boolean execute(Card targetCard) {
+            public CommandResult execute(Card targetCard) {
                 Logger.debug("fully healing " + targetCard);
                 targetCard.setHits(targetCard.getMaxHits());
-                return true;
+                return CommandResult.successful();
             }
         };
-        result = Command.execute(healFull, warrior);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(healFull, warrior);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertEquals(warrior.getHits(), warrior.getMaxHits());
 
         // some reverse test
         Card goblinWithGuard = Catalog.copyOf("Goblin");
-        goblinWithGuard.hasKeyword(Keyword.GUARDED);
+        goblinWithGuard.getEffects().add(new Guard());
 
         player.addToHazards(goblin);
         player.addToHazards(goblinWithGuard);
-        result = Command.execute(warrior, goblin);
-        Assert.assertFalse(result);
 
-        result = Command.execute(warrior, goblinWithGuard);
-        Assert.assertTrue(result);
+        GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
+
+        // warrior cannot attack guarded goblin
+        warrior.reset();
+        commandResult = Command.execute(warrior, goblin);
+        Assert.assertFalse(commandResult.isSuccessful());
+
+        // but he can attack a guard
+        warrior.reset();
+        commandResult = Command.execute(warrior, goblinWithGuard);
+        Assert.assertTrue(commandResult.isSuccessful());
 
         // target self?
-        warrior.getKeywords().remove(Keyword.EXHAUSTED);
-        result = Command.execute(warrior, warrior);
-        Assert.assertFalse(result);
+        warrior.reset();
+        commandResult = Command.execute(warrior, warrior);
+        Assert.assertFalse(commandResult.isSuccessful());
 
         // target friendly?
-        warrior.getKeywords().remove(Keyword.EXHAUSTED);
-        result = Command.execute(warrior, wizard);
-        Assert.assertFalse(result);
+        warrior.reset();
+        commandResult = Command.execute(warrior, wizard);
+        Assert.assertFalse(commandResult.isSuccessful());
 
         // attack prone?
-        warrior.getKeywords().remove(Keyword.EXHAUSTED);
+        warrior.reset();
         warrior.addKeyword(Keyword.PRONE);
-        result = Command.execute(warrior, wizard);
-        Assert.assertFalse(result);
+        commandResult = Command.execute(warrior, wizard);
+        Assert.assertFalse(commandResult.isSuccessful());
 
         // retaliate
+        warrior.reset();
         goblinWithGuard.addKeyword(Keyword.RETALIATE);
         warrior.getKeywords().remove(Keyword.PRONE);
-        result = Command.execute(warrior, goblinWithGuard);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(warrior, goblinWithGuard);
+        Assert.assertTrue(commandResult.isSuccessful());
 
         // retaliate with kill
+        warrior.reset();
         goblinWithGuard.addKeyword(Keyword.RETALIATE);
         goblinWithGuard.setDamage(1000);
         warrior.getKeywords().remove(Keyword.PRONE);
         warrior.getKeywords().remove(Keyword.EXHAUSTED);
-        result = Command.execute(warrior, goblinWithGuard);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(warrior, goblinWithGuard);
+        Assert.assertTrue(commandResult.isSuccessful());
 
         // attack with prone
         Card goblinProner = Catalog.copyOf("Goblin");
         goblinProner.setCommand("attack;prone");
         goblinProner.setDamage(2);
-        result = Command.execute(healFull, warrior);
-        Assert.assertTrue(result);
-        result = Command.execute(goblinProner, warrior);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(healFull, warrior);
+        Assert.assertTrue(commandResult.isSuccessful());
+        commandResult = Command.execute(goblinProner, warrior);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertTrue(warrior.hasKeyword(Keyword.PRONE));
         Assert.assertNotEquals(warrior.getHits(), warrior.getMaxHits());
 
@@ -261,22 +282,84 @@ public class CardTest {
 
 
         GameEngine.getInstance().setCurrentInitiative(0);
-        result = Command.execute(limitedUsage, warrior);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(limitedUsage, warrior);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertEquals(warrior.getHits(), warrior.getMaxHits() -1);
         Assert.assertEquals(1, limitedUsage.getUses());
-        result = Command.execute(limitedUsage, warrior);
-        Assert.assertTrue(result);
+        commandResult = Command.execute(limitedUsage, warrior);
+        Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertEquals(warrior.getHits(), warrior.getMaxHits());
         Assert.assertEquals(0, limitedUsage.getUses());
-        result = Command.execute(limitedUsage, warrior);
-        Assert.assertFalse(result);
+        commandResult = Command.execute(limitedUsage, warrior);
+        Assert.assertFalse(commandResult.isSuccessful());
 
 
+        // check if thief can play magic missile
         Card magicMissile = Catalog.copyOf("Magic Missile");
         magicMissile.setOwner(player);
         Command.execute(magicMissile, goblin);
 
+        // check if wizard can play magic missile, this should kill the last goblin
+        GameEngine.getInstance().setCurrentInitiative(1);
+        commandResult = Command.execute(magicMissile, goblin);
+        Assert.assertTrue(commandResult.isSuccessful());
+        Assert.assertEquals(0, player.getHazards().size());
+
+
+    }
+
+    @Test
+    public  void testLevelCards() {
+        Character thief = (Character) Catalog.copyOf("thief");
+        Card goblin = Catalog.copyOf("Goblin");
+        CommandResult commandResult = Command.execute(thief, goblin);
+        Assert.assertTrue(commandResult.isSuccessful());
+        Assert.assertNotEquals(goblin.getHits(), goblin.getMaxHits());
+        Assert.assertTrue(thief.getSelectedCard().hasKeyword(Keyword.EXHAUSTED));
+        Assert.assertFalse(goblin.hasKeyword(Keyword.EXHAUSTED));
+        thief.reset();
+        Assert.assertFalse(thief.getSelectedCard().hasKeyword(Keyword.EXHAUSTED));
+
+    }
+
+    @Test
+    public void testMonsterCommands() {
+
+        Monster monster = new Monster();
+        monster.setCommand("simple");
+        Assert.assertEquals("simple", monster.getCommand());
+
+        monster.setRandomCommands(new ArrayList<>());
+        monster.getRandomCommands().add("command1");
+        monster.getRandomCommands().add("command2");
+        String randomCommand = monster.getCommand();
+        Assert.assertTrue("command1".equals(randomCommand) || "command2".equals(randomCommand));
+
+        List<CommandStage> commandStages = new ArrayList<>();
+        monster.setCommandStages(commandStages);
+        monster.setRandomCommands(null);
+
+        commandStages.add(new CommandStage(10, "stage1"));
+        commandStages.add(new CommandStage(5, "stage2"));
+        commandStages.add(new CommandStage(1, "stage3"));
+
+        monster.setHits(20);
+        Assert.assertEquals("stage1", monster.getCommand());
+
+        monster.setHits(10);
+        Assert.assertEquals("stage1", monster.getCommand());
+
+        monster.setHits(9);
+        Assert.assertEquals("stage2", monster.getCommand());
+
+        monster.setHits(5);
+        Assert.assertEquals("stage2", monster.getCommand());
+
+        monster.setHits(4);
+        Assert.assertEquals("stage3", monster.getCommand());
+
+        monster.setHits(1);
+        Assert.assertEquals("stage3", monster.getCommand());
 
 
 

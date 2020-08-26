@@ -79,19 +79,19 @@ public abstract class CardEffect {
 		this.sourceCard = sourceCard;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		CardEffect effect = (CardEffect) o;
-		return Objects.equals(sourceCard, effect.sourceCard) &&
-				Objects.equals(effectTiming, effect.effectTiming);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(sourceCard, effectTiming);
-	}
+//	@Override
+//	public boolean equals(Object o) {
+//		if (this == o) return true;
+//		if (o == null || getClass() != o.getClass()) return false;
+//		CardEffect effect = (CardEffect) o;
+//		return Objects.equals(sourceCard, effect.sourceCard) &&
+//				Objects.equals(effectTiming, effect.effectTiming);
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(sourceCard, effectTiming);
+//	}
 
 	public CardEffect getSourceEffect() {
 		return sourceEffect;
@@ -99,5 +99,17 @@ public abstract class CardEffect {
 
 	public void setSourceEffect(CardEffect sourceEffect) {
 		this.sourceEffect = sourceEffect;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("[");
+		if (this instanceof KeywordEffect) {
+			sb.append(((KeywordEffect) this).getKeyword().name());
+		} else {
+			sb.append(this.getClass().getSimpleName());
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }

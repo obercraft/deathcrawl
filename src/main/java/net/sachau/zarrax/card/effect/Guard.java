@@ -6,6 +6,7 @@ import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Goblin;
 import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.engine.GameEngine;
+import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 public class Guard extends CardEffect {
     public Guard() {
         super();
+        this.setEffectTiming(new EffectTiming(GameEventContainer.Type.STARTENCOUNTER, GameEventContainer.Type.ENDENCOUNTER));
     }
 
     @Override

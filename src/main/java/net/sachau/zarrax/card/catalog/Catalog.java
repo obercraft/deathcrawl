@@ -24,6 +24,8 @@ public class Catalog {
     //private Map<Long, Card> idCache = new HashMap<>();
 
 
+    private boolean loaded;
+
     private static Catalog catalog;
 
     private Catalog() {
@@ -54,6 +56,10 @@ public class Catalog {
 
 
     private static void init(boolean withTexts) {
+
+        if (Catalog.getInstance().isLoaded()) {
+            return;
+        }
         Logger.debug("reading catalog");
         try {
             List<Card> allCards = CardParser.parse(Catalog.class
@@ -83,6 +89,7 @@ public class Catalog {
                     .add(basic);
 
             Logger.debug("reading catalog done");
+            Catalog.getInstance().setLoaded(true);
         } catch (Exception e) {
             Logger.error("init catalog failed", e);
         }
@@ -154,4 +161,11 @@ public class Catalog {
         return getInstance().texts.get(name);
     }
 
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+    }
 }

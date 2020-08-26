@@ -37,11 +37,10 @@ public class Command {
         return args;
     }
 
-    public static boolean execute(Card source, Card target) {
+    public static CommandResult execute(Card source, Card target) {
 
         if (source.hasKeyword(Keyword.EXHAUSTED)) {
-            Logger.debug(source + " is exhausted");
-            return false;
+            return CommandResult.notAllowed(source + " is exhausted");
         }
 
 
@@ -61,19 +60,19 @@ public class Command {
             Card currentCard = GameEngine.getInstance()
                     .getCurrentCard();
             if (!currentCard.hasOneKeyword(source.getKeywords())) {
-                Logger.debug(currentCard + " cannot play " + source);
-                return false;
+                return CommandResult.notAllowed(currentCard + " cannot play " + source);
             }
         }
-        boolean result = CommandParser.executeCommands(source, target);
-        if (result) {
+        CommandResult result = CommandParser.executeCommands(source, target);
+        if (result.isSuccessful()) {
             if (source.getOwner() instanceof Player) {
-                GameEngine.getInstance().getPlayer().discard(source);
+                GameEngine.getInstance()
+                        .getPlayer()
+                        .discard(source);
                 Logger.debug("discarding " + source);
             }
-            return true;
-        } else {
-            return false;
         }
+        return result;
+
     }
 }

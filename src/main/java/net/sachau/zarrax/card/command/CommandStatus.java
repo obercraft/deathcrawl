@@ -25,30 +25,25 @@ public class CommandStatus {
         return new CommandStatus(commandType);
     }
 
-    public boolean check(Card source, Card target) {
+    public CommandResult check(Card source, Card target) {
         if (!prone && source.hasKeyword(Keyword.PRONE)) {
-            Logger.debug(source + " is prone");
-            return false;
+            return CommandResult.notAllowed(source + " is prone");
         }
         if (!targetSelf && source == target) {
-            Logger.debug(source + " not allowed to target self");
-            return false;
+            return CommandResult.notAllowed(source + " not allowed to target self");
         }
         if (!targetFriendly &&  target != null && target.getOwner() == source.getOwner()) {
-            Logger.debug(source + " not allowed to target friendly card " + target);
-            return false;
+            return CommandResult.notAllowed(source + " not allowed to target friendly card " + target);
         }
 
         if (!targetEnemy && target != null && target.getOwner() != source.getOwner()) {
-            Logger.debug(source + " not allowed to target enemy card " + target);
-            return false;
+            return CommandResult.notAllowed(source + " not allowed to target enemy card " + target);
         }
 
         if (allowedKeywords != null && target != null && !target.hasAllKeywords(allowedKeywords)) {
-            Logger.debug(source + " must have " + allowedKeywords);
-            return false;
+            return CommandResult.notAllowed(source + " must have " + allowedKeywords);
         }
-        return true;
+        return CommandResult.allowed();
 
     }
 

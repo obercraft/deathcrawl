@@ -3,6 +3,7 @@ package net.sachau.zarrax.card.effect;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.command.Command;
+import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Horse;
 import net.sachau.zarrax.engine.GameEngine;
@@ -63,6 +64,23 @@ public class CardEffectTest {
         testCard.triggerEndEffects(GameEventContainer.Type.ENDENCOUNTER);
         Assert.assertFalse(testCard.hasKeyword(Keyword.SIMPLE));
 
+        // adding keyword twice
+        testCard.addKeyword(Keyword.PRONE);
+        testCard.addKeyword(Keyword.PRONE);
+        Assert.assertTrue(testCard.hasKeyword(Keyword.PRONE));
+        testCard.removeKeyword(Keyword.PRONE);
+
+        Assert.assertFalse(testCard.hasKeyword(Keyword.PRONE));
+
+        // adding same effect twice
+        testCard.getEffects().add(effect);
+        testCard.getEffects().add(effect);
+
+        // still only one effect
+        Assert.assertEquals(1,testCard.getEffects().size());
+
+
+
 
 
     }
@@ -115,8 +133,8 @@ public class CardEffectTest {
         GameEngine.getInstance().setCurrentInitiative(0);
         GameEngine.getInstance().getInitiativeOrder().add(paladin);
 
-        boolean result = Command.execute(horse, null);
-        Assert.assertTrue(result);
+        CommandResult commandResult = Command.execute(horse, null);
+        Assert.assertTrue(commandResult.isSuccessful());
         int before = player.getMoves();
         horse.triggerStartEffects(GameEventContainer.Type.STARTTURN);
         Assert.assertEquals(before + 1, player.getMoves());

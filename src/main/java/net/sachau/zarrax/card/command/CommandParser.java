@@ -12,6 +12,7 @@ import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.card.keyword.Keyword;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandParser {
@@ -27,11 +28,10 @@ public class CommandParser {
 //        return executeCommands(source.getCommand(), source, target);
 //    }
 
-    public static boolean executeCommands(Card source, Card target) {
+    public static CommandResult executeCommands(Card source, Card target) {
 
         if (source == null) {
-            Logger.debug("no source card");
-            return false;
+            return CommandResult.notAllowed("no source card");
         }
 
         if (source instanceof Character) {
@@ -44,31 +44,31 @@ public class CommandParser {
         }
 
         if (StringUtils.isEmpty(source.getCommand())) {
-            Logger.debug("no command given");
-            return false;
+            return CommandResult.notAllowed("no command given");
         }
 
         String[] commands = source.getCommand().trim().toLowerCase().split(";", -1);
 
         if (commands == null || commands.length == 0) {
-            return false;
+            return CommandResult.notAllowed("no commands given");
         }
-        boolean result = false;
+        List<CommandResult> result = new ArrayList<>();
         for (String c : commands) {
-            result = executeCommand(c.trim(), source, target);
-            if (result == false) {
-                return false;
+            CommandResult commandResult = executeCommand(c.trim(), source, target);
+            result.add(commandResult);
+            if (commandResult.failed()) {
+                return commandResult;
             }
         }
-        return result;
+        return CommandResult.build(result);
     }
 
-    private static boolean executeCommand(String commandString, Card source, Card target) {
+    private static CommandResult executeCommand(String commandString, Card source, Card target) {
 
         List<String> commands = Command.getArguments(commandString);
 
         if (commands == null || commands.size() < 1) {
-            return false;
+            return CommandResult.notAllowed("command size is 0");
         }
 
         Commands command = Commands.valueOf(commands.get(0).toUpperCase()
@@ -76,11 +76,11 @@ public class CommandParser {
 
         CommandTarget commandTarget = getCommandTarget(commands.size() > 1 ? commands.get(1) : "");
 
-        boolean statusResult = command.getStatus()
+        CommandResult statusResult = command.getStatus()
                 .check(source, target);
 
-        if (!statusResult) {
-            return false;
+        if (!statusResult.isAllowed()) {
+            return statusResult;
         }
 
         Logger.debug("$ " + command + " " + commandTarget + " (" + source +", " + target +")");
@@ -94,47 +94,46 @@ public class CommandParser {
                 if (p != null) {
                     p.draw(amount);
                 }
-                return true;
+                return CommandResult.successful();
             }
             case ATTACK: {
                 if (target == null) {
-                    return false;
+                    return CommandResult.notAllowed("target is null");
                 }
 
                 int count = commands.size() >= 3 ? new Integer( commands.get(2)) : 1;
                 List<Card> targets = CardUtils.getPossibleTargets(source, target, commandTarget, count);
                 if (targets.size() == 0) {
-                    Logger.debug(source +  " has no targets");
-                    return false;
+                    return CommandResult.notAllowed(source +  " has no targets");
                 }
 
 
-                boolean result = true;
+                List<CommandResult> result = new ArrayList<>();
                 for (Card t : targets) {
-                    result &= source.attack(t, source.getDamage());
+                    result.add(source.attack(t, source.getDamage()));
 
                 }
-                return result;
+                return CommandResult.build(result);
             }
             case HEAL: {
 
                 int count = commands.size() >=3 ? new Integer(commands.get(2)) : 1;
 
                 List<Card> targets = CardUtils.getPossibleFriendlyTargets(source, target, commandTarget, count);
-                boolean result = true;
+                List<CommandResult> result = new ArrayList<>();
                 if (target != null) {
                     for (Card t : targets) {
-                        result &= source.heal(t, source.getDamage());
+                        result.add(source.heal(t, source.getDamage()));
                     }
                 }
-                return result;
+                return CommandResult.build(result);
             }
             case SHIELD: {
                 if (target != null && target.getKeywords()
                         .contains(Keyword.CREATURE)) {
                     target.getEffects().add(new KeywordEffect(Keyword.ARMOR, target));
                 }
-                return true;
+                return CommandResult.successful();
             }
             case POISON_ITEM: {
                 // TODO msachau
@@ -151,19 +150,19 @@ public class CommandParser {
 //                    return true;
 //                }
 //                return false;
-                return false;
+                return CommandResult.notAllowed("POISON ITEM not implemented");
             }
             case MOMENTUM: {
                 if (source.getOwner() instanceof Player) {
                     Player player = (Player) source.getOwner();
                     int m = player.getMomentum() + new Integer(commands.get(1));
                     player.setMomentum(m);
-                    return true;
+                    return CommandResult.successful();
                 }
-                return false;
+                return CommandResult.notAllowed("MOMENTUM not allowed");
             }
             default:
-                return false;
+                return CommandResult.notAllowed("command " + command + " is not allowed");
 
             case PLAY_TO_PARTY: {
                 Player p = source.getPlayer();
@@ -172,9 +171,9 @@ public class CommandParser {
                     p.getParty()
                             .add(source);
                     //source.getDeck().remove(source);
-                    return true;
+                    return CommandResult.successful();
                 }
-                return false;
+                return CommandResult.notAllowed("player is null");
 
             }
             case GOLD: {
@@ -183,41 +182,41 @@ public class CommandParser {
                     int g = p.getGold() + 1;
                     p.setGold(g);
                 }
-                return true;
+                return CommandResult.successful();
             }
 
             case PRONE: {
                 int count = commands.size() >= 3 ? new Integer( commands.get(2)) : 1;
                 List<Card> targets = CardUtils.getPossibleTargets(source, target, commandTarget, count);
                 if (targets.size() == 0) {
-                    Logger.debug(source + " has no targets");
-                    return false;
+                    return CommandResult.notAllowed(source + " has no targets");
+
                 }
                 for (Card t : targets) {
                     t.getEffects().add(new KeywordEffect(Keyword.PRONE));
                     Logger.debug(source + " prones" + t);
                 }
-                return true;
+                return CommandResult.successful();
             }
             case EXHAUST: {
                 source.getEffects().add(new KeywordEffect(Keyword.EXHAUSTED));
-                return true;
+                return CommandResult.successful();
             }
             case EXHAUST_ATTACK: {
                 if (target == null) {
-                    return false;
+                    return CommandResult.notAllowed("target is null");
                 }
                 int count = commands.size() >= 3 ? new Integer( commands.get(2)) : 1;
                 List<Card> targets = CardUtils.getPossibleTargets(source, target, commandTarget, count);
                 if (targets.size() == 0) {
-                    Logger.debug(source +  " has no targets");
-                    return false;
+                    return CommandResult.notAllowed(source +  " has no targets");
+
                 }
 
                 for (Card t : targets) {
                     t.getEffects().add(new KeywordEffect(Keyword.EXHAUSTED));
                 }
-                return true;
+                return CommandResult.successful();
 
             }
 
@@ -232,9 +231,9 @@ public class CommandParser {
                         .get(commands.get(2));
                 if (card != null && cards != null) {
                     cards.add(CardUtils.copyCard(card));
-                    return true;
+                    return CommandResult.successful();
                 } else {
-                    return false;
+                    return CommandResult.notAllowed("cannot ADD Card");
                 }
             }
 

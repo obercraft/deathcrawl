@@ -10,6 +10,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.command.CommandParser;
 import net.sachau.zarrax.card.Creature;
@@ -167,8 +168,8 @@ public class CardTile extends CardView {
     }
 
     private void executeCommand(Card sourceCard, int cost, boolean discard) {
-        boolean commandSuccessful = CommandParser.executeCommands(sourceCard, getCard());
-        if (commandSuccessful) {
+        CommandResult commandResult = CommandParser.executeCommands(sourceCard, getCard());
+        if (commandResult.isSuccessful()) {
             Creature owner = sourceCard.getOwner();
             if (owner != null && owner instanceof Player) {
                 Player player = (Player) owner;

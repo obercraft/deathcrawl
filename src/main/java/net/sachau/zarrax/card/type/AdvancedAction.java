@@ -1,6 +1,7 @@
 package net.sachau.zarrax.card.type;
 
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.keyword.Keyword;
 
 public abstract class AdvancedAction extends Action {
@@ -14,5 +15,5 @@ public abstract class AdvancedAction extends Action {
         super(action);
     }
 
-    public abstract boolean execute(Card targetCard);
+    public abstract CommandResult execute(Card targetCard);
 }

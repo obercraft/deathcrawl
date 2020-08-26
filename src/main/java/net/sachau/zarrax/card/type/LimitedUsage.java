@@ -6,6 +6,7 @@ import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.command.Command;
 import net.sachau.zarrax.card.command.CommandParser;
+import net.sachau.zarrax.card.command.CommandResult;
 
 public class LimitedUsage extends Card {
 
@@ -25,7 +26,7 @@ public class LimitedUsage extends Card {
         this.usageCard = card.getUsageCard();
     }
 
-    public boolean execute(Card target) {
+    public CommandResult execute(Card target) {
 
         if (usageCard == null) {
             Card card = Catalog.copyOf(this.getUsageCardName());
@@ -35,16 +36,15 @@ public class LimitedUsage extends Card {
         }
 
         if (getUses() > 0 || getUses() == UNLIMITED) {
-            boolean result = Command.execute(usageCard, target);
-            if (result) {
+            CommandResult result = Command.execute(usageCard, target);
+            if (result.isSuccessful()) {
                 if (getUses() != UNLIMITED) {
                     setUses(getUses() - 1);
                 }
             }
             return result;
         } else {
-            Logger.debug("not enough uses=" + getUses());
-            return false;
+            return CommandResult.notAllowed("not enough uses=" + getUses());
         }
     }
 

@@ -286,13 +286,13 @@ public class GameEngine  implements Observer {
     public void triggerEffects(GameEventContainer.Type eventType) {
         player.setSpawnCards(new UniqueCardList());
         for (Card card : player.getHazards()) {
-            // TODO msachau card.triggerPhaseEffects(eventType);
+            card.triggerStartEffects(eventType);
         }
         for (Card card : player.getParty()) {
-            // TODO msachau card.triggerPhaseEffects(eventType);
+            card.triggerStartEffects(eventType);
         }
         if (player.getSpawnCards().size() > 0) {
-            // TODO msachau player.getHazards().addAll(player.getSpawnCards());
+            player.getHazards().addAll(player.getSpawnCards());
         }
     }
 
