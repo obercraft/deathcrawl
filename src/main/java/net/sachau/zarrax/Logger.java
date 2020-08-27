@@ -79,9 +79,6 @@ public class Logger {
         }
     }
 
-    public static void main(String [] args) {
-        Logger.debug("text");
-    }
 
 
 }

@@ -37,13 +37,21 @@ public class Command {
         return args;
     }
 
+    /**
+     * this is the general method to execute commands, always use this method
+     * @param source card that should execute its commands
+     * @param target the target of the commands
+     * @return command result
+     */
     public static CommandResult execute(Card source, Card target) {
 
+        // a command of an exhausted card may not be executed
         if (source.hasKeyword(Keyword.EXHAUSTED)) {
             return CommandResult.notAllowed(source + " is exhausted");
         }
 
-
+        // a character always has a list of cards to choose among,
+        // execute the command of the selected card
         if (source instanceof Character) {
             Character character = (Character) source;
             return execute(character.getSelectedCard(), target);
@@ -52,10 +60,13 @@ public class Command {
         }
 
 
+        // a PERMANENT card has already been played, so need
+        // to check if the source can play the card ...
         if (source.hasKeyword(Keyword.PERMANENT)) {
             return CommandParser.executeCommands(source, target);
         }
 
+        // .. otherwise check if owner can play the card
         if (source.getOwner() instanceof Player) {
             Card currentCard = GameEngine.getInstance()
                     .getCurrentCard();
@@ -63,6 +74,8 @@ public class Command {
                 return CommandResult.notAllowed(currentCard + " cannot play " + source);
             }
         }
+
+        // finally execute commands and discard source if commands were successful
         CommandResult result = CommandParser.executeCommands(source, target);
         if (result.isSuccessful()) {
             if (source.getOwner() instanceof Player) {
@@ -73,6 +86,5 @@ public class Command {
             }
         }
         return result;
-
     }
 }
