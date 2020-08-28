@@ -3,8 +3,6 @@ package net.sachau.zarrax.card.effect;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.card.type.Goblin;
-import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
@@ -14,11 +12,11 @@ import java.util.List;
 public class Guard extends CardEffect {
     public Guard() {
         super();
-        this.setEffectTiming(new EffectTiming(GameEventContainer.Type.STARTENCOUNTER, GameEventContainer.Type.ENDENCOUNTER));
+        this.setEffectTiming(new EffectTiming(GameEventContainer.Type.START_ENCOUNTER, GameEventContainer.Type.END_ENCOUNTER));
     }
 
     @Override
-    public void trigger(Card targetCard) {
+    public void start(Card targetCard) {
         Logger.debug(targetCard + "triggers Guard");
         Player player = GameEngine.getInstance()
                 .getPlayer();
@@ -34,7 +32,7 @@ public class Guard extends CardEffect {
     }
 
     @Override
-    public void remove(Card targetCard) {
+    public void end(Card targetCard) {
         Player player = GameEngine.getInstance()
                 .getPlayer();
         List<Card> cards = targetCard.getOwner() instanceof Player ? player.getParty() : player.getHazards();

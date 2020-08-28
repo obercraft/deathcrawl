@@ -1,0 +1,17 @@
+<?xml encoding="UTF-8"?>
+
+        <!ELEMENT encounters (site|land)+>
+
+        <!ELEMENT site (encounter)+>
+        <!ATTLIST site
+                  name  CDATA "">
+
+        <!ELEMENT land (encounter)+>
+        <!ATTLIST land
+                  name  CDATA "">
+
+        <!ELEMENT encounter (#PCDATA)>
+        <!ATTLIST encounter
+                warning  CDATA "">
+
+

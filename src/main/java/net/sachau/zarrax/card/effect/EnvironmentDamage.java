@@ -11,7 +11,7 @@ public class EnvironmentDamage extends CardEffect {
     }
 
     @Override
-    public void trigger(Card targetCard) {
+    public void start(Card targetCard) {
         Player player = GameEngine.getInstance()
                 .getPlayer();
         for (Card card : player.getParty()) {
@@ -21,7 +21,7 @@ public class EnvironmentDamage extends CardEffect {
     }
 
     @Override
-    public void remove(Card card) {
+    public void end(Card card) {
 
     }
 

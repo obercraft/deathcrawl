@@ -9,6 +9,7 @@ import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.CardParser;
 import net.sachau.zarrax.util.CardUtils;
+import org.reflections.Reflections;
 
 import java.util.*;
 
@@ -46,53 +47,76 @@ public class Catalog {
         this.idCache.set(idCache);
     }
 
-    public static void init() {
+    public static void init() throws Exception {
         init(true);
     }
 
-    public static void initForTesting() {
+    public static void initForTesting() throws Exception {
         init(false);
     }
 
 
-    private static void init(boolean withTexts) {
+    private static void init(boolean withTexts) throws Exception {
 
         if (Catalog.getInstance().isLoaded()) {
             return;
         }
-        Logger.debug("reading catalog");
-        try {
-            List<Card> allCards = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/cards.xml"), withTexts);
-            Catalog.getInstance()
-                    .add(allCards);
+        Logger.debug("reading catalogs");
 
-            List<Card> monsters = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/monsters.xml"), withTexts);
-            Catalog.getInstance()
-                    .add(monsters);
-
-            List<Card> environments = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/environments.xml"), withTexts);
-            Catalog.getInstance()
-                    .add(environments);
-
-            List<Card> events = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/events.xml"), withTexts);
-            Catalog.getInstance()
-                    .add(events);
+        Reflections reflections = new Reflections(Catalog.class.getCanonicalName().replace("Catalog", ""));
+        Set<Class<? extends CatalogResource>> resourceClasses = reflections.getSubTypesOf(CatalogResource.class);
 
 
-            List<Card> basic = CardParser.parse(Catalog.class
-                    .getResourceAsStream("/cards/characters.xml"), withTexts);
-            Catalog.getInstance()
-                    .add(basic);
-
-            Logger.debug("reading catalog done");
-            Catalog.getInstance().setLoaded(true);
-        } catch (Exception e) {
-            Logger.error("init catalog failed", e);
+        LinkedList<CatalogResource> catalogResources = new LinkedList<>();
+        for (Class<? extends CatalogResource> resource : resourceClasses) {
+            Basic basic = resource.getAnnotation(Basic.class);
+            if (basic != null) {
+                catalogResources.push(resource.newInstance());
+            } else {
+                catalogResources.add(resource.newInstance());
+            }
         }
+
+        for (CatalogResource catalogResource : catalogResources) {
+            Logger.debug("reading " + catalogResource.getClass().getSimpleName());
+            catalogResource.init(withTexts);
+        }
+
+        Logger.debug("reading catalog done");
+        Catalog.getInstance().setLoaded(true);
+
+//        try {
+//            List<Card> allCards = CardParser.parse(Catalog.class
+//                    .getResourceAsStream("/cards/cards.xml"), withTexts);
+//            Catalog.getInstance()
+//                    .add(allCards);
+//
+//            List<Card> monsters = CardParser.parse(Catalog.class
+//                    .getResourceAsStream("/cards/monsters.xml"), withTexts);
+//            Catalog.getInstance()
+//                    .add(monsters);
+//
+//            List<Card> environments = CardParser.parse(Catalog.class
+//                    .getResourceAsStream("/cards/environments.xml"), withTexts);
+//            Catalog.getInstance()
+//                    .add(environments);
+//
+//            List<Card> events = CardParser.parse(Catalog.class
+//                    .getResourceAsStream("/cards/events.xml"), withTexts);
+//            Catalog.getInstance()
+//                    .add(events);
+//
+//
+//            List<Card> basic = CardParser.parse(Catalog.class
+//                    .getResourceAsStream("/cards/characters.xml"), withTexts);
+//            Catalog.getInstance()
+//                    .add(basic);
+//
+//            Logger.debug("reading catalog done");
+//            Catalog.getInstance().setLoaded(true);
+//        } catch (Exception e) {
+//            Logger.error("init catalog failed", e);
+//        }
 
 
 

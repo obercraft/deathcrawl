@@ -169,22 +169,23 @@ public class CardTile extends CardView {
 
     private void executeCommand(Card sourceCard, int cost, boolean discard) {
         CommandResult commandResult = CommandParser.executeCommands(sourceCard, getCard());
-        if (commandResult.isSuccessful()) {
-            Creature owner = sourceCard.getOwner();
-            if (owner != null && owner instanceof Player) {
-                Player player = (Player) owner;
-                if (discard) {
-                    if (Card.Source.HAND.equals(sourceCard.getSource())) {
-                        player.getDraw().addToDiscard(card);
-                    }
-                    player.getHand().remove(sourceCard);
-                }
-
-                int m = player.getMomentum() - cost;
-                player.setMomentum(m);
-            }
-
-        }
+        // TODO msachau code below really needed?
+//        if (commandResult.isSuccessful()) {
+//            Creature owner = sourceCard.getOwner();
+//            if (owner != null && owner instanceof Player) {
+//                Player player = (Player) owner;
+//                if (discard) {
+//                    if (Card.Source.HAND.equals(sourceCard.getSource())) {
+//                        player.getDraw().addToDiscard(card);
+//                    }
+//                    player.getHand().remove(sourceCard);
+//                }
+//
+//                int m = player.getMomentum() - cost;
+//                player.setMomentum(m);
+//            }
+//
+//        }
 
     }
 

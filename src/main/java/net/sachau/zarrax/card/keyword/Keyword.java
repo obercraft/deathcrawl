@@ -27,8 +27,8 @@ public enum Keyword {
 
 
     EXHAUSTED(true), GUARDED(true), PRONE(true), ARMOR(true),
-    STEALTH(true)
-    ;
+    STEALTH(true),
+    LONG_EXHAUSTED(true);
 
     private boolean onCard;
 

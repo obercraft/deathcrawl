@@ -9,18 +9,26 @@ import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.Creature;
 import net.sachau.zarrax.card.Deck;
 import net.sachau.zarrax.card.UniqueCardList;
+import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.gui.map.MapCoord;
+import net.sachau.zarrax.map.LandType;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collections;
 
 
 public class Player extends Creature {
+
+	public final static int PARTY_SIZE = 4;
+	public final static int MOVES = 4;
 
 	private SimpleListProperty<Card> party;
 
 	private SimpleListProperty<Card> hand;
 
-	private SimpleIntegerProperty handSize = new SimpleIntegerProperty(5);
+	private SimpleIntegerProperty maxHandsize = new SimpleIntegerProperty(5);
 
 	private Deck draw;
 
@@ -28,13 +36,15 @@ public class Player extends Creature {
 
 	private Turn turn;
 
-	private int moves;
+	private SimpleIntegerProperty moves = new SimpleIntegerProperty(MOVES);
 
 	private MapCoord mapCoord;
 
 	private UniqueCardList spawnCards;
 
 	private SimpleIntegerProperty momentum = new SimpleIntegerProperty(0);
+
+
 
 
 	public Player() {
@@ -45,8 +55,6 @@ public class Player extends Creature {
 		hazards = new SimpleListProperty<>(FXCollections.observableArrayList(new UniqueCardList()));
 
 		draw = new Deck();
-		draw.setVisible(false);
-
 		turn = new Turn();
 
 	}
@@ -63,22 +71,29 @@ public class Player extends Creature {
 		this.momentum.set(momentum);
 	}
 
-	public int getHandSize() {
-		return handSize.get();
+	public int getMaxHandsize() {
+		return maxHandsize.get();
 	}
 
-	public SimpleIntegerProperty handSizeProperty() {
-		return handSize;
+	public SimpleIntegerProperty maxHandsizeProperty() {
+		return maxHandsize;
 	}
 
-	public void setHandSize(int handSize) {
-		this.handSize.set(handSize);
+	public void setMaxHandsize(int maxHandsize) {
+		this.maxHandsize.set(maxHandsize);
 	}
 
 	public void initHand() {
-		getDraw().draw(getHand(), getHandSize());
-		for (Card card : getHand()) {
-			card.setSource(Card.Source.HAND);
+		if (getHand().size() == 0) {
+			int max = Math.min(getMaxHandsize(), draw.size() + draw.getDiscards()
+					.size());
+			for (int i = 0; i < max; i++) {
+				Card card = draw.draw();
+				card.setSource(Card.Source.HAND);
+				card.setOwner(this);
+				card.setVisible(true);
+
+			}
 		}
 	}
 
@@ -90,13 +105,8 @@ public class Player extends Creature {
 		this.mapCoord = mapCoord;
 	}
 
-	public void draw(int amount) {
-		if (amount < 1) {
-			amount = 1;
-		}
-		int limit = Math.min(amount, getDraw().size());
-		getDraw().draw(getHand(), limit);
-
+	public Card draw() {
+		return getDraw().draw();
 	}
 
 
@@ -153,15 +163,20 @@ public class Player extends Creature {
 	}
 
 	public int getMoves() {
+		return moves.get();
+	}
+
+	public SimpleIntegerProperty movesProperty() {
 		return moves;
 	}
 
 	public void setMoves(int moves) {
-		this.moves = moves;
+		this.moves.set(moves);
 	}
 
 	public void addCardToHand(Card card) {
 		card.setOwner(this);
+		card.setVisible(true);
 		getHand().add(card);
 
 	}
@@ -175,13 +190,15 @@ public class Player extends Creature {
 		}
 		if (toDiscard != null) {
 			getHand().remove(toDiscard);
-			getDraw().addToDiscard(toDiscard);
+			getDraw().discard(toDiscard);
 		}
 	}
 
 	public boolean addToParty(Card card) {
 		if (!StringUtils.isEmpty(card.getUniqueId())) {
 			for (Card c : getParty()) {
+				c.setVisible(true);
+				c.setOwner(this);
 				if (card.getUniqueId().toLowerCase().equalsIgnoreCase(c.getUniqueId())) {
 					Logger.debug("already contains a " + card.getUniqueId());
 					return false;
@@ -205,5 +222,58 @@ public class Player extends Creature {
 
 	public void setSpawnCards(UniqueCardList spawnCards) {
 		this.spawnCards = spawnCards;
+	}
+
+	public void addCardToDraw(Card card) {
+		card.setOwner(this);
+		card.setVisible(false);
+		draw.add(card);
+		Collections.shuffle(draw);
+	}
+
+	public void resetHand() {
+		int cardsToDraw = Math.min(getMaxHandsize() - this.getHand().size(), draw.size() + draw.getDiscards().size());
+		for (int i = 0; i< cardsToDraw; i++) {
+			Card card = draw.draw();
+			addCardToHand(card);
+		}
+	}
+
+
+	public CommandResult longRest(MapCoord mapCoord) {
+		int moves = getMoves();
+		if (moves < 4) {
+			return CommandResult.notAllowed("not enough moves");
+		} else {
+			for (Card card : getParty()) {
+				if (card instanceof Character) {
+					card.longRest();
+				}
+			}
+			return CommandResult.successful();
+		}
+	}
+
+	public CommandResult move(LandType targetLand) {
+		int moves = getMoves();
+		switch (targetLand) {
+			default:
+			case VALLEY:
+				if (moves < 1) {
+					return CommandResult.notAllowed("not enough moves");
+				}
+				setMoves(moves -1);
+				return CommandResult.successful();
+
+			case HILL:
+			case WATER:
+			case MOUNTAINS:
+			case WOODS:
+				if (moves < 2) {
+					return CommandResult.notAllowed("not enough moves");
+				}
+				setMoves(moves -2);
+				return CommandResult.successful();
+		}
 	}
 }

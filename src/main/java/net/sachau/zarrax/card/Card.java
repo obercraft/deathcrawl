@@ -127,7 +127,7 @@ public abstract class Card {
         }
         for (CardEffect effect : effects) {
             if (effect.getEffectTiming() != null && event.equals(effect.getEffectTiming().getStartPhase())) {
-                effect.trigger(this);
+                effect.start(this);
             }
         }
 
@@ -567,7 +567,7 @@ public abstract class Card {
 
     public void removeEffect(CardEffect cardEffect) {
         if (this.effects.contains(cardEffect)) {
-            cardEffect.remove(this);
+            cardEffect.end(this);
         }
     }
 
@@ -602,6 +602,21 @@ public abstract class Card {
             }
         }
     }
+
+    public void longRest() {
+        this.removeKeyword(Keyword.EXHAUSTED);
+        this.removeKeyword(Keyword.LONG_EXHAUSTED);
+        if (this instanceof Character) {
+            Character character = (Character) this;
+            if (character.getHits() > 0) {
+                character.setHits(character.getMaxHits());
+            }
+            for (Card card : character.getLevelCards()) {
+                card.longRest();
+            }
+        }
+    }
+
 
 
 }

@@ -20,7 +20,7 @@ public class CardEffectTest {
     Player player;
 
     @Before
-    public void init() {
+    public void init() throws Exception {
         player = new Player();
         GameEngine.getInstance()
                 .setPlayer(player);
@@ -46,22 +46,22 @@ public class CardEffectTest {
 
         CardEffect effect = new CardEffect() {
             @Override
-            public void trigger(Card targetCard) {
+            public void start(Card targetCard) {
                 targetCard.addKeyword(Keyword.SIMPLE);
             }
 
             @Override
-            public void remove(Card card) {
+            public void end(Card card) {
                 card.removeKeyword(Keyword.SIMPLE);
             }
         };
-        EffectTiming timing = new EffectTiming(GameEventContainer.Type.STARTENCOUNTER, GameEventContainer.Type.ENDENCOUNTER);
+        EffectTiming timing = new EffectTiming(GameEventContainer.Type.START_ENCOUNTER, GameEventContainer.Type.END_ENCOUNTER);
         effect.setEffectTiming(timing);
         testCard.getEffects().add(effect);
 
-        testCard.triggerStartEffects(GameEventContainer.Type.STARTENCOUNTER);
+        testCard.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
         Assert.assertTrue(testCard.hasKeyword(Keyword.SIMPLE));
-        testCard.triggerEndEffects(GameEventContainer.Type.ENDENCOUNTER);
+        testCard.triggerEndEffects(GameEventContainer.Type.END_ENCOUNTER);
         Assert.assertFalse(testCard.hasKeyword(Keyword.SIMPLE));
 
         // adding keyword twice
@@ -102,7 +102,7 @@ public class CardEffectTest {
 
         GameEngine.getInstance().setCurrentInitiative(0); // warrior
         for (Card c : player.getParty()) {
-            c.triggerStartEffects(GameEventContainer.Type.STARTENCOUNTER);
+            c.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
         }
 
         Assert.assertTrue(thief.hasKeyword(Keyword.GUARDED));
@@ -113,7 +113,7 @@ public class CardEffectTest {
                 .size();
 
         for (Card c : player.getParty()) {
-            c.triggerEndEffects(GameEventContainer.Type.ENDENCOUNTER);
+            c.triggerEndEffects(GameEventContainer.Type.END_ENCOUNTER);
         }
         Assert.assertFalse(thief.hasKeyword(Keyword.GUARDED));
         Assert.assertFalse(wizard.hasKeyword(Keyword.GUARDED));
@@ -136,9 +136,9 @@ public class CardEffectTest {
         CommandResult commandResult = Command.execute(horse, null);
         Assert.assertTrue(commandResult.isSuccessful());
         int before = player.getMoves();
-        horse.triggerStartEffects(GameEventContainer.Type.STARTTURN);
+        horse.triggerStartEffects(GameEventContainer.Type.START_TURN);
         Assert.assertEquals(before + 1, player.getMoves());
-        horse.triggerEndEffects(GameEventContainer.Type.ENDTURN);
+        horse.triggerEndEffects(GameEventContainer.Type.END_TURN);
         Assert.assertEquals(before, player.getMoves());
     }
 

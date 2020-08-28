@@ -63,38 +63,78 @@ public class GameEngine  implements Observer {
                 player.initHand();
                 return;
             }
-            case STARTTURN: {
-                player.setMoves(1);
+            case START_TURN: {
+                player.setMoves(Player.MOVES);
+                triggerStartEffects(GameEventContainer.Type.START_TURN);
+                GameEvent.getInstance()
+                        .send(GameEventContainer.Type.START_MOVEMENT);
+                return;
+            }
 
-                // trigger events
-                for (Card card : player.getParty()) {
-                    // TODO msachau trigger card.triggerPhaseEffects(GameEventContainer.Type.STARTTURN);
+            case END_MOVEMENT: {
+                GameEvent.getInstance()
+                        .send(GameEventContainer.Type.START_ENCOUNTER);
+                return;
+            }
+            case PREPARE_ENCOUNTER: {
+                {
+                    // make sure every card in the party is owned by player and has PERMANENT keyword
+                    for (Card card : player.getParty()) {
+                        card.setOwner(player);
+                        card.setVisible(true);
+                        card.addKeyword(Keyword.PERMANENT);
+                    }
+
+                    // generate an encounter and assign it to player
+
+                    player.setHazards(FXCollections.observableArrayList(EncounterGenerator.builder().addRandomEnvironment(player.getMapCoord()).addRandomEvent(player.getMapCoord()).getCards()));
+
+                    // check if every card in hazards is visible and not owned by player
+                    for (Card card : player.getHazards()) {
+                        card.setVisible(true);
+                        card.setOwner(null);
+                    }
+
+                    // build initiativeDeck
+                    initiativeOrder = new ArrayList<>();
+                    initiativeOrder.addAll(player.getParty());
+                    initiativeOrder.addAll(player.getHazards());
+                    Collections.shuffle(initiativeOrder);
+                    setCurrentInitiative(0);
+
+                    GameEvent.getInstance()
+                            .send(GameEventContainer.Type.START_ENCOUNTER);
+
                 }
 
                 return;
             }
-            case STARTENCOUNTER: {
-                startEncounter();
+
+            case START_ENCOUNTER: {
+                //trigger phase effects
+                triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
+                GameEvent.getInstance()
+                        .send(GameEventContainer.Type.START_CARDPHASE);
                 return;
             }
 
-            case STARTCARDPHASE:
+            case START_CARDPHASE:
                 startCardPhase();
                 return;
 
-            case NEXTACTION: {
+            case NEXT_ACTION: {
 
                 Card card = getCurrentCard();
                 if (card.getOwner() instanceof Player) {
                     Logger.debug("waiting for " + getCurrentCard());
                     GameEvent.getInstance()
-                            .send(GameEventContainer.Type.WAITINGFORPLAYERACTION);
+                            .send(GameEventContainer.Type.WAITING_FOR_PLAYER_ACTION);
 
                 } else {
                     Logger.debug("AI for " + card);
                     GameAI.execute(player, card);
                     GameEvent.getInstance()
-                            .send(GameEventContainer.Type.ACTIONDONE);
+                            .send(GameEventContainer.Type.ACTION_DONE);
                 }
 
                 return;
@@ -102,25 +142,25 @@ public class GameEngine  implements Observer {
 
             case PLAYERACTIONDONE:
                 GameEvent.getInstance()
-                        .send(GameEventContainer.Type.ACTIONDONE);
+                        .send(GameEventContainer.Type.ACTION_DONE);
                 return;
-            case ACTIONDONE: {
+            case ACTION_DONE: {
                 if (getCurrentInitiative() < initiativeOrder.size() - 1) {
                     int ini = getCurrentInitiative() + 1;
 
                     setCurrentInitiative(ini);
                     GameEvent.getInstance()
-                            .send(GameEventContainer.Type.NEXTACTION);
+                            .send(GameEventContainer.Type.NEXT_ACTION);
                 } else {
                     GameEvent.getInstance()
-                            .send(GameEventContainer.Type.ENDCARDPHASE);
+                            .send(GameEventContainer.Type.END_CARDPHASE);
                 }
                 return;
             }
 
-            case ENDCARDPHASE:
-                triggerEffects(GameEventContainer.Type.ENDCARDPHASE);
-                player.getDraw().draw(player.getHand(), player.getHandSize() - player.getHand().size());
+            case END_CARDPHASE:
+                triggerStartEffects(GameEventContainer.Type.END_CARDPHASE);
+                player.resetHand();
 
                 for (Card card : player.getParty()) {
                     card.getKeywords().remove(Keyword.EXHAUSTED);
@@ -133,17 +173,17 @@ public class GameEngine  implements Observer {
                 }
 
                 if (regenerateMonstersAndCheckDefeated()) {
-                    GameEvent.getInstance().send(GameEventContainer.Type.ENDTURN);
+                    GameEvent.getInstance().send(GameEventContainer.Type.END_TURN);
                 } else {
-                    GameEvent.getInstance().send(GameEventContainer.Type.STARTCARDPHASE);
+                    GameEvent.getInstance().send(GameEventContainer.Type.START_CARDPHASE);
                 }
 
                 return;
-            case ENDTURN: {
+            case END_TURN: {
                 Levels.getInstance()
                         .gainLevel(player);
                     GameEvent.getInstance()
-                            .send(GameEventContainer.Type.STARTTURN);
+                            .send(GameEventContainer.Type.START_TURN);
                 return;
             }
             case CHARACTERDEATH: {
@@ -206,7 +246,7 @@ public class GameEngine  implements Observer {
 
                 if (initiativeId >= initiativeOrder.size()) {
                     GameEvent.getInstance()
-                            .send(GameEventContainer.Type.ENDCARDPHASE);
+                            .send(GameEventContainer.Type.END_CARDPHASE);
                 }
 
                 return;
@@ -237,53 +277,16 @@ public class GameEngine  implements Observer {
         return monstersAlive == 0;
     }
 
-    private void startEncounter() {
-
-        // make sure every card in the party is owned by player and has PERMANENT keyword
-        for (Card card : player.getParty()) {
-            card.setOwner(player);
-            card.setVisible(true);
-            card.addKeyword(Keyword.PERMANENT);
-        }
-
-        // generate an encounter and assign it to player
-        player.setHazards(FXCollections.observableArrayList(EncounterGenerator.builder().addRandomEnvironment().addRandomEvent().getCards()));
-
-        // check if every card in hazards is visible and not owned by player
-        for (Card card : player.getHazards()) {
-            card.setVisible(true);
-            card.setOwner(null);
-        }
-
-        // build initiativeDeck
-        initiativeOrder = new ArrayList<>();
-        initiativeOrder.addAll(player.getParty());
-        initiativeOrder.addAll(player.getHazards());
-        Collections.shuffle(initiativeOrder);
-        setCurrentInitiative(0);
-
-        //trigger phase effects
-        triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
-
-
-        GameEvent.getInstance()
-                .send(GameEventContainer.Type.GUI_STARTENCOUNTER);
-        GameEvent.getInstance()
-                .send(GameEventContainer.Type.STARTCARDPHASE);
-
-    }
 
     private void startCardPhase() {
         setCurrentInitiative(0);
-
-        triggerEffects(GameEventContainer.Type.STARTCARDPHASE);
-
+        triggerStartEffects(GameEventContainer.Type.START_CARDPHASE);
         GameEvent.getInstance()
-                .send(GameEventContainer.Type.NEXTACTION);
+                .send(GameEventContainer.Type.NEXT_ACTION);
     }
 
 
-    public void triggerEffects(GameEventContainer.Type eventType) {
+    public void triggerStartEffects(GameEventContainer.Type eventType) {
         player.setSpawnCards(new UniqueCardList());
         for (Card card : player.getHazards()) {
             card.triggerStartEffects(eventType);
@@ -295,6 +298,17 @@ public class GameEngine  implements Observer {
             player.getHazards().addAll(player.getSpawnCards());
         }
     }
+
+    public void triggerEndEffects(GameEventContainer.Type eventType) {
+
+        for (Card card : player.getHazards()) {
+            card.triggerEndEffects(eventType);
+        }
+        for (Card card : player.getParty()) {
+            card.triggerEndEffects(eventType);
+        }
+    }
+
 
 
     public Card getCurrentCard() {

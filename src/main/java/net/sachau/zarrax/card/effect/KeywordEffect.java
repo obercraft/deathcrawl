@@ -29,13 +29,13 @@ public class KeywordEffect extends CardEffect {
     }
 
     @Override
-    public void trigger(Card targetCard) {
+    public void start(Card targetCard) {
         this.setSourceCard(targetCard);
         targetCard.getEffects().add(this);
     }
 
     @Override
-    public void remove(Card card) {
+    public void end(Card card) {
         card.getKeywords().remove(this);
     }
 

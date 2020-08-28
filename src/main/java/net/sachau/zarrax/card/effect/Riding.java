@@ -7,11 +7,11 @@ import net.sachau.zarrax.engine.Player;
 public class Riding extends CardEffect {
 
     public Riding() {
-        this.setEffectTiming(new EffectTiming(GameEventContainer.Type.STARTTURN, GameEventContainer.Type.ENDTURN));
+        this.setEffectTiming(new EffectTiming(GameEventContainer.Type.START_TURN, GameEventContainer.Type.END_TURN));
     }
 
     @Override
-    public void trigger(Card targetCard) {
+    public void start(Card targetCard) {
         Player p = (Player) targetCard.getOwner();
         if (p != null) {
             int m = p.getMoves() + 1;
@@ -20,7 +20,7 @@ public class Riding extends CardEffect {
     }
 
     @Override
-    public void remove(Card card) {
+    public void end(Card card) {
         Player p = (Player) card.getOwner();
         if (p != null) {
             int m = p.getMoves() - 1;

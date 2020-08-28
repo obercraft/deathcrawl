@@ -27,7 +27,7 @@ public class CardTest {
     Player player;
 
     @Before
-    public void init() {
+    public void init() throws Exception {
         player = new Player();
         GameEngine.getInstance().setPlayer(player);
         GameEngine.getInstance().setInitiativeOrder(new ArrayList<>());
@@ -64,12 +64,12 @@ public class CardTest {
 
         char1.getEffects().add(new CardEffect() {
             @Override
-            public void trigger(Card targetCard) {
+            public void start(Card targetCard) {
 
             }
 
             @Override
-            public void remove(Card card) {
+            public void end(Card card) {
 
             }
 
@@ -98,6 +98,8 @@ public class CardTest {
         draw.setOwner(player);
         draw.setCommand("draw 1");
         draw.addKeyword(Keyword.SIMPLE);
+        player.addCardToHand(draw);
+        player.discard(draw);
 
         // Draw
         CommandResult commandResult = Command.execute(draw, null);
@@ -165,11 +167,11 @@ public class CardTest {
 
         Card warrior = Catalog.copyOf("Warrior");
         // trigger events without warrior being in party
-        GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
+        GameEngine.getInstance().triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
         Assert.assertFalse(warrior.hasKeyword(Keyword.ARMOR));
         // trigger again with warrior being in party, this time warrior should have guard
         player.addToParty(warrior);
-        GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
+        GameEngine.getInstance().triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
         Assert.assertTrue(warrior.hasEffect(Guard.class));
 
 
@@ -215,7 +217,7 @@ public class CardTest {
         player.addToHazards(goblin);
         player.addToHazards(goblinWithGuard);
 
-        GameEngine.getInstance().triggerEffects(GameEventContainer.Type.STARTENCOUNTER);
+        GameEngine.getInstance().triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
 
         // warrior cannot attack guarded goblin
         warrior.reset();
@@ -363,6 +365,36 @@ public class CardTest {
 
 
 
+
+    }
+
+    @Test
+    public void drawTest() {
+
+        int numberOfCards = 10;
+        for (int i = 0; i < numberOfCards; i++) {
+            Card card = new Card() {
+            };
+            card.setName("card " +i);
+            player.addCardToDraw(card);
+        }
+        Assert.assertEquals(numberOfCards, player.getDraw().size());
+
+        player.initHand();
+        Assert.assertEquals(numberOfCards - (player.getMaxHandsize() + player.getDraw().getDiscards().size()), player.getDraw().size());
+        Assert.assertEquals(player.getMaxHandsize(), player.getHand().size());
+        Assert.assertEquals(0, player.getDraw().getDiscards().size());
+
+
+        player.draw();
+        Assert.assertEquals(numberOfCards - player.getHand().size(), player.getDraw().size());
+
+
+        player.discard(player.getHand().get(0));
+        player.discard(player.getHand().get(0));
+        Assert.assertEquals(numberOfCards - (player.getHand().size() + player.getDraw().getDiscards().size()), player.getDraw().size());
+        Assert.assertEquals(player.getMaxHandsize() - 1, player.getHand().size());
+        Assert.assertEquals(2, player.getDraw().getDiscards().size());
 
     }
 

@@ -17,7 +17,7 @@ public class GoblinSpawn extends CardEffect {
     }
 
     @Override
-    public void trigger(Card targetCard) {
+    public void start(Card targetCard) {
         Logger.debug("trigger Goblin Spawn");
         Player player = GameEngine.getInstance().getPlayer();
         if (player != null && player.getHazards() != null) {
@@ -33,6 +33,6 @@ public class GoblinSpawn extends CardEffect {
     }
 
     @Override
-    public void remove(Card card) {
+    public void end(Card card) {
     }
 }

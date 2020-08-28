@@ -10,18 +10,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEvent;
-import net.sachau.zarrax.gui.Fonts;
 import net.sachau.zarrax.gui.screens.GameScreen;
-
-import java.io.InputStream;
 
 public class Main extends Application {
 
@@ -68,7 +62,7 @@ public class Main extends Application {
             public void handle(KeyEvent ke) {
                 if (keyComb.match(ke)) {
                     Logger.debug("Key Pressed: " + GameEvent.getInstance().getStage() + ", l=" + GameEvent.getInstance().getLastStage());
-                    if (GameEventContainer.Type.WAITINGFORPLAYERACTION.equals(GameEvent.getInstance().getType())) {
+                    if (GameEventContainer.Type.WAITING_FOR_PLAYER_ACTION.equals(GameEvent.getInstance().getType())) {
                         Logger.debug("Key Pressed: " + keyComb);
                         GameEvent.getInstance().send(GameEventContainer.Type.PLAYERACTIONDONE);
                     }

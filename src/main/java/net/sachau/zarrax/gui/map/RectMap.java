@@ -9,6 +9,7 @@ import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.images.Tile;
 import net.sachau.zarrax.gui.images.TileSet;
+import net.sachau.zarrax.map.LandType;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -46,30 +47,30 @@ public class RectMap extends AnchorPane implements Observer {
         for (int x = 0; x < tilesPerRow; x++) {
             for (int y = 0; y < rowCount; y++) {
 
-                MapCoord.Type type = MapCoord.Type.VALLEY;
+                LandType landType = LandType.VALLEY;
                 float  value = noiseMap[x][y];
 
                 if (value < -0.3f) {
                     System.out.println(value);
-                    type = MapCoord.Type.WATER;
+                    landType = LandType.WATER;
                 }
 
                 if (value > 0.5f) {
-                    type = MapCoord.Type.WOODS;
+                    landType = LandType.WOODS;
 
                 }
                 if (value > 0.6f) {
-                    type = MapCoord.Type.HILL;
+                    landType = LandType.HILL;
                 }
 
                 if (value > 0.7f) {
-                    type = MapCoord.Type.MOUNTAINS;
+                    landType = LandType.MOUNTAINS;
                 }
 
                 double xCoord = x * TILE_WIDTH;
                 double yCoord = y * TILE_HEIGHT;
 
-                MapTile tile = new MapTile(player, new MapCoord(x, y, xCoord, yCoord, type));
+                MapTile tile = new MapTile(player, new MapCoord(x, y, xCoord, yCoord, landType));
                 getChildren().add(tile);
                 tilesSet.add(tile);
             }

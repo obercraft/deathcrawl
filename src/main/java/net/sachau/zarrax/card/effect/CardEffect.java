@@ -2,11 +2,8 @@ package net.sachau.zarrax.card.effect;
 
 
 import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.gui.images.Tile;
-
-import java.util.Objects;
 
 public abstract class CardEffect {
 
@@ -28,12 +25,12 @@ public abstract class CardEffect {
 			ticks --;
 			return false;
 		}
-		remove(card);
+		end(card);
 		return true;
 	}
 
-	abstract public void trigger(Card targetCard);
-	abstract public void remove(Card card);
+	abstract public void start(Card targetCard);
+	abstract public void end(Card card);
 
 	public Tile getTile() {
 		return tile;

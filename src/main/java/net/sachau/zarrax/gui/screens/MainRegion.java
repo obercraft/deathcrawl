@@ -49,14 +49,14 @@ public class MainRegion extends VBox implements Observer {
             case PARTYDONE:
                 getChildren().remove(partySelection);
                 return;
-            case STARTTURN:
+            case START_TURN:
                 getChildren().remove(0, getChildren().size());
                 if (rectMap == null) {
                     rectMap = new RectMap(player);
                 }
                 getChildren().add(rectMap);
                 return;
-            case GUI_STARTENCOUNTER:
+            case START_ENCOUNTER:
                 if (cardBoard == null) {
                     cardBoard = new CardBoard(player);
                 }

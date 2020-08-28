@@ -2,6 +2,8 @@ package net.sachau.zarrax.gui.map;
 
 import javafx.scene.paint.Color;
 import net.sachau.zarrax.gui.images.Tile;
+import net.sachau.zarrax.map.LandType;
+import net.sachau.zarrax.map.Site;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -59,13 +61,16 @@ public class MapCoord implements Serializable {
   private int column, row;
   private double x, y;
   private Type type;
+  private LandType landType;
+  private Site site;
 
-  public MapCoord(int column, int row, double x, double y, Type type) {
+  public MapCoord(int column, int row, double x, double y, LandType landType) {
     this.x = x;
     this.y = y;
     this.column = column;
     this.row = row;
-    this.type = type;
+    this.type = Type.valueOf(landType.name());
+    this.landType = landType;
   }
 
   public double getX() {
@@ -106,6 +111,22 @@ public class MapCoord implements Serializable {
 
   public void setRow(int row) {
     this.row = row;
+  }
+
+  public LandType getLandType() {
+    return landType;
+  }
+
+  public void setLandType(LandType landType) {
+    this.landType = landType;
+  }
+
+  public Site getSite() {
+    return site;
+  }
+
+  public void setSite(Site site) {
+    this.site = site;
   }
 
   @Override

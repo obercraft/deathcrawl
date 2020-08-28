@@ -14,18 +14,18 @@ import java.util.List;
 
 public class Command {
 
-    public static CommandType getType(String command) {
-        if (StringUtils.isNotEmpty(command)) {
-            List<String> args = getArguments(command);
-            if (args.size() > 0) {
-                Commands c = Commands.valueOf(args.get(0));
-                if (c != null) {
-                    return c.getStatus().getType();
-                }
-            }
-        }
-        return CommandType.ACTION;
-    }
+//    public static CommandType getType(String command) {
+//        if (StringUtils.isNotEmpty(command)) {
+//            List<String> args = getArguments(command);
+//            if (args.size() > 0) {
+//                Commands c = Commands.valueOf(args.get(0));
+//                if (c != null) {
+//                    return c.getStatus().getType();
+//                }
+//            }
+//        }
+//        return CommandType.ACTION;
+//    }
 
     public static List<String> getArguments(String command) {
         List<String> args = new LinkedList<>();

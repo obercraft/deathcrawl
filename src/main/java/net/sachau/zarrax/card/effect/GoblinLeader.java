@@ -14,7 +14,7 @@ public class GoblinLeader extends CardEffect {
     }
 
     @Override
-    public void trigger(Card targetCard) {
+    public void start(Card targetCard) {
         Logger.debug("trigger Goblin Leader");
         Player player = GameEngine.getInstance().getPlayer();
         if (player != null && player.getHazards() != null) {
@@ -32,7 +32,7 @@ public class GoblinLeader extends CardEffect {
     }
 
     @Override
-    public void remove(Card card) {
+    public void end(Card card) {
         if (card != null && card instanceof Monster) {
             card.setDamage(card.getDamage() - 1);
         }

@@ -12,13 +12,11 @@ import net.sachau.zarrax.card.Deck;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.card.CardSelect;
 import net.sachau.zarrax.gui.card.CardTile;
+import net.sachau.zarrax.util.DiceUtils;
 
 import java.util.*;
 
 public class PartySelection extends VBox implements Observer {
-
-
-    public final static int PARTY_SIZE = 4;
 
     private Player player;
 
@@ -81,12 +79,10 @@ public class PartySelection extends VBox implements Observer {
     public void update(Observable o, Object arg) {
         switch (GameEvent.getType(arg)) {
             case RANDOMPARTY:
-                for (int i = 0; i < PARTY_SIZE; i++) {
-                    availableCharacters.drawRandom(player.getParty());
-                }
-
+                player.getParty().clear();
+                DiceUtils.createRandomParty(player);
                 GameEvent.getInstance().send(GameEventContainer.Type.PARTYDONE);
-                GameEvent.getInstance().send(GameEventContainer.Type.STARTTURN);
+                GameEvent.getInstance().send(GameEventContainer.Type.START_TURN);
                 return;
             default:
                 return;

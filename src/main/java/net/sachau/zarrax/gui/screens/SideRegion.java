@@ -69,7 +69,7 @@ public class SideRegion extends VBox implements Observer {
         });
 
         encounter.setOnMouseClicked(event -> {
-            GameEvent.getInstance().send(GameEventContainer.Type.STARTENCOUNTER);
+            GameEvent.getInstance().send(GameEventContainer.Type.START_ENCOUNTER);
         });
 
         actionDone.setOnMouseClicked(event -> {
@@ -96,16 +96,16 @@ public class SideRegion extends VBox implements Observer {
                 buttons.getChildren().remove(newGame);
                 buttons.getChildren().addAll(partyClear, partyDone, randomParty);
                 return;
-            case STARTTURN:
+            case START_TURN:
                 buttons.getChildren().remove(0, buttons.getChildren().size());
                 buttons.getChildren().add(encounter);
                 return;
 
-            case STARTENCOUNTER:
+            case START_ENCOUNTER:
                 buttons.getChildren().remove(0, buttons.getChildren().size());
                 return;
-            case NEXTACTION:
-            case STARTCARDPHASE:
+            case NEXT_ACTION:
+            case START_CARDPHASE:
                 buttons.getChildren().remove(0, buttons.getChildren().size());
                 buttons.getChildren().add(actionDone);
                 return;
