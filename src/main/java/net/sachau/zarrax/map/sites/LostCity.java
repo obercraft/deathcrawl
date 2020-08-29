@@ -1,11 +1,15 @@
 package net.sachau.zarrax.map.sites;
 
-import net.sachau.zarrax.map.LandTypeList;
+import net.sachau.zarrax.map.LandList;
 import net.sachau.zarrax.map.Site;
+import net.sachau.zarrax.map.Warning;
 
-public class LostCity implements Site {
+import java.util.Set;
+
+public class LostCity extends Site {
+
     @Override
-    public LandTypeList getPossibleLandTypes() {
-        return LandTypeList.build().addAll().create();
+    public LandList getPossibleLandTypes() {
+        return LandList.build().addAll().create();
     }
 }

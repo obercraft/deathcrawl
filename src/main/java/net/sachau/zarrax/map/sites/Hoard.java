@@ -1,13 +1,17 @@
 package net.sachau.zarrax.map.sites;
 
-import net.sachau.zarrax.map.LandType;
-import net.sachau.zarrax.map.LandTypeList;
+import net.sachau.zarrax.map.LandList;
 import net.sachau.zarrax.map.Site;
+import net.sachau.zarrax.map.Warning;
+import net.sachau.zarrax.map.lands.Hill;
+import net.sachau.zarrax.map.lands.Mountain;
 
-public class Hoard implements Site {
+import java.util.Set;
+
+public class Hoard extends Site {
 
     @Override
-    public LandTypeList getPossibleLandTypes() {
-        return LandTypeList.build().addType(LandType.MOUNTAINS).addType(LandType.HILL).create();
+    public LandList getPossibleLandTypes() {
+        return LandList.build().addType(Mountain.class).addType(Hill.class).create();
     }
 }

@@ -1,4 +1,4 @@
-package net.sachau.zarrax.engine;
+package net.sachau.zarrax.encounter;
 
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;

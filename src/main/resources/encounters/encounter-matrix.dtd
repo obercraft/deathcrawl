@@ -1,5 +1,7 @@
 <?xml encoding="UTF-8"?>
 
+        <!ELEMENT encounter-matrix (encounters)+>
+
         <!ELEMENT encounters (site|land)+>
 
         <!ELEMENT site (encounter)+>

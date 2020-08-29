@@ -13,7 +13,7 @@ import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.gui.map.MapCoord;
-import net.sachau.zarrax.map.LandType;
+import net.sachau.zarrax.map.Land;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -254,26 +254,14 @@ public class Player extends Creature {
 		}
 	}
 
-	public CommandResult move(LandType targetLand) {
+	public CommandResult move(Land targetLand) {
 		int moves = getMoves();
-		switch (targetLand) {
-			default:
-			case VALLEY:
-				if (moves < 1) {
-					return CommandResult.notAllowed("not enough moves");
-				}
-				setMoves(moves -1);
-				return CommandResult.successful();
 
-			case HILL:
-			case WATER:
-			case MOUNTAINS:
-			case WOODS:
-				if (moves < 2) {
-					return CommandResult.notAllowed("not enough moves");
-				}
-				setMoves(moves -2);
-				return CommandResult.successful();
+		if (moves - targetLand.getMoveCost() < 0) {
+			return CommandResult.notAllowed("not enough moves");
+		} else {
+			setMoves(moves - targetLand.getMoveCost());
+			return CommandResult.successful();
 		}
 	}
 }

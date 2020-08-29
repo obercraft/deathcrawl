@@ -10,7 +10,7 @@ import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.images.Tile;
 import net.sachau.zarrax.gui.images.TileSet;
-import net.sachau.zarrax.map.LandType;
+import net.sachau.zarrax.map.lands.Valley;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -48,7 +48,7 @@ public class HexMap extends AnchorPane implements Observer {
                 double yCoord = y * TILE_HEIGHT * 0.75 + yStartOffset;
 
                 Logger.info(xCoord + ", " + yCoord);
-                MapTile tile = new MapTile(player, new MapCoord(x, y, xCoord, yCoord, LandType.VALLEY));
+                MapTile tile = new MapTile(player, new MapCoord(x, y, xCoord, yCoord, new Valley()));
                 getChildren().add(tile);
                 tilesSet.add(tile);
             }

@@ -10,6 +10,7 @@ import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.encounter.EncounterGenerator;
 
 import java.util.*;
 

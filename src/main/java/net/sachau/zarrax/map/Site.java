@@ -1,8 +1,8 @@
 package net.sachau.zarrax.map;
 
-import java.util.List;
+public abstract class Site extends Encounters {
 
-public interface Site {
+    public abstract  LandList getPossibleLandTypes();
 
-    LandTypeList getPossibleLandTypes();
+
 }
