@@ -55,7 +55,7 @@
         <starting-cards>Knife,short sword,Knife</starting-cards>
         <keywords>fighter</keywords>
         <effects>
-            <effect start="STARTENCOUNTER" end="ENDENCOUNTER">Guard</effect>
+            <effect start="START_ENCOUNTER" end="END_ENCOUNTER">Guard</effect>
         </effects>
         <flavor>A Fighter!</flavor>
     </card>

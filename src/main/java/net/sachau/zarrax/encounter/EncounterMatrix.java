@@ -122,9 +122,13 @@ public class EncounterMatrix {
     }
 
     public void addSiteEncounter(String siteName, String encounterString) {
-
-
-
+        Site site = siteMapping.get(siteName.trim().toLowerCase());
+        if (site != null) {
+            site.addEncounters(encounterString);
+        } else {
+            Logger.debug("site " + siteName + " not found");
+        }
+        sites.add(site);
     }
 
     public Set<Site> getSites() {
@@ -205,7 +209,7 @@ public class EncounterMatrix {
             if (node.getNodeName().equalsIgnoreCase("land")) {
                 encounterMatrix.addLand(name, warning, encounterNode.getTextContent());
             } else if (node.getNodeName().equalsIgnoreCase("site")) {
-                // encounterMatrix.addSiteEncounter(name, warning, encounterNode.getTextContent());
+                encounterMatrix.addSiteEncounter(name, encounterNode.getTextContent());
             }
 
         }

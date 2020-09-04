@@ -30,7 +30,7 @@ public class Catalog {
     private static Catalog catalog;
 
     private Catalog() {
-        ObservableMap<Long,Card> observableMap = FXCollections.observableHashMap();
+        ObservableMap<Long, Card> observableMap = FXCollections.observableHashMap();
         idCache = new SimpleMapProperty<>(observableMap);
     }
 
@@ -119,7 +119,6 @@ public class Catalog {
 //        }
 
 
-
     }
 
     public static Catalog getInstance() {
@@ -161,6 +160,12 @@ public class Catalog {
                 .replaceAll(" ", ""));
     }
 
+    public Card getCopy(String cardName) {
+        Card card = get(cardName);
+        return card != null ? CardUtils.copyCard(card) : null;
+
+    }
+
     public static Card getById(long id) {
         return getInstance().getIdCache().get(id);
     }
@@ -181,6 +186,7 @@ public class Catalog {
     public static void putText(String name, TextFlow textFlow) {
         getInstance().texts.put(name, textFlow);
     }
+
     public static TextFlow getText(String name) {
         return getInstance().texts.get(name);
     }

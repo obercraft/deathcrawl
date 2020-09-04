@@ -8,7 +8,7 @@ import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.CardBoard;
 import net.sachau.zarrax.gui.PartySelection;
-import net.sachau.zarrax.gui.map.RectMap;
+import net.sachau.zarrax.map.World;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -18,7 +18,7 @@ public class MainRegion extends VBox implements Observer {
     private PartySelection partySelection;
     private Player player;
     private CardBoard cardBoard;
-    private RectMap rectMap;
+    private World world;
 
     public MainRegion(double gameWidth, double gameHeight, Player player) {
         super();
@@ -51,10 +51,12 @@ public class MainRegion extends VBox implements Observer {
                 return;
             case START_TURN:
                 getChildren().remove(0, getChildren().size());
-                if (rectMap == null) {
-                    rectMap = new RectMap(player);
+                // TODO msachau MAP!
+                /*if (world == null) {
+                    world = new World(player);
                 }
-                getChildren().add(rectMap);
+                getChildren().add(world);
+                */
                 return;
             case START_ENCOUNTER:
                 if (cardBoard == null) {

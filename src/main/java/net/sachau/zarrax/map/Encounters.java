@@ -4,6 +4,7 @@ import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.type.Encounter;
+import net.sachau.zarrax.util.CardUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Encounters {
         for (String encounterArg : encounterArgs) {
             Card card = Catalog.getInstance().get(encounterArg.trim());
             if (card != null) {
-                addEncounter(card);
+                addEncounter(CardUtils.copyCard(card));
             } else {
                 Logger.debug("Encounter " +encounterArg + " not found");
             }

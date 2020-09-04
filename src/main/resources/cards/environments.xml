@@ -17,7 +17,7 @@
         <type>Environment</type>
         <threat>10</threat>
         <effects>
-            <effect start="ENDCARDPHASE">GoblinSpawn</effect>
+            <effect start="END_CARDPHASE">GoblinSpawn</effect>
         </effects>
     </card>
 

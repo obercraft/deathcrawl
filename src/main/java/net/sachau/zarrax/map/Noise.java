@@ -1,4 +1,4 @@
-package net.sachau.zarrax.gui.map;
+package net.sachau.zarrax.map;
 
 import java.util.Random;
 

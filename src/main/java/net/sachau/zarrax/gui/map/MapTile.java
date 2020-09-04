@@ -10,11 +10,13 @@ import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.images.TileSet;
+import net.sachau.zarrax.map.World;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MapTile extends AnchorPane {
+
 
 
     private MapCoord mapCoord;
@@ -28,15 +30,15 @@ public class MapTile extends AnchorPane {
 
         this.mapCoord = mapCoord;
 
-        this.setWidth(RectMap.TILE_WIDTH);
-        this.setHeight(RectMap.TILE_HEIGHT);
+        this.setWidth(32);
+        this.setHeight(32);
 
 
         if (mapCoord.getType().getTile() != null) {
             this.getChildren().add(TileSet.getInstance().getTile(mapCoord.getType().getTile()));
         } else {
             // set up the visuals and a click listener for the tile
-            Rectangle rectangle = new Rectangle(RectMap.TILE_WIDTH,RectMap.TILE_HEIGHT);
+            Rectangle rectangle = new Rectangle(32,32);
             rectangle.setFill(mapCoord.getType()
                     .getColor());
             rectangle.setStrokeWidth(1);
@@ -47,21 +49,24 @@ public class MapTile extends AnchorPane {
         this.relocate(mapCoord.getX(),mapCoord.getY());
 
 
+        /*
         setOnDragOver(event -> {
             if (event.getDragboard()
-                    .hasContent(RectMap.mapFormat)) {
+                    .hasContent(mapFormat)) {
                 event.acceptTransferModes(TransferMode.ANY);
             }
             event.consume();
 
         });
 
+
+
         setOnDragDetected(event -> {
             if (player.getMapCoord()
                     .equals(mapCoord)) {
                 Dragboard db = this.startDragAndDrop(TransferMode.ANY);
                 Map<DataFormat, Object> map = new HashMap<>();
-                map.put(RectMap.mapFormat, getMapCoord());
+                map.put(World.mapFormat, getMapCoord());
                 db.setContent(map);
             }
             event.consume();
@@ -72,7 +77,7 @@ public class MapTile extends AnchorPane {
         setOnDragDropped(event -> {
 
             MapCoord sourceCoord = (MapCoord) event.getDragboard()
-                    .getContent(RectMap.mapFormat);
+                    .getContent(World.mapFormat);
 
 
             if (player.getMoves() > 0 && Math.abs(sourceCoord.getColumn() - mapCoord.getColumn()) <= 1 && Math.abs(sourceCoord.getRow() - mapCoord.getRow()) <= 1) {
@@ -84,7 +89,11 @@ public class MapTile extends AnchorPane {
             }
 
             event.consume();
+
+
         });
+        
+         */
     }
 
     public MapCoord getMapCoord() {

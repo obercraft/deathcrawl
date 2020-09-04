@@ -3,6 +3,7 @@ package net.sachau.zarrax.map;
 import net.sachau.zarrax.card.Card;
 import org.reflections.Reflections;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,22 @@ public class LandList extends HashSet<Land> {
 
     public LandList addAll() {
         return addType("*");
+    }
+
+    public LandList allExcept(Class<? extends Land> ... exceptedLands) {
+        LandList allLands = addAll();
+        LandList cleanedLandList = new LandList();
+        Set<Class<? extends Land>> exceptions = new HashSet<>();
+        for (Class landClass : exceptedLands) {
+            exceptions.add(landClass);
+        }
+
+        for (Land land : allLands) {
+            if (!exceptions.contains(land.getClass())) {
+                cleanedLandList.add(land);
+            }
+        }
+        return cleanedLandList;
     }
 
     public LandList addType (Class<? extends Land> landClass) {

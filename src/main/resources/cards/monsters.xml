@@ -46,7 +46,7 @@
         <gold>2</gold>
         <command>attack</command>
         <effects>
-            <effect start="STARTENCOUNTER">GoblinLeader</effect>
+            <effect start="START_ENCOUNTER">GoblinLeader</effect>
         </effects>
         <flavor>A Goblin Leader!</flavor>
     </card>
@@ -61,6 +61,29 @@
         <command>attack</command>
         <flavor>A Troll!</flavor>
     </card>
+
+    <card>
+        <name>Wolf</name>
+        <type>Monster</type>
+        <hits>3</hits>
+        <damage>1</damage>
+        <experience>2</experience>
+        <gold>1</gold>
+        <command>attack</command>
+        <flavor>A Wolf!</flavor>
+    </card>
+
+    <card>
+        <name>Demon</name>
+        <type>Monster</type>
+        <hits>3</hits>
+        <damage>1</damage>
+        <experience>2</experience>
+        <gold>1</gold>
+        <command>attack</command>
+        <flavor>A Demon!</flavor>
+    </card>
+
 
 
 </cards>
