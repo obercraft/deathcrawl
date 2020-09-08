@@ -1,0 +1,31 @@
+<?xml encoding="UTF-8"?>
+
+        <!ELEMENT world (terrains|sites)*>
+
+        <!ELEMENT terrains (terrain)*>
+
+        <!ELEMENT sites (site)*>
+
+        <!ELEMENT site (encounter)*>
+        <!ATTLIST site
+                  name  CDATA "">
+        <!ATTLIST site
+                terrain CDATA "">
+
+        <!ELEMENT terrain (encounter)*>
+        <!ATTLIST terrain
+                  name  CDATA "">
+        <!ATTLIST terrain
+                left  CDATA "">
+        <!ATTLIST terrain
+                right  CDATA "">
+
+        <!ATTLIST terrain
+                move  CDATA "">
+
+
+        <!ELEMENT encounter (#PCDATA)>
+        <!ATTLIST encounter
+                warning  CDATA "">
+
+

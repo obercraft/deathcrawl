@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-
 public class EncounterMatrixTest {
 
     Player player;
@@ -30,20 +28,9 @@ public class EncounterMatrixTest {
 
 
     @Test
-    public void addSiteEncounter() throws Exception {
-
-
-        Set<Site> sites = EncounterMatrix.getInstance().getSites();
-        Set<Land> lands = EncounterMatrix.getInstance().getLands();
-        sites.size();
-
-    }
-
-    @Test
     public void testWorld() {
         World world = new World();
-        Map<Class<? extends Land>, List<Land>> map = world.getMap();
-        map.size();
+
         System.out.println(world.toString());
 
     }

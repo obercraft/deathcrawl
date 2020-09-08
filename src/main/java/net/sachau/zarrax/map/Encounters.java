@@ -34,4 +34,9 @@ public class Encounters {
     private void addEncounter(Card encounter) {
         encounters.add(encounter);
     }
+
+    @Override
+    public String toString() {
+        return "Encounters{" + encounters + '}';
+    }
 }

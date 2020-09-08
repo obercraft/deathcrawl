@@ -1,0 +1,29 @@
+<!-- HOWL, FLUTTER, ROAR, PATTER, SLITHER -->
+<!-- SMOKE                   RUINS                      DANK                    BONES -->
+<!-- LOST CITY STATUE ALTAR VAULT POOL LOST CASTLE HOARD LAIR CAIRNS SHRINE -->
+
+<!DOCTYPE world SYSTEM "world.dtd">
+<world>
+    <terrains>
+        <terrain name="Water" left="-2.0" right="-0.8" move="4"></terrain>
+        <terrain name="Desert" left="-8.0" right="-0.6" move="4"></terrain>
+        <terrain name="Caves" left="-0.6" right="-0.5" move="2"></terrain>
+        <terrain name="Valley" left="-0.5" right="0.3" move="1">
+            <encounter warning="howl">Wolf</encounter>
+            <encounter warning="flutter">Wolf</encounter>
+            <encounter warning="stink">Wolf</encounter>
+            <encounter warning="dank">Wolf</encounter>
+        </terrain>
+        <terrain name="Woods" left="0.3" right="0.5" move="2"></terrain>
+        <terrain name="Hill" left="0.5" right="0.7" ></terrain>
+        <terrain name="Mountain" left="0.7" right="2.0"></terrain>
+    </terrains>
+    <sites>
+        <site name="altar" terrain="valley, hill">
+            <encounter warning="*">demon</encounter>
+        </site>
+    </sites>
+
+</world>
+
+

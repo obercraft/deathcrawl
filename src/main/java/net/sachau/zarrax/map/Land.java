@@ -5,13 +5,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class Land  {
+public class Land {
 
     private Map<Warning, Encounters> encounters = new HashMap<>();
     private Set<Site> sites = new HashSet<>();
-    private int column;
-    private int row;
+    private Terrain terrain;
 
+    public Land() {
+    }
 
     public Map<Warning, Encounters> getEncounters() {
         return encounters;
@@ -21,29 +22,23 @@ public abstract class Land  {
         this.encounters = encounters;
     }
 
-    public abstract int getMoveCost();
-
-    public int getColumn() {
-        return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
     public Set<Site> getSites() {
         return sites;
     }
 
     public void setSites(Set<Site> sites) {
         this.sites = sites;
+    }
+
+    public Terrain getTerrain() {
+        return terrain;
+    }
+
+    public void setTerrain(Terrain terrain) {
+        this.terrain = terrain;
+    }
+
+    public int getMoveCost() {
+        return this.terrain.getMoveCost();
     }
 }

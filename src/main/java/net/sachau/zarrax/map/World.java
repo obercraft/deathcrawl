@@ -1,8 +1,7 @@
 package net.sachau.zarrax.map;
 
 import net.sachau.zarrax.Logger;
-import net.sachau.zarrax.encounter.EncounterMatrix;
-import net.sachau.zarrax.map.lands.*;
+import net.sachau.zarrax.encounter.EncounterMatrixGenerator;
 import net.sachau.zarrax.util.DiceUtils;
 
 import java.util.*;
@@ -12,7 +11,9 @@ public class World {
     private int rows; // how many rows of tiles should be created
     private int columns; // the amount of tiles that are contained in each row
 
-    private Map<Class<? extends Land>, List<Land>> map = new HashMap<>();
+    private Land [][] map;
+
+    private Map<Terrain, List<Land>> terrainMapping = new HashMap<>();
 
     public World() {
         init(20, 20);
@@ -23,53 +24,47 @@ public class World {
     }
 
     private void init(int columns, int rows) {
+        EncounterMatrixGenerator.getInstance();
         this.rows = rows;
         this.columns = columns;
+
+        this.map = new Land[columns][rows];
 
         Noise noise = new Noise(null, 1, columns, rows);
         noise.initialise();
         float[][] noiseMap = noise.getGrid();
 
+
+
         for (int x = 0; x < columns; x++) {
             for (int y = 0; y < rows; y++) {
 
-                Land land = new Valley();
+                Land land = new Land();
+                land.setTerrain(Terrain.VALLEY);
                 float value = noiseMap[x][y];
-
-                if (value < -0.3f) {
-                    System.out.println(value);
-                    land = new Water();
+                for (Terrain t : Terrain.values()) {
+                    if (value >= t.getLeft() && value <= t.getRight() ) {
+                        land.setTerrain(t);
+                    }
                 }
 
-                if (value > 0.5f) {
-                    land = new Woods();
-
+                map[x][y] = land;
+                if (terrainMapping.get(land.getTerrain()) == null) {
+                    terrainMapping.put(land.getTerrain(), new LinkedList<>());
                 }
-                if (value > 0.6f) {
-                    land = new Hill();
-                }
-
-                if (value > 0.7f) {
-                    land = new Mountain();
-                }
-
-                land.setColumn(x);
-                land.setRow(y);
-
-                if (map.get(land.getClass()) == null) {
-                    map.put(land.getClass(), new ArrayList<>());
-                }
-                map.get(land.getClass()).add(land);
+                terrainMapping.get(land.getTerrain()).add(land);
             }
 
 
         }
-        Set<Site> sites = EncounterMatrix.getInstance().getSites();
-        for (Site site : sites) {
+        for (Site site : Site.values()) {
             boolean landFound = false;
-            LandList landTypes = site.getPossibleLandTypes();
-            for (Land landType : landTypes) {
-                Land land = getRandomLandForType(landType);
+            TerrainList landTypes = site.getPossibleTerrains();
+            if (landTypes == null) {
+                continue;
+            }
+            for (Terrain terrain : landTypes) {
+                Land land = getRandomLandForTerrain(terrain);
                 if (land != null) {
                     land.getSites().add(site);
                     landFound = true;
@@ -81,63 +76,33 @@ public class World {
                 Logger.error(msg);
                 throw new RuntimeException(msg);
             }
+
         }
+
+        return;
     }
 
-    private Land getRandomLandForType(Land landType) {
-        List<Land> lands = getMap().get(landType.getClass());
+    private Land getRandomLandForTerrain(Terrain terrain) {
+        List<Land> lands = terrainMapping.get(terrain);
         return lands.get(DiceUtils.get(lands.size()));
     }
 
-    public Map<Class<? extends Land>, List<Land>> getMap() {
-        return map;
-    }
 
     @Override
     public String toString() {
-        String [][]m = new String[this.rows][this.columns];
-        for (Map.Entry<Class<? extends Land>, List<Land>>  entry : map.entrySet()) {
-            for (Land l : entry.getValue()) {
-                if (l.getSites().size() > 0) {
-                    m[l.getRow()][l.getColumn()] = getSiteChar(l.getSites());
-                } else {
-                    m[l.getRow()][l.getColumn()] = getLandChar(entry.getKey());
-                }
-            }
-        }
         StringBuilder sb = new StringBuilder();
-        for (int r = 0 ; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
 
-                sb.append(m[r][c]);
+        for (int x = 0; x < columns; x++) {
+            for (int y = 0; y < rows; y++) {
+                if (map[x][y].getSites().size() > 0) {
+                    sb.append("!");
+                } else {
+                    sb.append(map[x][y].getTerrain().name().substring(0, 1));
+                }
             }
             sb.append("\n");
         }
         return sb.toString();
     }
 
-    private String getSiteChar(Set<Site> sites) {
-        return sites.toArray()[0].getClass().getSimpleName().substring(0,1);
-    }
-
-    private String getLandChar(Class<? extends Land> key) {
-        if (key == Water.class) {
-            return "=";
-        }
-        if (key == Mountain.class) {
-            return "^";
-        }
-        if (key == Valley.class) {
-            return ".";
-        }
-        if (key == Woods.class) {
-            return "&";
-        }
-        if (key == Hill.class) {
-            return "#";
-        }
-
-
-        return key.getSimpleName().substring(0,1);
-    }
 }
