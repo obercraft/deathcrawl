@@ -11,8 +11,8 @@ import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.gui.text.CardText;
 import net.sachau.zarrax.gui.Symbol;
-import net.sachau.zarrax.gui.images.Tile;
-import net.sachau.zarrax.gui.images.TileSet;
+import net.sachau.zarrax.gui.image.Tile;
+import net.sachau.zarrax.gui.image.TileSet;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Observer;

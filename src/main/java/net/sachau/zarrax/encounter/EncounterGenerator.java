@@ -7,7 +7,6 @@ import net.sachau.zarrax.card.UniqueCardList;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.type.Encounter;
 import net.sachau.zarrax.card.type.Environment;
-import net.sachau.zarrax.gui.map.MapCoord;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.util.DiceUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -19,6 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class EncounterGenerator {
 
     private static final Pattern countMatcher = Pattern.compile("^\\[(\\d+)-(\\d+)\\](.+)$");
@@ -49,7 +49,7 @@ public class EncounterGenerator {
         return this.hazards;
     }
 
-    public EncounterGenerator addRandomEnvironment(MapCoord mapCoord) {
+    public EncounterGenerator addRandomEnvironment() {
         /*
         if (DiceUtils.percentage(50)) {
             return this;
@@ -59,7 +59,7 @@ public class EncounterGenerator {
         return this;
     }
 
-    public EncounterGenerator addRandomEvent(MapCoord mapCoord) {
+    public EncounterGenerator addRandomEvent() {
         Encounter encounter = (Encounter) CardUtils.copyCard(DiceUtils.getRandomCard(eventCards));
         this.hazards.addAll(createEncounterCards(encounter.getCardString()));
         return this;

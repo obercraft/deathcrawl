@@ -1,6 +1,6 @@
 package net.sachau.zarrax.card.keyword;
 
-import net.sachau.zarrax.gui.images.Tile;
+import net.sachau.zarrax.gui.image.Tile;
 
 public enum Keyword {
 

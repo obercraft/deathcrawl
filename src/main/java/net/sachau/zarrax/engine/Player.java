@@ -12,7 +12,6 @@ import net.sachau.zarrax.card.UniqueCardList;
 import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Character;
-import net.sachau.zarrax.gui.map.MapCoord;
 import net.sachau.zarrax.map.Land;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,10 +34,11 @@ public class Player extends Creature {
 	private SimpleListProperty<Card> hazards;
 
 	private Turn turn;
+	private VictoryCondition victoryCondition = new VictoryCondition();
 
 	private SimpleIntegerProperty moves = new SimpleIntegerProperty(MOVES);
 
-	private MapCoord mapCoord;
+	private int x,y;
 
 	private UniqueCardList spawnCards;
 
@@ -95,14 +95,6 @@ public class Player extends Creature {
 
 			}
 		}
-	}
-
-	public MapCoord getMapCoord() {
-		return mapCoord;
-	}
-
-	public void setMapCoord(MapCoord mapCoord) {
-		this.mapCoord = mapCoord;
 	}
 
 	public Card draw() {
@@ -240,7 +232,7 @@ public class Player extends Creature {
 	}
 
 
-	public CommandResult longRest(MapCoord mapCoord) {
+	public CommandResult longRest() {
 		int moves = getMoves();
 		if (moves < 4) {
 			return CommandResult.notAllowed("not enough moves");
@@ -254,14 +246,52 @@ public class Player extends Creature {
 		}
 	}
 
-	public CommandResult move(Land targetLand) {
+	public CommandResult move(Land targetLand, int x, int y) {
 		int moves = getMoves();
 
 		if (moves - targetLand.getMoveCost() < 0) {
 			return CommandResult.notAllowed("not enough moves");
 		} else {
 			setMoves(moves - targetLand.getMoveCost());
+			setX(x);
+			setY(y);
 			return CommandResult.successful();
 		}
+	}
+
+	public VictoryCondition getVictoryCondition() {
+		return victoryCondition;
+	}
+
+	public void setVictoryCondition(VictoryCondition victoryCondition) {
+		this.victoryCondition = victoryCondition;
+	}
+
+	public VictoryCondition getActualScore() {
+		// TODO msachau
+		VictoryCondition actualScore = new VictoryCondition();
+
+		return actualScore;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void relocate(int x, int y) {
+		this.setX(x);
+		this.setY(y);
 	}
 }

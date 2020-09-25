@@ -15,7 +15,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEvent;
-import net.sachau.zarrax.gui.screens.GameScreen;
+import net.sachau.zarrax.gui.screen.GameScreen;
 
 public class Main extends Application {
 
@@ -36,7 +36,7 @@ public class Main extends Application {
 
         ProgressBar progressBar = new ProgressBar();
         Text pleaseWait = new Text("loading Zarrax");
-        gameScreen.getMainRegion().getChildren().addAll(pleaseWait, progressBar);
+        gameScreen.getChildren().addAll(pleaseWait, progressBar);
 
         // Unbind progress property
         progressBar.progressProperty().unbind();

@@ -1,11 +1,8 @@
 package net.sachau.zarrax.gui.card;
 
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.engine.GameEvent;
-import net.sachau.zarrax.gui.images.Tile;
-import net.sachau.zarrax.gui.images.TileSet;
 
 import java.util.Observer;
 

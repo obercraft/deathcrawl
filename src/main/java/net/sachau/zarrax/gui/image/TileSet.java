@@ -1,4 +1,4 @@
-package net.sachau.zarrax.gui.images;
+package net.sachau.zarrax.gui.image;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

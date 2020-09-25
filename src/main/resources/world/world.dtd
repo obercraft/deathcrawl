@@ -23,6 +23,8 @@
         <!ATTLIST terrain
                 move  CDATA "">
 
+        <!ATTLIST terrain
+                tile  CDATA "">
 
         <!ELEMENT encounter (#PCDATA)>
         <!ATTLIST encounter

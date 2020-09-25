@@ -6,10 +6,12 @@ import javafx.scene.layout.HBox;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.type.Character;
+import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.gui.PartySelection;
 
 import java.util.Observable;
 
+@Deprecated
 public class CardSelect extends CardView {
 
 
@@ -57,7 +59,7 @@ public class CardSelect extends CardView {
                             .add(card.getUniqueId());
                     Card cardtToAdd = card.getClass()
                             .newInstance();
-                    cardtToAdd.setOwner(partySelection.getPlayer());
+                    cardtToAdd.setOwner(GameEngine.getInstance().getPlayer());
                     target.add(cardtToAdd);
                 } else {
                     Logger.info("party already has four members");

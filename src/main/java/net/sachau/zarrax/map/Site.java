@@ -1,6 +1,6 @@
 package net.sachau.zarrax.map;
 
-import net.sachau.zarrax.gui.images.Tile;
+import net.sachau.zarrax.gui.image.Tile;
 
 public enum Site {
 

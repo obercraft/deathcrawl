@@ -10,8 +10,8 @@ import javafx.scene.text.TextFlow;
 
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.gui.images.Tile;
-import net.sachau.zarrax.gui.images.TileSet;
+import net.sachau.zarrax.gui.image.Tile;
+import net.sachau.zarrax.gui.image.TileSet;
 
 
 public class CardDesignPane extends VBox {

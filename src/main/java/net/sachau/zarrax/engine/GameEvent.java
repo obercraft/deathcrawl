@@ -58,4 +58,7 @@ public class GameEvent extends Observable {
     }
 
 
+    public Object getData() {
+        return this.stage.getData();
+    }
 }

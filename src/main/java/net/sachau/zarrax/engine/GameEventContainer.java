@@ -4,9 +4,10 @@ import net.sachau.zarrax.card.Card;
 
 public class GameEventContainer {
     public enum Type {
-        NEWGAME,
+        CREATE_GAME,
         RANDOMPARTY,
         PARTYDONE,
+        LANDINFO,
 
 
         START_TURN,
@@ -25,22 +26,23 @@ public class GameEventContainer {
         ENVIROMENTDEATH,
         WELCOME, START_MOVEMENT, END_MOVEMENT, PREPARE_ENCOUNTER;
 
+
     }
 
     private Type type;
-    private Card card;
+    private Object data;
 
     public GameEventContainer(Type type) {
         this.type = type;
     }
 
-    public GameEventContainer(Type type, Card card) {
+    public GameEventContainer(Type type, Object data) {
         this.type = type;
-        this.card = card;
+        this.data = data;
     }
 
-    public Card getCard() {
-        return card;
+    public Object getData() {
+        return data;
     }
 
     public Type getType() {
@@ -51,7 +53,7 @@ public class GameEventContainer {
     public String toString() {
         return "Event{" +
                 "type=" + type +
-                ", card=" + card +
+                ", data=" + data +
                 '}';
     }
 }

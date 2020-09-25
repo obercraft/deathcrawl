@@ -3,6 +3,7 @@ package net.sachau.zarrax.gui;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.card.Card;
@@ -16,19 +17,16 @@ import net.sachau.zarrax.util.DiceUtils;
 
 import java.util.*;
 
+@Deprecated
 public class PartySelection extends VBox implements Observer {
-
-    private Player player;
 
     private Set<String> uniqueIds = new HashSet<>();
 
     Deck availableCharacters = new Deck();
 
-    public PartySelection(Player player, int length, String cssClass) {
+    public PartySelection(int length, String cssClass) {
         super();
         GameEvent.getInstance().addObserver(this);
-        this.player = player;
-
 
         this.setMinHeight(2 * CardTile.HEIGHT);
 
@@ -40,7 +38,7 @@ public class PartySelection extends VBox implements Observer {
 
          
         
-        DeckPane partyArea = new DeckPane(player.partyProperty(), length, "card-small");
+        DeckPane partyArea = new DeckPane(GameEngine.getInstance().getPlayer().partyProperty(), length, "card-small");
         try {
             List<Card> basic = Catalog.getInstance()
                     .get(Character.class);
@@ -49,10 +47,10 @@ public class PartySelection extends VBox implements Observer {
                 card.setVisible(true);
                 if (card.getLevelCards() != null) {
                     for (Card c : card.getLevelCards()) {
-                        c.setOwner(player);
+                        c.setOwner(GameEngine.getInstance().getPlayer());
                     }
                 }
-                available.getChildren().add(new CardSelect(this, card, player.partyProperty(), cssClass));
+                available.getChildren().add(new CardSelect(this, card, GameEngine.getInstance().getPlayer().partyProperty(), cssClass));
                 availableCharacters.add(new Character(card));
             }
             getChildren().addAll(available, partyArea);
@@ -71,16 +69,12 @@ public class PartySelection extends VBox implements Observer {
         this.uniqueIds = uniqueIds;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
     @Override
     public void update(Observable o, Object arg) {
         switch (GameEvent.getType(arg)) {
             case RANDOMPARTY:
-                player.getParty().clear();
-                DiceUtils.createRandomParty(player);
+                GameEngine.getInstance().getPlayer().getParty().clear();
+                DiceUtils.createRandomParty(GameEngine.getInstance().getPlayer());
                 GameEvent.getInstance().send(GameEventContainer.Type.PARTYDONE);
                 GameEvent.getInstance().send(GameEventContainer.Type.START_TURN);
                 return;

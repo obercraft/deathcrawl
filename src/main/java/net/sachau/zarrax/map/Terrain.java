@@ -1,6 +1,6 @@
 package net.sachau.zarrax.map;
 
-import net.sachau.zarrax.gui.images.Tile;
+import net.sachau.zarrax.gui.image.Tile;
 
 public enum Terrain {
 
@@ -15,7 +15,7 @@ public enum Terrain {
     ;
     private float left, right;
     private int moveCost;
-    private Tile tile;
+    private String tile;
 
     Terrain() {
         this.moveCost = 1;
@@ -51,11 +51,11 @@ public enum Terrain {
         this.moveCost = moveCost;
     }
 
-    public Tile getTile() {
+    public String getTile() {
         return tile;
     }
 
-    public void setTile(Tile tile) {
+    public void setTile(String tile) {
         this.tile = tile;
     }
 }

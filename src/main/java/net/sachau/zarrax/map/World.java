@@ -1,6 +1,9 @@
 package net.sachau.zarrax.map;
 
+import net.sachau.zarrax.Configuration;
 import net.sachau.zarrax.Logger;
+import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.encounter.EncounterGenerator;
 import net.sachau.zarrax.encounter.EncounterMatrixGenerator;
 import net.sachau.zarrax.util.DiceUtils;
 
@@ -16,7 +19,7 @@ public class World {
     private Map<Terrain, List<Land>> terrainMapping = new HashMap<>();
 
     public World() {
-        init(20, 20);
+        init(Configuration.getInstance().getInt("zarrax.map.columns"), Configuration.getInstance().getInt("zarrax.map.rows"));
     }
 
     public World(int columns, int rows) {
@@ -64,7 +67,7 @@ public class World {
                 continue;
             }
             for (Terrain terrain : landTypes) {
-                Land land = getRandomLandForTerrain(terrain);
+                Land land = getRandomLandForSite(terrain);
                 if (land != null) {
                     land.getSites().add(site);
                     landFound = true;
@@ -79,10 +82,34 @@ public class World {
 
         }
 
+        // TODO msachau cities
+        int numberOfCities = 5;
+        for (int i = 0; i < numberOfCities; i++) {
+            Land land = getRandomLandForCity();
+            if (land != null) {
+                land.setCity(new StandardCity());
+            }
+        }
+
         return;
     }
 
-    private Land getRandomLandForTerrain(Terrain terrain) {
+    private Land getRandomLandForCity() {
+        Land land = null;
+        int tries = 0;
+        do {
+            List<Land> lands = terrainMapping.get(Terrain.VALLEY);
+            Land cityLand = lands.get(DiceUtils.get(lands.size()));
+            if (cityLand.getCity() == null) {
+                return cityLand;
+            }
+            tries ++;
+
+        } while (tries < 10);
+        return land;
+    }
+
+    private Land getRandomLandForSite(Terrain terrain) {
         List<Land> lands = terrainMapping.get(terrain);
         return lands.get(DiceUtils.get(lands.size()));
     }
@@ -96,6 +123,9 @@ public class World {
             for (int y = 0; y < rows; y++) {
                 if (map[x][y].getSites().size() > 0) {
                     sb.append("!");
+                } else
+                if (map[x][y].getCity() != null) {
+                    sb.append("*");
                 } else {
                     sb.append(map[x][y].getTerrain().name().substring(0, 1));
                 }
@@ -105,4 +135,19 @@ public class World {
         return sb.toString();
     }
 
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public Land[][] getMap() {
+        return map;
+    }
+
+    public List<Card> getHazards(int x, int y) {
+        return EncounterGenerator.builder().addRandomEnvironment().addRandomEvent().getCards();
+    }
 }

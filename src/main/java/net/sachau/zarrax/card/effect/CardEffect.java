@@ -3,7 +3,7 @@ package net.sachau.zarrax.card.effect;
 
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.card.Card;
-import net.sachau.zarrax.gui.images.Tile;
+import net.sachau.zarrax.gui.image.Tile;
 
 public abstract class CardEffect {
 

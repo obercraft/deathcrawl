@@ -4,7 +4,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import net.sachau.zarrax.card.effect.CardEffect;
-import net.sachau.zarrax.gui.images.TileSet;
+import net.sachau.zarrax.gui.image.TileSet;
 
 public class ConditionItem extends HBox {
 

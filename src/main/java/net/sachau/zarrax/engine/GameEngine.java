@@ -11,6 +11,7 @@ import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.encounter.EncounterGenerator;
+import net.sachau.zarrax.map.World;
 
 import java.util.*;
 
@@ -25,6 +26,7 @@ public class GameEngine  implements Observer {
 
 
     Player player;
+    World world;
 
     private List<Card> initiativeOrder;
     private SimpleIntegerProperty currentInitiative = new SimpleIntegerProperty(0);
@@ -87,8 +89,13 @@ public class GameEngine  implements Observer {
                     }
 
                     // generate an encounter and assign it to player
-
-                    player.setHazards(FXCollections.observableArrayList(EncounterGenerator.builder().addRandomEnvironment(player.getMapCoord()).addRandomEvent(player.getMapCoord()).getCards()));
+                    List<Card> hazards = world.getHazards(player.getX(), player.getY());
+                    if (hazards == null || hazards.size() == 0) {
+                        GameEvent.getInstance()
+                                .send(GameEventContainer.Type.END_ENCOUNTER);
+                        return;
+                    }
+                    player.setHazards(FXCollections.observableArrayList(hazards));
 
                     // check if every card in hazards is visible and not owned by player
                     for (Card card : player.getHazards()) {
@@ -189,9 +196,8 @@ public class GameEngine  implements Observer {
             }
             case CHARACTERDEATH: {
                 int totalHealth = 0;
-                Card deadCard = GameEvent.getInstance()
-                        .getStage()
-                        .getCard();
+                Card deadCard = (Card) GameEvent.getInstance()
+                        .getData();
 
                 for (CardEffect cardEffect : deadCard.getEffects()) {
                     for (Card card : player.getHazards()) {
@@ -354,5 +360,23 @@ public class GameEngine  implements Observer {
 
     public void setInitiativeOrder(List<Card> initiativeOrder) {
         this.initiativeOrder = initiativeOrder;
+    }
+
+    public void gameOver() {
+        // TODO msachau
+
+    }
+
+    public void createGame() {
+        setPlayer(new Player());
+        setWorld(new World());
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
     }
 }

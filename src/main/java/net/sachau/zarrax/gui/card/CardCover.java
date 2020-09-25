@@ -2,8 +2,8 @@ package net.sachau.zarrax.gui.card;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import net.sachau.zarrax.gui.images.Tile;
-import net.sachau.zarrax.gui.images.TileSet;
+import net.sachau.zarrax.gui.image.Tile;
+import net.sachau.zarrax.gui.image.TileSet;
 
 public class CardCover extends StackPane {
 

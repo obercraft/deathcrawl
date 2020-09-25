@@ -1,7 +1,9 @@
 package net.sachau.zarrax.encounter;
 
+import net.sachau.zarrax.gui.image.Tile;
 import net.sachau.zarrax.map.*;
 import net.sachau.zarrax.util.XmlUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -126,9 +128,11 @@ public class EncounterMatrixGenerator {
             float left = NumberUtils.toFloat(attributes.get("left"));
             float right = NumberUtils.toFloat(attributes.get("right"));
             int moveCost = NumberUtils.toInt(attributes.get("move"), 1);
+            String tile = attributes.get("tile");
             terrain.setLeft(left);
             terrain.setRight(right);
             terrain.setMoveCost(moveCost);
+            terrain.setTile(StringUtils.isEmpty(tile) ? "WHITE" : tile);
             for (int j = 0; j < node.getChildNodes().getLength(); j++) {
                 if (node.getChildNodes().item(j).getNodeType() == Node.TEXT_NODE) {
                     continue;
