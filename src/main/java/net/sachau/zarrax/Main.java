@@ -1,22 +1,25 @@
 package net.sachau.zarrax;
 
 import javafx.application.Application;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEvent;
+import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.gui.screen.GameScreen;
 
 public class Main extends Application {
@@ -30,8 +33,10 @@ public class Main extends Application {
         //primaryScreenBounds.getHeight()
         double width = primaryScreenBounds.getWidth() - 100;
         double height = primaryScreenBounds.getHeight() - 100;
-        GameScreen gameScreen = new GameScreen(width, height);
-        Scene content = new Scene(gameScreen, width, height);
+        //GameScreen gameScreen = new GameScreen();
+        HBox loadScreen = new HBox();
+        loadScreen.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        Scene content = new Scene(loadScreen, width, height);
 
         primaryStage.setScene(content);
         primaryStage.show();
@@ -39,7 +44,7 @@ public class Main extends Application {
 //        ProgressBar progressBar = new ProgressBar();
         Text pleaseWait = new Text("loading Zarrax");
         pleaseWait.setFill(Color.WHITE);
-        gameScreen.getChildren().addAll(pleaseWait);
+        loadScreen.getChildren().addAll(pleaseWait);
 
         // Unbind progress property
 //        progressBar.progressProperty().unbind();
@@ -58,6 +63,7 @@ public class Main extends Application {
 //        new Thread(initTask).start();
 
         ApplicationContext.init(width, height);
+        loadScreen.getChildren().add((GameScreen) ApplicationContext.getInstance().getContextData().get(GameScreen.class));
         GameEvent.getInstance().send(GameEventContainer.Type.WELCOME);
 
 

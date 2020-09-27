@@ -47,16 +47,7 @@ public class ApplicationContext {
 
             for (Class<?> component : components) {
 
-                System.out.println("creating " + component);
-                try {
-                    Object obj = component.newInstance();
-                    callInitMethod(obj);
-                    contextData.put(component, obj);
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                createComponent(component);
 
             }
         }
@@ -68,16 +59,7 @@ public class ApplicationContext {
 
             for (Class<?> component : components) {
 
-                System.out.println("creating " + component);
-                try {
-                    callInitMethod(component);
-                    contextData.put(component, component.newInstance());
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-
+                createComponent(component);
             }
         }
 
@@ -97,6 +79,26 @@ public class ApplicationContext {
 //                }
 //            }
 
+
+    }
+
+    private Object createComponent(Class<?> component) {
+        try {
+            if (contextData.get(component.getClass()) != null) {
+                return contextData.get(component.getClass());
+            }
+            Object obj = component.newInstance();
+            contextData.put(component, obj);
+            createResources(obj);
+            callInitMethod(obj);
+            contextData.put(component, obj);
+            return obj;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
 
     }
 
@@ -134,15 +136,16 @@ public class ApplicationContext {
     }
 
 
-    private void intResources(Object component) {
+    private void createResources(Object component) {
         Field[] fields = component.getClass().getDeclaredFields();
         for (Field field : fields) {
             Annotation[] annotations = field.getAnnotations();
             for (Annotation a : annotations) {
-                if  (a.annotationType().equals(PostConstruct.class)) {
-                    Object resource = contextData.get(field.getType());
+                if  (a.annotationType().equals(Resource.class)) {
+                    Object resource = createComponent(field.getType());
                     try {
                         field.setAccessible(true);
+                        System.out.print(component.getClass() + "->" + resource.getClass());
                         field.set(component, resource);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();

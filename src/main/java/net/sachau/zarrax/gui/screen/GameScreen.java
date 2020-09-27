@@ -6,6 +6,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameComponent;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEvent;
@@ -19,17 +20,17 @@ public class GameScreen extends HBox implements Observer {
 
 
     @Resource
-    private WelcomeScreen welcomeScreen;
+    WelcomeScreen welcomeScreen;
 
     private CreateGameScreen createScreen;
     private MovementScreen movementScreen;
 
-    public GameScreen(double width, double height) {
+    public GameScreen() {
         super();
         GameEvent.getInstance().addObserver(this);
         setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-        setWidth(width);
-        setHeight(height);
+        setWidth(ApplicationContext.getInstance().getWidth());
+        setHeight(ApplicationContext.getInstance().getHeight());
 
     }
 
