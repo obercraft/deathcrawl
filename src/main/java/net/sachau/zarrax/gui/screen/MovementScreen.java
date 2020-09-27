@@ -13,8 +13,8 @@ public class MovementScreen extends ScreenWithSidebar {
 
     private final WorldMap worldMap;
 
-    public MovementScreen(double width, double height) {
-        super(width, height);
+    public MovementScreen() {
+        super();
 
         worldMap = new WorldMap();
         getMainArea().getChildren().add(worldMap);

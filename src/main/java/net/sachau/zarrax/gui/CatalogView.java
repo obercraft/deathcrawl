@@ -9,22 +9,32 @@ import javafx.util.Callback;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.engine.GameComponent;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.List;
 
+@GameComponent
 public class CatalogView extends HBox {
+
+    @Resource
+    private Catalog catalog;
 
     public CatalogView() {
         super();
 
+    }
+    @PostConstruct
+    public void init() {
         ListView<Class<? extends Card>> categoryList = new ListView<>();
         ListView<Card> cardList = new ListView<>();
 
-        ObservableList<Class<? extends Card>> categories = FXCollections.observableList(Catalog.getInstance().getCategories());
+        ObservableList<Class<? extends Card>> categories = FXCollections.observableList(catalog.getCategories());
 
 
         Class<? extends Card> startingCategory = categories.get(0);
-        ObservableList<Card> cards = FXCollections.observableArrayList(Catalog.getInstance().get(startingCategory));
+        ObservableList<Card> cards = FXCollections.observableArrayList(catalog.get(startingCategory));
 
         categoryList.setItems(categories);
         cardList.setItems(cards);
@@ -47,12 +57,12 @@ public class CatalogView extends HBox {
         categoryList.setOnMouseClicked(event -> {
             Class<? extends Card> selectedItem = categoryList.getSelectionModel().getSelectedItem();
             Logger.debug("-> " + selectedItem);
-            List<Class<? extends Card>> cats = Catalog.getCategories();
+            List<Class<? extends Card>> cats = catalog.getCategories();
             if (cardList.getItems().size() > 0) {
                 cardList.getItems()
                         .remove(0, cardList.getItems().size());
             }
-            cardList.getItems().addAll(Catalog.getInstance().get(selectedItem));
+            cardList.getItems().addAll(catalog.get(selectedItem));
         });
     }
 

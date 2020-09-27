@@ -8,18 +8,25 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.engine.GameComponent;
 import net.sachau.zarrax.gui.card.CardInfoView;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
+@GameComponent
 public class CardInfoWindow extends Stage {
+
+    @Resource
+    private Catalog catalog;
 
     private Map<Long, CardInfoView> cache = new HashMap<>();
 
     private SimpleLongProperty cardId = new SimpleLongProperty(-1);
 
     private HBox secondaryLayout;
+
     public CardInfoWindow() {
         super();
         secondaryLayout = new HBox();
@@ -39,7 +46,7 @@ public class CardInfoWindow extends Stage {
                 if (id > 0) {
                     CardInfoView cardInfoView = cache.get(id);
                     if (cardInfoView == null) {
-                        Card card = Catalog.getById(id);
+                        Card card = catalog.getById(id);
                         cardInfoView = new CardInfoView(card, "card");
                         cache.put(id, cardInfoView);
                     }

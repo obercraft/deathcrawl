@@ -3,6 +3,7 @@ package net.sachau.zarrax.util;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.type.Character;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.Player;
 
 import java.util.LinkedList;
@@ -32,7 +33,7 @@ public class DiceUtils {
 
     public static void createRandomParty(Player player) {
 
-        List<Card> characters = Catalog.getInstance()
+        List<Card> characters = ApplicationContext.getCatalog()
                 .get(Character.class);
 
         while (player.getParty().size() < Player.PARTY_SIZE) {

@@ -31,7 +31,8 @@ public class CardTest {
         player = new Player();
         GameEngine.getInstance().setPlayer(player);
         GameEngine.getInstance().setInitiativeOrder(new ArrayList<>());
-        Catalog.initForTesting();
+        Catalog catalog = new Catalog();
+        catalog.initForTesting();
     }
 
     @Test

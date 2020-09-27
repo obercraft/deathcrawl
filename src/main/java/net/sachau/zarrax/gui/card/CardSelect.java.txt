@@ -7,7 +7,6 @@ import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.gui.PartySelection;
 
 import java.util.Observable;
 

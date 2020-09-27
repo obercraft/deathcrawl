@@ -1,5 +1,6 @@
 package net.sachau.zarrax.encounter;
 
+import net.sachau.zarrax.engine.GameComponent;
 import net.sachau.zarrax.map.Terrain;
 import net.sachau.zarrax.map.Warning;
 

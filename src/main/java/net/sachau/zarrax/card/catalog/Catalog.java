@@ -7,12 +7,15 @@ import javafx.collections.ObservableMap;
 import javafx.scene.text.TextFlow;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
-import net.sachau.zarrax.card.CardParser;
+import net.sachau.zarrax.engine.GameComponent;
+import net.sachau.zarrax.engine.GameData;
 import net.sachau.zarrax.util.CardUtils;
 import org.reflections.Reflections;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
+@GameData
 public class Catalog {
 
     private final Map<Class<? extends Card>, CardCache> caches = new HashMap<>();
@@ -27,9 +30,7 @@ public class Catalog {
 
     private boolean loaded;
 
-    private static Catalog catalog;
-
-    private Catalog() {
+    public Catalog() {
         ObservableMap<Long, Card> observableMap = FXCollections.observableHashMap();
         idCache = new SimpleMapProperty<>(observableMap);
     }
@@ -47,18 +48,19 @@ public class Catalog {
         this.idCache.set(idCache);
     }
 
-    public static void init() throws Exception {
+    @PostConstruct
+    public void init() throws Exception {
         init(true);
     }
 
-    public static void initForTesting() throws Exception {
+    public void initForTesting() throws Exception {
         init(false);
     }
 
 
-    private static void init(boolean withTexts) throws Exception {
+    private void init(boolean withTexts) throws Exception {
 
-        if (Catalog.getInstance().isLoaded()) {
+        if (isLoaded()) {
             return;
         }
         Logger.debug("reading catalogs");
@@ -83,7 +85,7 @@ public class Catalog {
         }
 
         Logger.debug("reading catalog done");
-        Catalog.getInstance().setLoaded(true);
+        setLoaded(true);
 
 //        try {
 //            List<Card> allCards = CardParser.parse(Catalog.class
@@ -121,33 +123,26 @@ public class Catalog {
 
     }
 
-    public static Catalog getInstance() {
-        if (catalog == null) {
-            catalog = new Catalog();
-        }
-        return catalog;
-    }
-
     public void add(Card card) {
         Class<? extends Card> clazz = card.getClass();
-        if (catalog.caches.get(clazz) == null) {
-            catalog.caches.put(clazz, new CardCache());
+        if (caches.get(clazz) == null) {
+            caches.put(clazz, new CardCache());
         }
         String cardName = card.getName()
                 .toLowerCase()
                 .replaceAll(" ", "");
-        catalog.caches.get(clazz).put(cardName, card);
-        catalog.allCards.put(cardName, card);
+        caches.get(clazz).put(cardName, card);
+        allCards.put(cardName, card);
     }
 
     public void add(Collection<Card> cards) {
         for (Card card : cards) {
-            catalog.add(card);
+            add(card);
         }
     }
 
     public List<Card> get(Class<? extends Card> type) {
-        CardCache cache = catalog.caches.get(type);
+        CardCache cache = caches.get(type);
         if (cache != null) {
             return new LinkedList<>(cache.values());
         }
@@ -166,29 +161,29 @@ public class Catalog {
 
     }
 
-    public static Card getById(long id) {
-        return getInstance().getIdCache().get(id);
+    public Card getById(long id) {
+        return getIdCache().get(id);
     }
 
 
-    public static void putById(Card card) {
-        getInstance().getIdCache().put(card.getId(), card);
+    public void putById(Card card) {
+        getIdCache().put(card.getId(), card);
     }
 
-    public static List<Class<? extends Card>> getCategories() {
-        return new ArrayList<>(getInstance().caches.keySet());
+    public List<Class<? extends Card>> getCategories() {
+        return new ArrayList<>(caches.keySet());
     }
 
-    public static Card copyOf(String name) {
-        return CardUtils.copyCard(Catalog.getInstance().get(name));
+    public Card copyOf(String name) {
+        return CardUtils.copyCard(get(name));
     }
 
-    public static void putText(String name, TextFlow textFlow) {
-        getInstance().texts.put(name, textFlow);
+    public void putText(String name, TextFlow textFlow) {
+        texts.put(name, textFlow);
     }
 
-    public static TextFlow getText(String name) {
-        return getInstance().texts.get(name);
+    public TextFlow getText(String name) {
+        return texts.get(name);
     }
 
     public boolean isLoaded() {

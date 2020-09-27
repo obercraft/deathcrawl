@@ -11,6 +11,7 @@ import net.sachau.zarrax.card.effect.KeywordEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Illumination;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
@@ -55,7 +56,8 @@ public abstract class Card {
 
         this.hitsProperty()
                 .addListener(new HitsListener(this));
-        Catalog.putById(this);
+
+        ApplicationContext.getCatalog().putById(this);
 //        Card card = this;
 //        this.hitsProperty().addListener(new ChangeListener<Number>() {
 //            @Override
@@ -108,7 +110,7 @@ public abstract class Card {
         this.hitsProperty()
                 .addListener(new HitsListener(this));
 
-        Catalog.putById(this);
+        ApplicationContext.getCatalog().putById(this);
     }
 
     public Card(int initialHits, int initialDamage) {

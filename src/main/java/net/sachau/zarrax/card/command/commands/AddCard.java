@@ -3,6 +3,7 @@ package net.sachau.zarrax.card.command.commands;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.command.*;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.util.CardUtils;
 
@@ -23,7 +24,7 @@ public class AddCard implements CardCommand {
         } else {
             cards = GameEngine.getInstance().getPlayer().getHazards();
         }
-        Card card = Catalog.getInstance()
+        Card card = ApplicationContext.getCatalog()
                 .get(commandParameter.getString(1).trim());
         if (card != null && cards != null) {
             cards.add(CardUtils.copyCard(card));

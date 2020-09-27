@@ -3,22 +3,24 @@ package net.sachau.zarrax.gui;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.GameEventContainer;
-import net.sachau.zarrax.engine.GameEvent;
+import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.Deck;
-import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.card.CardSelect;
 import net.sachau.zarrax.gui.card.CardTile;
 import net.sachau.zarrax.util.DiceUtils;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Deprecated
+@GameComponent
 public class PartySelection extends VBox implements Observer {
+
+    @Resource
+    private Catalog catalog;
 
     private Set<String> uniqueIds = new HashSet<>();
 
@@ -40,8 +42,7 @@ public class PartySelection extends VBox implements Observer {
         
         DeckPane partyArea = new DeckPane(GameEngine.getInstance().getPlayer().partyProperty(), length, "card-small");
         try {
-            List<Card> basic = Catalog.getInstance()
-                    .get(Character.class);
+            List<Card> basic = catalog.get(Character.class);
             for (Card b : basic) {
                 Character card = (Character) b;
                 card.setVisible(true);

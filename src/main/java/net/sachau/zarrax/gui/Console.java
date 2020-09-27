@@ -9,14 +9,20 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.engine.GameComponent;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@GameComponent
 public class Console extends ScrollPane {
+
+    @Resource
+    private Catalog catalog;
 
     private Pattern pattern = Pattern.compile("\\{Card@(\\d+):(.*?)\\}");
 
@@ -60,7 +66,7 @@ public class Console extends ScrollPane {
         if (matcher.find()) {
             long cardId = Long.parseLong(matcher.group(1));
 
-            Card card = Catalog.getById(cardId);
+            Card card = catalog.getById(cardId);
             System.out.println("cardId=" + cardId + " card= "+ card);
             Text cardLink = new Text();
 

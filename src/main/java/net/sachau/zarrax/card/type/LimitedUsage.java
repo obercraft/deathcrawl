@@ -7,6 +7,7 @@ import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.command.Command;
 import net.sachau.zarrax.card.command.CommandParser;
 import net.sachau.zarrax.card.command.CommandResult;
+import net.sachau.zarrax.engine.ApplicationContext;
 
 public class LimitedUsage extends Card {
 
@@ -29,7 +30,7 @@ public class LimitedUsage extends Card {
     public CommandResult execute(Card target) {
 
         if (usageCard == null) {
-            Card card = Catalog.copyOf(this.getUsageCardName());
+            Card card = ApplicationContext.getCatalog().copyOf(this.getUsageCardName());
             card.setOwner(this.getOwner());
             card.setVisible(true);
             this.usageCard = card;

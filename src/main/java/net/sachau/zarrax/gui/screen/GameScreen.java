@@ -6,16 +6,21 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import net.sachau.zarrax.engine.GameComponent;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEvent;
 
+import javax.annotation.Resource;
 import java.util.Observable;
 import java.util.Observer;
 
+@GameComponent
 public class GameScreen extends HBox implements Observer {
 
 
+    @Resource
     private WelcomeScreen welcomeScreen;
+
     private CreateGameScreen createScreen;
     private MovementScreen movementScreen;
 
@@ -33,9 +38,6 @@ public class GameScreen extends HBox implements Observer {
         switch (GameEvent.getType(arg)) {
             case WELCOME:
                 getChildren().clear();
-                if (welcomeScreen == null) {
-                    welcomeScreen = new WelcomeScreen(this.getWidth(), this.getHeight());
-                }
                 getChildren().add(welcomeScreen);
                 return;
 
@@ -43,7 +45,7 @@ public class GameScreen extends HBox implements Observer {
                 getChildren().clear();
 
                 if (createScreen == null) {
-                    createScreen = new CreateGameScreen(this.getWidth(), this.getHeight());
+                    createScreen = new CreateGameScreen();
                 }
                 getChildren().add(createScreen);
                 return;
@@ -52,7 +54,7 @@ public class GameScreen extends HBox implements Observer {
                 getChildren().clear();
 
                 if (movementScreen == null) {
-                    movementScreen = new MovementScreen(this.getWidth(), this.getHeight());
+                    movementScreen = new MovementScreen();
                 }
                 getChildren().add(movementScreen);
                 movementScreen.init();

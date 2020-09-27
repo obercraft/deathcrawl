@@ -7,6 +7,7 @@ import net.sachau.zarrax.card.UniqueCardList;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.type.Encounter;
 import net.sachau.zarrax.card.type.Environment;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.util.DiceUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -29,10 +30,10 @@ public class EncounterGenerator {
     private final UniqueCardList hazards;
 
     private EncounterGenerator(){
-        eventCards = Catalog.getInstance()
+        eventCards = ApplicationContext.getCatalog()
                 .get(Encounter.class);
 
-        environments = Catalog.getInstance()
+        environments = ApplicationContext.getCatalog()
                 .get(Environment.class);
 
         hazards = new UniqueCardList();
@@ -88,7 +89,7 @@ public class EncounterGenerator {
                     if (clazz.getSimpleName()
                             .toLowerCase()
                             .matches(type.toLowerCase())) {
-                        typeSelection = Catalog.getInstance().get(clazz);
+                        typeSelection = ApplicationContext.getCatalog().get(clazz);
                         break;
 
                     }
@@ -102,7 +103,7 @@ public class EncounterGenerator {
                     if (typeSelection != null && typeSelection.size() > 0) {
                         c = DiceUtils.getRandomCard(typeSelection);
                     } else {
-                        c = Catalog.getInstance()
+                        c = ApplicationContext.getCatalog()
                                 .get(cardName);
                     }
                     c.setVisible(true);

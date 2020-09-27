@@ -10,6 +10,7 @@ import javafx.scene.text.TextFlow;
 
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.gui.image.Tile;
 import net.sachau.zarrax.gui.image.TileSet;
 
@@ -44,7 +45,7 @@ public class CardDesignPane extends VBox {
         text.getStyleClass().add("card-text");
 
 
-        TextFlow cardText = Catalog.getText(card.getName());
+        TextFlow cardText = ApplicationContext.getCatalog().getText(card.getName());
         if (cardText != null) {
             text.getChildren().addAll(cardText);
         }

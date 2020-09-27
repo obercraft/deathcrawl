@@ -10,9 +10,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.gui.screen.GameScreen;
@@ -34,25 +36,29 @@ public class Main extends Application {
         primaryStage.setScene(content);
         primaryStage.show();
 
-        ProgressBar progressBar = new ProgressBar();
+//        ProgressBar progressBar = new ProgressBar();
         Text pleaseWait = new Text("loading Zarrax");
-        gameScreen.getChildren().addAll(pleaseWait, progressBar);
+        pleaseWait.setFill(Color.WHITE);
+        gameScreen.getChildren().addAll(pleaseWait);
 
         // Unbind progress property
-        progressBar.progressProperty().unbind();
+//        progressBar.progressProperty().unbind();
 
-        // Bind progress property
-        InitTask initTask = new InitTask();
-        progressBar.progressProperty().bind(initTask.progressProperty());
+//        // Bind progress property
+//        InitTask initTask = new InitTask(width, height);
+//        progressBar.progressProperty().bind(initTask.progressProperty());
+//
+//        initTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, //
+//                t -> {
+//                    GameEvent.getInstance()
+//                            .send(GameEventContainer.Type.WELCOME);
+//                });
+//
+//
+//        new Thread(initTask).start();
 
-        initTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, //
-                t -> {
-                    GameEvent.getInstance()
-                            .send(GameEventContainer.Type.WELCOME);
-                });
-
-
-        new Thread(initTask).start();
+        ApplicationContext.init(width, height);
+        GameEvent.getInstance().send(GameEventContainer.Type.WELCOME);
 
 
         // content.getStylesheets().add(this.getClass().getResource("/application.css").toExternalForm());

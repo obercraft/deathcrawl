@@ -4,6 +4,7 @@ package net.sachau.zarrax.card;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.effect.EffectTiming;
 import net.sachau.zarrax.card.effect.KeywordEffect;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.util.XmlUtils;
 import net.sachau.zarrax.card.catalog.Catalog;
@@ -218,7 +219,7 @@ public class CardParser {
                     for (String startingCard : cards) {
                         try {
                             characterCard.getStartingCards()
-                                    .add(CardUtils.copyCard(Catalog.getInstance()
+                                    .add(CardUtils.copyCard(ApplicationContext.getCatalog()
                                             .get(startingCard)));
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -238,7 +239,7 @@ public class CardParser {
                     Character characterCard = (Character) card;
                     for (String levelCard : cards) {
                         try {
-                            characterCard.addLevelCard(CardUtils.copyCard(Catalog.getInstance()
+                            characterCard.addLevelCard(CardUtils.copyCard(ApplicationContext.getCatalog()
                                     .get(levelCard)));
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -306,7 +307,7 @@ public class CardParser {
                     .equals("text")) {
                 CardText cardText = CardText.builder();
                 TextParser.parse(cardNode, cardText);
-                Catalog.putText(card.getName(), cardText.write());
+                ApplicationContext.getCatalog().putText(card.getName(), cardText.write());
             }
 
             if (cardNode.getNodeName()
@@ -355,7 +356,7 @@ public class CardParser {
         }
         if (card != null) {
 
-            Catalog.getInstance()
+            ApplicationContext.getCatalog()
                     .add(card);
         }
 

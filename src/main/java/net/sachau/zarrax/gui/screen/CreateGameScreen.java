@@ -11,8 +11,8 @@ import net.sachau.zarrax.engine.GameEventContainer;
 
 public class CreateGameScreen extends ScreenWithSidebar {
 
-    public CreateGameScreen(double width, double height) {
-        super(width, height);
+    public CreateGameScreen() {
+        super();
 
         HBox welcome = new HBox();
         welcome.setAlignment(Pos.BASELINE_CENTER);

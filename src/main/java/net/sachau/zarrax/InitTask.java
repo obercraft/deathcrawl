@@ -2,12 +2,21 @@ package net.sachau.zarrax;
 
 import javafx.concurrent.Task;
 import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.gui.Fonts;
 
 public class InitTask extends Task<String> {
+
+    private double width, height;
+
+    public InitTask(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+
     @Override
     protected String call() throws Exception {
 //        String standard = "/fonts/LibreBaskerville-Regular.ttf";
@@ -21,7 +30,7 @@ public class InitTask extends Task<String> {
 //                .load("italic",Main.class.getResourceAsStream("/fonts/LibreBaskerville-Italic.ttf"), fontSize).progress(this, 6)
 //                .load("bold",Main.class.getResourceAsStream("/fonts/LibreBaskerville-Bold.ttf"), fontSize).progress(this, 7)
 //        ;
-        Catalog.init();
+        ApplicationContext.init(width, height);
         GameEngine.getInstance().setInitialized(true);
         this.update(10);
         return null;
