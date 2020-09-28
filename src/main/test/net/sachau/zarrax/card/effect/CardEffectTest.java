@@ -6,6 +6,7 @@ import net.sachau.zarrax.card.command.Command;
 import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Horse;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
@@ -17,18 +18,23 @@ import java.util.ArrayList;
 
 public class CardEffectTest {
 
+    private Catalog catalog = new Catalog();
+    private GameEngine gameEngine = new GameEngine();
+
     Player player;
 
     @Before
     public void init() throws Exception {
+        ApplicationContext.put(GameEngine.class, gameEngine);
+        ApplicationContext.put(Catalog.class, catalog);
+
         player = new Player();
-        GameEngine.getInstance()
+        gameEngine
                 .setPlayer(player);
-        GameEngine.getInstance()
+        gameEngine
                 .setInitiativeOrder(new ArrayList<>());
-        Catalog.initForTesting();
 
-
+        catalog.initForTesting();
     }
 
     @Test
@@ -88,9 +94,9 @@ public class CardEffectTest {
     @Test
     public void testGuard() {
 
-        Card thief = Catalog.copyOf("thief");
-        Card warrior = Catalog.copyOf("warrior");
-        Card wizard = Catalog.copyOf("wizard");
+        Card thief = catalog.copyOf("thief");
+        Card warrior = catalog.copyOf("warrior");
+        Card wizard = catalog.copyOf("wizard");
 
         Assert.assertEquals(2, thief.getKeywords().size());
         Assert.assertTrue(thief.hasKeyword(Keyword.ROGUE));
@@ -100,7 +106,7 @@ public class CardEffectTest {
         player.addToParty(thief);
         player.addToParty(wizard);
 
-        GameEngine.getInstance().setCurrentInitiative(0); // warrior
+        gameEngine.setCurrentInitiative(0); // warrior
         for (Card c : player.getParty()) {
             c.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
         }
@@ -129,9 +135,9 @@ public class CardEffectTest {
 
         player.addCardToHand(horse);
 
-        Card paladin = Catalog.copyOf("paladin");
-        GameEngine.getInstance().setCurrentInitiative(0);
-        GameEngine.getInstance().getInitiativeOrder().add(paladin);
+        Card paladin = catalog.copyOf("paladin");
+        gameEngine.setCurrentInitiative(0);
+        gameEngine.getInitiativeOrder().add(paladin);
 
         CommandResult commandResult = Command.execute(horse, null);
         Assert.assertTrue(commandResult.isSuccessful());

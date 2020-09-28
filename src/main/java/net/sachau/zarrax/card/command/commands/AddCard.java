@@ -20,9 +20,9 @@ public class AddCard implements CardCommand {
     public CommandResult execute(Card sourceCard, Card targetCard, CommandParameter commandParameter) {
         List<Card> cards;
         if ("hand".equalsIgnoreCase(commandParameter.getString(0).trim())) {
-            cards = GameEngine.getInstance().getPlayer().getHand();
+            cards = ApplicationContext.getPlayer().getHand();
         } else {
-            cards = GameEngine.getInstance().getPlayer().getHazards();
+            cards = ApplicationContext.getPlayer().getHazards();
         }
         Card card = ApplicationContext.getCatalog()
                 .get(commandParameter.getString(1).trim());

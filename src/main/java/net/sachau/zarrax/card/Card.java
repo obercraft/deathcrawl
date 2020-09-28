@@ -250,7 +250,7 @@ public abstract class Card {
                 hasBadLight = true;
             }
             if (hasBadLight) {
-                Player player = GameEngine.getInstance().getPlayer();
+                Player player = ApplicationContext.getPlayer();
                 if (this.owner instanceof Player) {
 
                     for (Card c : player.getParty()) {
@@ -319,7 +319,7 @@ public abstract class Card {
         Logger.debug(this + (isRetaliate ? " retaliates " : " attacks " ) + target + " for " + attack + " damage");
         if (target.hasKeyword(Keyword.RETALIATE)) {
 
-            Card retaliateTarget = GameEngine.getInstance().getCurrentCard();
+            Card retaliateTarget = ApplicationContext.getGameEngine().getCurrentCard();
             if (retaliateTarget != null && retaliateTarget.hasKeyword(Keyword.CREATURE)) {
                 target.attack(retaliateTarget, target.getDamage(), true);
             } else {
@@ -377,7 +377,7 @@ public abstract class Card {
         if (this.isActive()) {
             return true;
         }
-        Card currentCard = GameEngine.getInstance()
+        Card currentCard = ApplicationContext.getGameEngine()
                 .getCurrentCard();
         if (currentCard != null) {
 

@@ -6,6 +6,7 @@ import net.sachau.zarrax.card.command.*;
 import net.sachau.zarrax.card.effect.Guard;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Illumination;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.util.CardUtils;
@@ -75,7 +76,7 @@ public class Attack implements CardCommand {
                 hasBadLight = true;
             }
             if (hasBadLight) {
-                Player player = GameEngine.getInstance().getPlayer();
+                Player player = ApplicationContext.getPlayer();
                 if (source.getOwner() instanceof Player) {
 
                     for (Card c : player.getParty()) {
@@ -144,7 +145,7 @@ public class Attack implements CardCommand {
         Logger.debug(this + (isRetaliate ? " retaliates " : " attacks " ) + target + " for " + attackValue + " damage");
         if (target.hasKeyword(Keyword.RETALIATE)) {
 
-            Card retaliateTarget = GameEngine.getInstance().getCurrentCard();
+            Card retaliateTarget = ApplicationContext.getGameEngine().getCurrentCard();
             if (retaliateTarget != null && retaliateTarget.hasKeyword(Keyword.CREATURE)) {
                 attack(target, retaliateTarget, target.getDamage(), true);
             } else {

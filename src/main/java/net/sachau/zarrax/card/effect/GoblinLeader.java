@@ -1,6 +1,7 @@
 package net.sachau.zarrax.card.effect;
 
 import net.sachau.zarrax.card.type.Goblin;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
@@ -16,7 +17,7 @@ public class GoblinLeader extends CardEffect {
     @Override
     public void start(Card targetCard) {
         Logger.debug("trigger Goblin Leader");
-        Player player = GameEngine.getInstance().getPlayer();
+        Player player = ApplicationContext.getPlayer();
         if (player != null && player.getHazards() != null) {
             for (Card card : player.getHazards()) {
                 if (card instanceof Goblin) {

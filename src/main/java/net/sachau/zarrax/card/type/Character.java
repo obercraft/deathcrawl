@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.util.CardUtils;
 
@@ -42,7 +43,7 @@ public class Character extends Card {
         for (Card c : character.getLevelCards()) {
             Card copy = CardUtils.copyCard(c);
             copy.setVisible(true);
-            copy.setOwner(GameEngine.getInstance().getPlayer());
+            copy.setOwner(ApplicationContext.getPlayer());
             levelCards.add(copy);
         }
     }

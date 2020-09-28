@@ -36,6 +36,18 @@ public class ApplicationContext {
         getInstance().start(width, height);
     }
 
+    public static void put(Class<?> clazz, Object data) {
+        getInstance().contextData.put(clazz, data);
+    }
+
+    public static GameEngine getGameEngine() {
+        return (GameEngine) getInstance().getContextData().get(GameEngine.class);
+    }
+
+    public static Player getPlayer() {
+        return getGameEngine().getPlayer();
+    }
+
 
     public  void start(double width, double height) {
         this.height = height;
@@ -84,8 +96,8 @@ public class ApplicationContext {
 
     private Object createComponent(Class<?> component) {
         try {
-            if (contextData.get(component.getClass()) != null) {
-                return contextData.get(component.getClass());
+            if (contextData.get(component) != null) {
+                return contextData.get(component);
             }
             Object obj = component.newInstance();
             contextData.put(component, obj);

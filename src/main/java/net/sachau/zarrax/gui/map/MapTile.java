@@ -5,10 +5,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.GameEvent;
-import net.sachau.zarrax.engine.GameEventContainer;
-import net.sachau.zarrax.engine.Player;
+import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.gui.image.Tile;
 import net.sachau.zarrax.gui.image.TileSet;
 import net.sachau.zarrax.map.Land;
@@ -64,7 +61,7 @@ public class MapTile extends AnchorPane {
                     .hasContent(WorldMap.mapFormat)) {
                 String data = (String) event.getDragboard().getContent(WorldMap.mapFormat);
                 if (data.equals("party")) {
-                    Player player = GameEngine.getInstance().getPlayer();
+                    Player player = ApplicationContext.getPlayer();
                     if (player.getMoves() >= land.getMoveCost() && Math.abs(x - player.getX()) <= 1 && Math.abs(y - player.getY()) <= 1) {
                         event.acceptTransferModes(TransferMode.ANY);
                     }
@@ -78,7 +75,7 @@ public class MapTile extends AnchorPane {
         });
 
         setOnDragDropped(event -> {
-            GameEngine.getInstance().getPlayer().move(land, x, y);
+            ApplicationContext.getPlayer().move(land, x, y);
             GameEvent.getInstance().send(GameEventContainer.Type.PARTYMOVE);
             event.consume();
 

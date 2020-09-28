@@ -3,6 +3,7 @@ package net.sachau.zarrax.card.effect;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
@@ -18,7 +19,7 @@ public class Guard extends CardEffect {
     @Override
     public void start(Card targetCard) {
         Logger.debug(targetCard + "triggers Guard");
-        Player player = GameEngine.getInstance()
+        Player player = ApplicationContext
                 .getPlayer();
         List<Card> cards = targetCard.getOwner() instanceof Player ? player.getParty() : player.getHazards();
 
@@ -33,7 +34,7 @@ public class Guard extends CardEffect {
 
     @Override
     public void end(Card targetCard) {
-        Player player = GameEngine.getInstance()
+        Player player = ApplicationContext
                 .getPlayer();
         List<Card> cards = targetCard.getOwner() instanceof Player ? player.getParty() : player.getHazards();
         for (Card card : cards) {

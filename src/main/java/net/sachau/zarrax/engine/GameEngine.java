@@ -10,12 +10,12 @@ import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.encounter.EncounterGenerator;
 import net.sachau.zarrax.map.World;
 
 import java.util.*;
 
-public class GameEngine  implements Observer {
+@GameComponent
+public class GameEngine implements Observer {
 
     private static long id = 1;
     private boolean initialized;
@@ -31,17 +31,8 @@ public class GameEngine  implements Observer {
     private List<Card> initiativeOrder;
     private SimpleIntegerProperty currentInitiative = new SimpleIntegerProperty(0);
 
-    private static GameEngine gameEngine;
 
-    public static GameEngine getInstance() {
-        if (gameEngine == null) {
-            gameEngine = new GameEngine();
-        }
-        return gameEngine;
-    }
-
-
-    private GameEngine() {
+    public GameEngine() {
         super();
         GameEvent.getInstance().addObserver(this);
 
@@ -59,7 +50,7 @@ public class GameEngine  implements Observer {
                     for (Card startingCard : character.getStartingCards()) {
                         startingCard.setOwner(player);
                         player.getDraw()
-                                .add(startingCard);
+                                .addToDrawPile(startingCard);
                     }
                 }
 
@@ -176,7 +167,7 @@ public class GameEngine  implements Observer {
                 for (Card card : player.getHand()) {
                     card.getKeywords().remove(Keyword.EXHAUSTED);
                 }
-                for (Card card : player.getDraw().getDiscards()) {
+                for (Card card : player.getDraw().getDiscardPile()) {
                     card.getKeywords().remove(Keyword.EXHAUSTED);
                 }
 

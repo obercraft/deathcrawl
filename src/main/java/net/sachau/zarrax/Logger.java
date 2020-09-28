@@ -1,5 +1,6 @@
 package net.sachau.zarrax;
 
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.gui.Console;
 
@@ -56,7 +57,7 @@ public class Logger {
             return;
         }
         if (logLevel.getPriority() >= level.getPriority()) {
-            if (GameEngine.getInstance().isInitialized()) {
+            if (ApplicationContext.getGameEngine().isInitialized()) {
                 getConsole().appendText(text);
             }
             System.out.println(text);

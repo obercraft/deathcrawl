@@ -40,7 +40,7 @@ public class CommandParameter {
     }
 
     public int getInt(int index, int defaultValue) {
-        if (arguments == null || arguments.size() < index) {
+        if (arguments == null || index >= arguments.size() ) {
             return defaultValue;
         }
         return NumberUtils.toInt(arguments.get(0), defaultValue);

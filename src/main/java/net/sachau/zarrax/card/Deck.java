@@ -11,41 +11,57 @@ import net.sachau.zarrax.engine.Player;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Deck extends LinkedList<Card> {
+public class Deck  {
 
-    private List<Card> discards;
+    private List<Card> drawPile;
+    private List<Card> discardPile;
 
     public Deck() {
         super();
-        discards = new LinkedList<>();
+        this.drawPile = new ArrayList<>();
+        this.discardPile = new ArrayList<>();
     }
 
     public void discard(Card card) {
-        discards.add(card);
+        this.discardPile.add(card);
+        return;
     }
 
     public void shuffle() {
-        for (Card card : this) {
+        for (Card card : this.drawPile) {
             card.setVisible(false);
         }
-        Collections.shuffle(this);
+        Collections.shuffle(this.drawPile);
     }
 
     public Card draw() {
-        if (this.size() > 0) {
-            return this.remove();
-        } else if (this.discards.size() == 0){
+        if (this.drawPile.size() > 0) {
+            return this.drawPile.remove(0);
+        } else if (this.discardPile.size() == 0){
             return null;
         } else {
-            this.addAll(discards);
-            this.discards.clear();
+            this.drawPile.addAll(discardPile);
+            this.discardPile.clear();
             shuffle();
             return this.draw();
         }
 
     }
 
-    public List<Card> getDiscards() {
-        return discards;
+    public List<Card> getDiscardPile() {
+        return this.discardPile;
+    }
+
+    public void addToDrawPile(Card card) {
+        this.drawPile.add(card);
+    }
+
+
+    public int getSize() {
+        return drawPile.size() + discardPile.size();
+    }
+
+    public List<Card> getDrawPile() {
+        return drawPile;
     }
 }

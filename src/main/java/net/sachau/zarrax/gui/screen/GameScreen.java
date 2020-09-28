@@ -20,10 +20,16 @@ public class GameScreen extends HBox implements Observer {
 
 
     @Resource
-    WelcomeScreen welcomeScreen;
+    private WelcomeScreen welcomeScreen;
 
+    @Resource
     private CreateGameScreen createScreen;
+
+    @Resource
     private MovementScreen movementScreen;
+
+    @Resource
+    private GameEngine gameEngine;
 
     public GameScreen() {
         super();
@@ -44,27 +50,17 @@ public class GameScreen extends HBox implements Observer {
 
             case CREATE_GAME:
                 getChildren().clear();
-
-                if (createScreen == null) {
-                    createScreen = new CreateGameScreen();
-                }
                 getChildren().add(createScreen);
                 return;
 
             case START_TURN:
                 getChildren().clear();
-
-                if (movementScreen == null) {
-                    movementScreen = new MovementScreen();
-                }
                 getChildren().add(movementScreen);
                 movementScreen.init();
                 return;
 
-
             case GAMEOVER:
-                GameEngine.getInstance()
-                        .gameOver();
+                gameEngine.gameOver();
                 return;
             default:
         }

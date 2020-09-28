@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import net.sachau.zarrax.engine.GameComponent;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.Player;
@@ -18,10 +19,15 @@ import net.sachau.zarrax.gui.image.Tile;
 import net.sachau.zarrax.gui.image.TileSet;
 import net.sachau.zarrax.map.Land;
 
+import javax.annotation.Resource;
 import java.time.temporal.ValueRange;
 import java.util.*;
 
+@GameComponent
 public class WorldMap extends HBox implements Observer {
+
+    @Resource
+    private GameEngine gameEngine;
 
     public static DataFormat mapFormat =new DataFormat("map");
     private AnchorPane map = new AnchorPane();
@@ -55,12 +61,10 @@ public class WorldMap extends HBox implements Observer {
     }
 
     public void init() {
-        int columns = GameEngine.getInstance().getWorld().getColumns();
-        int rows = GameEngine.getInstance().getWorld().getRows();
-        Player player = GameEngine.getInstance().getPlayer();
-        Land[][] worldMap = GameEngine.getInstance()
-                .getWorld()
-                .getMap();
+        int columns = gameEngine.getWorld().getColumns();
+        int rows = gameEngine.getWorld().getRows();
+        Player player = gameEngine.getPlayer();
+        Land[][] worldMap = gameEngine.getWorld().getMap();
         map.getChildren().clear();
         for (int x = 0; x < columns; x++) {
             for (int y = 0; y < rows; y++) {
@@ -106,7 +110,7 @@ public class WorldMap extends HBox implements Observer {
     public void update(Observable o, Object arg) {
         switch (GameEvent.getType(arg)) {
             case PARTYMOVE:
-                Player player = GameEngine.getInstance().getPlayer();
+                Player player = gameEngine.getPlayer();
                 partyTile.relocate(player.getX() * Tile.WIDTH, player.getY() * Tile.HEIGHT);
                 return;
             case LANDINFO:

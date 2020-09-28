@@ -31,7 +31,7 @@ public class InitTask extends Task<String> {
 //                .load("bold",Main.class.getResourceAsStream("/fonts/LibreBaskerville-Bold.ttf"), fontSize).progress(this, 7)
 //        ;
         ApplicationContext.init(width, height);
-        GameEngine.getInstance().setInitialized(true);
+        ApplicationContext.getGameEngine().setInitialized(true);
         this.update(10);
         return null;
     }

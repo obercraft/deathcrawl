@@ -15,7 +15,7 @@ public class Draw implements CardCommand {
         int amount = commandParameter.getInt(0, 1);
         Player p = sourceCard.getPlayer();
         if (p != null) {
-            int max = Math.min(amount, p.getDraw().size() + p.getDraw().getDiscards().size());
+            int max = Math.min(amount, p.getDraw().getSize());
             for (int i = 0; i< max; i++) {
                 Card card = p.draw();
                 p.addCardToHand(card);

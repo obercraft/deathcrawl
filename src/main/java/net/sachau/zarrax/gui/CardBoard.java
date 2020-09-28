@@ -3,8 +3,7 @@ package net.sachau.zarrax.gui;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.sachau.zarrax.Logger;
-import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.Player;
+import net.sachau.zarrax.engine.ApplicationContext;
 
 public class CardBoard extends VBox {
 
@@ -14,8 +13,8 @@ public class CardBoard extends VBox {
         HBox row2 = new HBox();
         HBox row3 = new HBox();
 
-        DeckPane playArea = new DeckPane(GameEngine.getInstance().getPlayer().hazardsProperty(), 5, "card-small");
-        DeckPane hand = new DeckPane(GameEngine.getInstance().getPlayer().handProperty(), 5, "card-small");
+        DeckPane playArea = new DeckPane(ApplicationContext.getPlayer().hazardsProperty(), 5, "card-small");
+        DeckPane hand = new DeckPane(ApplicationContext.getPlayer().handProperty(), 5, "card-small");
         //DeckPane partyArea = new DeckPane(player.partyProperty(), 5, "card-small");
         PartyPane partyPane = new PartyPane();
         ActiveCardPane activeCardPane = new ActiveCardPane();

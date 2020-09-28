@@ -85,14 +85,13 @@ public class Player extends Creature {
 
 	public void initHand() {
 		if (getHand().size() == 0) {
-			int max = Math.min(getMaxHandsize(), draw.size() + draw.getDiscards()
-					.size());
+			int max = Math.min(getMaxHandsize(), draw.getSize());
 			for (int i = 0; i < max; i++) {
 				Card card = draw.draw();
 				card.setSource(Card.Source.HAND);
 				card.setOwner(this);
 				card.setVisible(true);
-
+				this.addCardToHand(card);
 			}
 		}
 	}
@@ -181,8 +180,8 @@ public class Player extends Creature {
 			}
 		}
 		if (toDiscard != null) {
-			getHand().remove(toDiscard);
 			getDraw().discard(toDiscard);
+			getHand().remove(toDiscard);
 		}
 	}
 
@@ -219,12 +218,12 @@ public class Player extends Creature {
 	public void addCardToDraw(Card card) {
 		card.setOwner(this);
 		card.setVisible(false);
-		draw.add(card);
-		Collections.shuffle(draw);
+		draw.addToDrawPile(card);
+		draw.shuffle();
 	}
 
 	public void resetHand() {
-		int cardsToDraw = Math.min(getMaxHandsize() - this.getHand().size(), draw.size() + draw.getDiscards().size());
+		int cardsToDraw = Math.min(getMaxHandsize() - this.getHand().size(), draw.getSize());
 		for (int i = 0; i< cardsToDraw; i++) {
 			Card card = draw.draw();
 			addCardToHand(card);

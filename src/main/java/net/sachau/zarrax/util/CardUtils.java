@@ -2,9 +2,9 @@ package net.sachau.zarrax.util;
 
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
-import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.command.CommandTarget;
-import net.sachau.zarrax.engine.GameEngine;
+import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.Player;
 
 import java.util.ArrayList;
@@ -65,12 +65,11 @@ public class CardUtils {
 
         List<Card> possibleTargets;
         if (attackingCard.getOwner() instanceof Player) {
-            possibleTargets = GameEngine.getInstance()
-                    .getPlayer()
+            possibleTargets = ApplicationContext.getPlayer()
                     .getHazards();
 
         } else {
-            possibleTargets = GameEngine.getInstance()
+            possibleTargets = ApplicationContext
                     .getPlayer()
                     .getParty();
         }
@@ -123,9 +122,9 @@ public class CardUtils {
                 targets.add(target);
                 break;
             case ALL: {
-                List<Card> cards = (source.getOwner() instanceof Player) ? GameEngine.getInstance()
+                List<Card> cards = (source.getOwner() instanceof Player) ? ApplicationContext
                         .getPlayer()
-                        .getParty() : GameEngine.getInstance()
+                        .getParty() : ApplicationContext
                         .getPlayer()
                         .getHazards();
                 if (cards != null) {
@@ -134,9 +133,9 @@ public class CardUtils {
             }
             break;
             case RANDOM: {
-                List<Card> cards = (source.getOwner() instanceof Player) ? GameEngine.getInstance()
+                List<Card> cards = (source.getOwner() instanceof Player) ? ApplicationContext
                         .getPlayer()
-                        .getParty() : GameEngine.getInstance()
+                        .getParty() : ApplicationContext
                         .getPlayer()
                         .getHazards();
                 if (cards != null) {
@@ -147,9 +146,9 @@ public class CardUtils {
             }
             break;
             case ADJACENT: {
-                List<Card> cards = (source.getOwner() instanceof Player) ? GameEngine.getInstance()
+                List<Card> cards = (source.getOwner() instanceof Player) ? ApplicationContext
                         .getPlayer()
-                        .getParty() : GameEngine.getInstance()
+                        .getParty() : ApplicationContext
                         .getPlayer()
                         .getHazards();
                 if (cards != null) {

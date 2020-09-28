@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.HBox;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.gui.card.CardTile;
 
@@ -19,7 +20,7 @@ public class ActiveCardPane extends HBox {
         setHeight(CardTile.HEIGHT);
         setWidth(CardTile.WIDTH);
 
-        Card card = GameEngine.getInstance()
+        Card card = ApplicationContext.getGameEngine()
                 .getCurrentCard();
 
         if (card != null) {
@@ -27,7 +28,7 @@ public class ActiveCardPane extends HBox {
             getChildren().add(current);
         }
 
-        GameEngine.getInstance()
+        ApplicationContext.getGameEngine()
                 .currentInitiativeProperty()
                 .addListener(new ChangeListener<Number>() {
                                  @Override
@@ -36,7 +37,7 @@ public class ActiveCardPane extends HBox {
                                          getChildren().remove(current);
                                          current = null;
                                      }
-                                     current = new CardTile(GameEngine.getInstance()
+                                     current = new CardTile(ApplicationContext.getGameEngine()
                                              .getCurrentCard(), "");
                                      getChildren().add(current);
                                  }

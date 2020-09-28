@@ -2,13 +2,10 @@ package net.sachau.zarrax.card;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import net.sachau.zarrax.engine.GameEngine;
+import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.type.Environment;
 import net.sachau.zarrax.card.type.Monster;
-import net.sachau.zarrax.engine.Player;
-import net.sachau.zarrax.engine.GameEventContainer;
-import net.sachau.zarrax.engine.GameEvent;
 
 public class ThreatListener implements ChangeListener<Number> {
 
@@ -25,7 +22,7 @@ public class ThreatListener implements ChangeListener<Number> {
             Logger.debug(card + " destroyed");
 
             if (card instanceof Environment) {
-                Player player = GameEngine.getInstance().getPlayer();
+                Player player = ApplicationContext.getPlayer();
                 Monster mc = (Monster) card;
                 int gold = mc.getGold() + player.getGold();
                 player.setGold(gold);

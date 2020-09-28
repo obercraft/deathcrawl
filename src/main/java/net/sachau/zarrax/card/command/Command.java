@@ -5,7 +5,8 @@ import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.LimitedUsage;
-import net.sachau.zarrax.engine.GameEngine;
+import net.sachau.zarrax.engine.ApplicationContext;
+
 import net.sachau.zarrax.engine.Player;
 import org.apache.commons.lang3.StringUtils;
 
@@ -68,7 +69,7 @@ public class Command {
 
         // .. otherwise check if owner can play the card
         if (source.getOwner() instanceof Player) {
-            Card currentCard = GameEngine.getInstance()
+            Card currentCard = ApplicationContext.getGameEngine()
                     .getCurrentCard();
             if (!currentCard.hasOneKeyword(source.getKeywords())) {
                 return CommandResult.notAllowed(currentCard + " cannot play " + source);
@@ -79,8 +80,7 @@ public class Command {
         CommandResult result = CommandParser.executeCommands(source, target);
         if (result.isSuccessful()) {
             if (source.getOwner() instanceof Player) {
-                GameEngine.getInstance()
-                        .getPlayer()
+                ApplicationContext.getPlayer()
                         .discard(source);
                 Logger.debug("discarding " + source);
             }

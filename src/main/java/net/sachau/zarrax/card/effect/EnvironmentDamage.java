@@ -1,5 +1,6 @@
 package net.sachau.zarrax.card.effect;
 
+import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.engine.Player;
@@ -12,7 +13,7 @@ public class EnvironmentDamage extends CardEffect {
 
     @Override
     public void start(Card targetCard) {
-        Player player = GameEngine.getInstance()
+        Player player = ApplicationContext
                 .getPlayer();
         for (Card card : player.getParty()) {
             int hits = card.getHits() - Math.max(1, targetCard.getDamage());
