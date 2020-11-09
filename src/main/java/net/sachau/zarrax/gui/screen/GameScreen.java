@@ -6,33 +6,31 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameComponent;
-import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.GameEvent;
+import net.sachau.zarrax.engine.*;
+import net.sachau.zarrax.v2.GEngine;
 
-import javax.annotation.Resource;
 import java.util.Observable;
 import java.util.Observer;
 
-@GameComponent
+@MainScreen
+@GuiComponent
 public class GameScreen extends HBox implements Observer {
 
+    final private WelcomeScreen welcomeScreen;
 
-    @Resource
-    private WelcomeScreen welcomeScreen;
+    final private CreateGameScreen createScreen;
 
-    @Resource
-    private CreateGameScreen createScreen;
+    final private MovementScreen movementScreen;
 
-    @Resource
-    private MovementScreen movementScreen;
+    final private GEngine engine;
 
-    @Resource
-    private GameEngine gameEngine;
-
-    public GameScreen() {
+    @Autowired
+    public GameScreen(WelcomeScreen welcomeScreen, CreateGameScreen createScreen, MovementScreen movementScreen, GEngine engine) {
         super();
+        this.welcomeScreen = welcomeScreen;
+        this.createScreen = createScreen;
+        this.movementScreen = movementScreen;
+        this.engine = engine;
         GameEvent.getInstance().addObserver(this);
         setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         setWidth(ApplicationContext.getInstance().getWidth());
@@ -60,7 +58,7 @@ public class GameScreen extends HBox implements Observer {
                 return;
 
             case GAMEOVER:
-                gameEngine.gameOver();
+                engine.gameOver();
                 return;
             default:
         }

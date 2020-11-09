@@ -9,25 +9,20 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import net.sachau.zarrax.engine.GameComponent;
-import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.GameEvent;
-import net.sachau.zarrax.engine.Player;
+import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.gui.image.Tile;
-import net.sachau.zarrax.gui.image.TileSet;
+import net.sachau.zarrax.gui.screen.Autowired;
 import net.sachau.zarrax.map.Land;
+import net.sachau.zarrax.v2.GEngine;
 
-import javax.annotation.Resource;
-import java.time.temporal.ValueRange;
 import java.util.*;
 
-@GameComponent
+@GuiComponent
 public class WorldMap extends HBox implements Observer {
 
-    @Resource
-    private GameEngine gameEngine;
+
+    private final GEngine engine;
 
     public static DataFormat mapFormat =new DataFormat("map");
     private AnchorPane map = new AnchorPane();
@@ -39,8 +34,10 @@ public class WorldMap extends HBox implements Observer {
     private Text landInfoText = new Text();
     private Text moveInfoText = new Text();
 
-    public WorldMap() {
+    @Autowired
+    public WorldMap(GEngine engine) {
         super();
+        this.engine = engine;
         GameEvent.getInstance()
                 .addObserver(this);
 
@@ -61,10 +58,10 @@ public class WorldMap extends HBox implements Observer {
     }
 
     public void init() {
-        int columns = gameEngine.getWorld().getColumns();
-        int rows = gameEngine.getWorld().getRows();
-        Player player = gameEngine.getPlayer();
-        Land[][] worldMap = gameEngine.getWorld().getMap();
+        int columns = engine.getWorld().getColumns();
+        int rows = engine.getWorld().getRows();
+        Player player = engine.getPlayer();
+        Land[][] worldMap = engine.getWorld().getMap();
         map.getChildren().clear();
         for (int x = 0; x < columns; x++) {
             for (int y = 0; y < rows; y++) {
@@ -110,7 +107,7 @@ public class WorldMap extends HBox implements Observer {
     public void update(Observable o, Object arg) {
         switch (GameEvent.getType(arg)) {
             case PARTYMOVE:
-                Player player = gameEngine.getPlayer();
+                Player player = engine.getPlayer();
                 partyTile.relocate(player.getX() * Tile.WIDTH, player.getY() * Tile.HEIGHT);
                 return;
             case LANDINFO:

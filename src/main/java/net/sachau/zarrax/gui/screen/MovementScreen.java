@@ -1,27 +1,23 @@
 package net.sachau.zarrax.gui.screen;
 
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import net.sachau.zarrax.engine.GameComponent;
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.GameEventContainer;
+import net.sachau.zarrax.engine.GuiComponent;
 import net.sachau.zarrax.gui.map.WorldMap;
 
-import javax.annotation.Resource;
-
-@GameComponent
+@GuiComponent
 public class MovementScreen extends ScreenWithSidebar {
 
-    @Resource
-    private WorldMap worldMap;
+    final private WorldMap worldMap;
 
-    public MovementScreen() {
+    @Autowired
+    public MovementScreen(WorldMap worldMap) {
         super();
+        this.worldMap = worldMap;
 
-        getMainArea().getChildren().add(worldMap);
+        getMainArea().getChildren().add(this.worldMap);
 
 
         Button button = new Button();

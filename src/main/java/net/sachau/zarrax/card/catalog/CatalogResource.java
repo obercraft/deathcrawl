@@ -14,5 +14,5 @@ import java.util.*;
 
 public interface CatalogResource {
 
-    void init(boolean withTexts) throws Exception;
+    void init(Catalog catalog, boolean withTexts) throws Exception;
 }

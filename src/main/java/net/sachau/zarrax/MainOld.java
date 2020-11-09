@@ -22,7 +22,7 @@ import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.gui.screen.GameScreen;
 
-public class Main extends Application {
+public class MainOld extends Application {
 
 
     @Override

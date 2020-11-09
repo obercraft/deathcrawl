@@ -109,7 +109,7 @@
 
                     <archive>
                         <manifest>
-                            <mainClass>net.sachau.zarrax.Main</mainClass>
+                            <mainClass>net.sachau.zarrax.MainOld</mainClass>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>

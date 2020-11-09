@@ -81,7 +81,7 @@ public class Catalog {
 
         for (CatalogResource catalogResource : catalogResources) {
             Logger.debug("reading " + catalogResource.getClass().getSimpleName());
-            catalogResource.init(withTexts);
+            catalogResource.init(this, withTexts);
         }
 
         Logger.debug("reading catalog done");

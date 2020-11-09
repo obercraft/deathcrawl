@@ -39,7 +39,7 @@ public class CardParser {
     private static final String effectPrefix = Card.class.getCanonicalName()
             .replace("Card", "effect");
 
-    public static List<Card> parse(InputStream inputStream, boolean withTexts) throws Exception {
+    public static List<Card> parse(Catalog catalog, InputStream inputStream, boolean withTexts) throws Exception {
 
         DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();
@@ -65,13 +65,13 @@ public class CardParser {
         List<Card> result = new LinkedList<>();
         for (int i = 0; i < root.getElementsByTagName("card")
                 .getLength(); i++) {
-            result.add(parse(root.getElementsByTagName("card")
+            result.add(parse(catalog, root.getElementsByTagName("card")
                     .item(i), withTexts));
         }
         return result;
     }
 
-    private static Card parse(Node node, boolean withTexts) throws IllegalAccessException, InstantiationException {
+    private static Card parse(Catalog catalog, Node node, boolean withTexts) throws IllegalAccessException, InstantiationException {
         Long start = new Date().getTime();
         Card card = null;
 
@@ -219,8 +219,7 @@ public class CardParser {
                     for (String startingCard : cards) {
                         try {
                             characterCard.getStartingCards()
-                                    .add(CardUtils.copyCard(ApplicationContext.getCatalog()
-                                            .get(startingCard)));
+                                    .add(CardUtils.copyCard(catalog.get(startingCard)));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -239,8 +238,7 @@ public class CardParser {
                     Character characterCard = (Character) card;
                     for (String levelCard : cards) {
                         try {
-                            characterCard.addLevelCard(CardUtils.copyCard(ApplicationContext.getCatalog()
-                                    .get(levelCard)));
+                            characterCard.addLevelCard(CardUtils.copyCard(catalog.get(levelCard)));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -307,7 +305,7 @@ public class CardParser {
                     .equals("text")) {
                 CardText cardText = CardText.builder();
                 TextParser.parse(cardNode, cardText);
-                ApplicationContext.getCatalog().putText(card.getName(), cardText.write());
+                catalog.putText(card.getName(), cardText.write());
             }
 
             if (cardNode.getNodeName()
@@ -356,8 +354,8 @@ public class CardParser {
         }
         if (card != null) {
 
-            ApplicationContext.getCatalog()
-                    .add(card);
+            catalog.add(card);
+            catalog.putById(card);
         }
 
         Logger.debug(card.getName() + ": " + Math.abs(new Date().getTime() - start));

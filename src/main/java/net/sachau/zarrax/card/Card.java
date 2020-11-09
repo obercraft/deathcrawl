@@ -57,7 +57,7 @@ public abstract class Card {
         this.hitsProperty()
                 .addListener(new HitsListener(this));
 
-        ApplicationContext.getCatalog().putById(this);
+//        ApplicationContext.getCatalog().putById(this);
 //        Card card = this;
 //        this.hitsProperty().addListener(new ChangeListener<Number>() {
 //            @Override
@@ -110,7 +110,7 @@ public abstract class Card {
         this.hitsProperty()
                 .addListener(new HitsListener(this));
 
-        ApplicationContext.getCatalog().putById(this);
+//        ApplicationContext.getCatalog().putById(this);
     }
 
     public Card(int initialHits, int initialDamage) {

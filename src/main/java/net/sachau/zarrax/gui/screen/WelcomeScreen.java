@@ -3,28 +3,27 @@ package net.sachau.zarrax.gui.screen;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameComponent;
 import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.GameEventContainer;
+import net.sachau.zarrax.engine.GuiComponent;
+import net.sachau.zarrax.v2.GEngine;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import java.util.Observer;
-
-@GameComponent
+@GuiComponent
 public class WelcomeScreen extends ScreenWithSidebar {
 
-    @Resource
-    private Catalog catalog;
+    private final Catalog catalog;
 
-    @PostConstruct
-    public void init() {
+    private final GEngine engine;
+
+    @Autowired
+    public WelcomeScreen(Catalog catalog, GEngine engine) {
+        super();
+        this.catalog = catalog;
+        this.engine = engine;
         HBox welcome = new HBox();
         welcome.setAlignment(Pos.BASELINE_CENTER);
-        welcome.getChildren().add(catalog.getText("intro"));
+        welcome.getChildren().add(this.catalog.getText("intro"));
         getMainArea().getChildren().add(welcome);
 
 
@@ -34,7 +33,7 @@ public class WelcomeScreen extends ScreenWithSidebar {
         getSideArea().getChildren().add(newGame);
 
         newGame.setOnMouseClicked(event -> {
-            GameEvent.getInstance().send(GameEventContainer.Type.CREATE_GAME);
+            engine.send(GameEventContainer.Type.CREATE_GAME);
         });
     }
 

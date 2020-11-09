@@ -102,7 +102,7 @@ public class ApplicationContext {
             Object obj = component.newInstance();
             contextData.put(component, obj);
             createResources(obj);
-            callInitMethod(obj);
+            // callInitMethod(obj);
             contextData.put(component, obj);
             return obj;
         } catch (InstantiationException e) {
@@ -138,6 +138,7 @@ public class ApplicationContext {
                 if  (a.annotationType().equals(PostConstruct.class)) {
                     try {
                         method.setAccessible(true);
+                        System.out.println(component.getClass() + " invoking "  + method.getName());
                         method.invoke(component);
                     } catch (Exception e) {
                         e.printStackTrace();
