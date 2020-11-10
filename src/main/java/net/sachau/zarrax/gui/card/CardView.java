@@ -6,13 +6,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.TextFlow;
-import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.gui.text.CardText;
 import net.sachau.zarrax.gui.Symbol;
 import net.sachau.zarrax.gui.image.Tile;
 import net.sachau.zarrax.gui.image.TileSet;
+import net.sachau.zarrax.gui.text.CardText;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GEvents;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Observer;
@@ -26,12 +27,13 @@ public abstract class CardView extends AnchorPane implements Observer {
     public static final double WIDTH = 240;
     private Card card;
 
+    private GEvents events = GEngine.getBean(GEvents.class);
+
     public CardView(Card card, String css) {
         super();
         this.card = card;
 
-        GameEvent.getInstance()
-                .addObserver(this);
+        events.addObserver(this);
 
         Image image = new Image(this.getClass()
                 .getResourceAsStream("/images/card5.png"));

@@ -1,7 +1,5 @@
 package net.sachau.zarrax;
 
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.gui.Console;
 import net.sachau.zarrax.v2.GEngine;
 

@@ -8,14 +8,16 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class GGraphics {
 
-    double width;
-    double height;
+    private double width;
+    private double height;
     private boolean initialized;
+    private HBox loadScreen;
 
     private Stage primaryStage;
     public GGraphics() {
@@ -31,8 +33,16 @@ public class GGraphics {
         this.width = primaryScreenBounds.getWidth() - 100;
         this.height = primaryScreenBounds.getHeight() - 100;
         //GameScreen gameScreen = new GameScreen();
-        HBox loadScreen = new HBox();
+        loadScreen = new HBox();
+        loadScreen.setMinHeight(height);
+        loadScreen.setMaxHeight(height);
+        loadScreen.setMinWidth(width);
+        loadScreen.setMinWidth(width);
+
         loadScreen.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        Text pleaseWait = new Text("loading Zarrax");
+        pleaseWait.setFill(Color.WHITE);
+        loadScreen.getChildren().addAll(pleaseWait);
         Scene content = new Scene(loadScreen, width, height);
 
         primaryStage.setScene(content);
@@ -49,5 +59,17 @@ public class GGraphics {
 
     public void show() {
         primaryStage.show();
+    }
+
+    public HBox getLoadScreen() {
+        return loadScreen;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 }

@@ -8,7 +8,7 @@ import java.util.Observable;
 public class GEvents extends Observable {
 
 
-    public static GameEventContainer.Type getType(Object arg) {
+    public GameEventContainer.Type getType(Object arg) {
         if (arg instanceof GameEventContainer) {
             return ((GameEventContainer) arg).getType();
         }

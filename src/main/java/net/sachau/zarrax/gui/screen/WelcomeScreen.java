@@ -4,23 +4,23 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GuiComponent;
 import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GEvents;
 
 @GuiComponent
 public class WelcomeScreen extends ScreenWithSidebar {
 
     private final Catalog catalog;
 
-    private final GEngine engine;
+    private final GEvents events;
 
     @Autowired
-    public WelcomeScreen(Catalog catalog, GEngine engine) {
+    public WelcomeScreen(Catalog catalog, GEvents events) {
         super();
         this.catalog = catalog;
-        this.engine = engine;
+        this.events = events;
         HBox welcome = new HBox();
         welcome.setAlignment(Pos.BASELINE_CENTER);
         welcome.getChildren().add(this.catalog.getText("intro"));
@@ -33,7 +33,7 @@ public class WelcomeScreen extends ScreenWithSidebar {
         getSideArea().getChildren().add(newGame);
 
         newGame.setOnMouseClicked(event -> {
-            engine.send(GameEventContainer.Type.CREATE_GAME);
+            events.send(GameEventContainer.Type.CREATE_GAME);
         });
     }
 

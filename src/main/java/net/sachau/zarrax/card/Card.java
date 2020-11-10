@@ -3,7 +3,6 @@ package net.sachau.zarrax.card;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import net.sachau.zarrax.Logger;
-import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.effect.Guard;
@@ -11,11 +10,12 @@ import net.sachau.zarrax.card.effect.KeywordEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Illumination;
-import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.util.DiceUtils;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GState;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -47,6 +47,8 @@ public abstract class Card {
 
     private Creature owner;
     private Source source;
+
+    private GState state = GEngine.getBean(GState.class);
 
     public Card() {
         super();
@@ -250,7 +252,7 @@ public abstract class Card {
                 hasBadLight = true;
             }
             if (hasBadLight) {
-                Player player = ApplicationContext.getPlayer();
+                Player player = state.getPlayer();
                 if (this.owner instanceof Player) {
 
                     for (Card c : player.getParty()) {
@@ -319,7 +321,7 @@ public abstract class Card {
         Logger.debug(this + (isRetaliate ? " retaliates " : " attacks " ) + target + " for " + attack + " damage");
         if (target.hasKeyword(Keyword.RETALIATE)) {
 
-            Card retaliateTarget = ApplicationContext.getGameEngine().getCurrentCard();
+            Card retaliateTarget = state.getCurrentCard();
             if (retaliateTarget != null && retaliateTarget.hasKeyword(Keyword.CREATURE)) {
                 target.attack(retaliateTarget, target.getDamage(), true);
             } else {
@@ -377,7 +379,7 @@ public abstract class Card {
         if (this.isActive()) {
             return true;
         }
-        Card currentCard = ApplicationContext.getGameEngine()
+        Card currentCard = state
                 .getCurrentCard();
         if (currentCard != null) {
 

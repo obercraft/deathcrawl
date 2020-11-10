@@ -6,16 +6,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GEvents;
 
 @GuiComponent
 public class CreateGameScreen extends ScreenWithSidebar {
 
     final private GEngine engine;
+    final private GEvents events;
 
     @Autowired
-    public CreateGameScreen(GEngine gameEngine) {
+    public CreateGameScreen(GEngine engine, GEvents events) {
         super();
-        this.engine = gameEngine;
+        this.engine = engine;
+        this.events = events;
 
         HBox welcome = new HBox();
         welcome.setAlignment(Pos.BASELINE_CENTER);
@@ -29,8 +32,8 @@ public class CreateGameScreen extends ScreenWithSidebar {
         getSideArea().getChildren().add(button);
 
         button.setOnMouseClicked(event -> {
-            this.engine.createGame();
-            GameEvent.getInstance().send(GameEventContainer.Type.START_TURN);
+            engine.createGame();
+            events.send(GameEventContainer.Type.START_TURN);
         });
 
     }

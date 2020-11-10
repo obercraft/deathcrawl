@@ -6,8 +6,11 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import net.sachau.zarrax.engine.*;
+import net.sachau.zarrax.engine.GuiComponent;
+import net.sachau.zarrax.engine.MainScreen;
 import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GEvents;
+import net.sachau.zarrax.v2.GGraphics;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -24,23 +27,26 @@ public class GameScreen extends HBox implements Observer {
 
     final private GEngine engine;
 
+    final private GEvents events;
+
     @Autowired
-    public GameScreen(WelcomeScreen welcomeScreen, CreateGameScreen createScreen, MovementScreen movementScreen, GEngine engine) {
+    public GameScreen(WelcomeScreen welcomeScreen, CreateGameScreen createScreen, MovementScreen movementScreen, GEngine engine, GEvents events, GGraphics graphics) {
         super();
         this.welcomeScreen = welcomeScreen;
         this.createScreen = createScreen;
         this.movementScreen = movementScreen;
         this.engine = engine;
-        GameEvent.getInstance().addObserver(this);
+        this.events = events;
+        events.addObserver(this);
         setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-        setWidth(ApplicationContext.getInstance().getWidth());
-        setHeight(ApplicationContext.getInstance().getHeight());
+        setWidth(graphics.getWidth());
+        setHeight(graphics.getHeight());
 
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        switch (GameEvent.getType(arg)) {
+        switch (events.getType(arg)) {
             case WELCOME:
                 getChildren().clear();
                 getChildren().add(welcomeScreen);

@@ -1,21 +1,22 @@
 package net.sachau.zarrax.gui.screen;
 
 import javafx.scene.control.Button;
-import net.sachau.zarrax.engine.GameComponent;
-import net.sachau.zarrax.engine.GameEvent;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.GuiComponent;
 import net.sachau.zarrax.gui.map.WorldMap;
+import net.sachau.zarrax.v2.GEvents;
 
 @GuiComponent
 public class MovementScreen extends ScreenWithSidebar {
 
     final private WorldMap worldMap;
+    private final GEvents events;
 
     @Autowired
-    public MovementScreen(WorldMap worldMap) {
+    public MovementScreen(WorldMap worldMap, GEvents events) {
         super();
         this.worldMap = worldMap;
+        this.events = events;
 
         getMainArea().getChildren().add(this.worldMap);
 
@@ -26,7 +27,7 @@ public class MovementScreen extends ScreenWithSidebar {
         getSideArea().getChildren().add(button);
 
         button.setOnMouseClicked(event -> {
-            GameEvent.getInstance().send(GameEventContainer.Type.START_TURN);
+            events.send(GameEventContainer.Type.START_TURN);
         });
 
     }

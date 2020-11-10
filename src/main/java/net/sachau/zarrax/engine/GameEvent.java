@@ -4,6 +4,7 @@ import net.sachau.zarrax.Logger;
 
 import java.util.Observable;
 
+@Deprecated
 public class GameEvent extends Observable {
 
 

@@ -2,7 +2,8 @@ package net.sachau.zarrax.gui.screen;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import net.sachau.zarrax.engine.ApplicationContext;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GGraphics;
 
 public abstract  class ScreenWithSidebar extends HBox {
 
@@ -11,8 +12,9 @@ public abstract  class ScreenWithSidebar extends HBox {
 
     public ScreenWithSidebar() {
         super();
-        double width = ApplicationContext.getInstance().getWidth();
-        double height = ApplicationContext.getInstance().getHeight();
+        GGraphics graphics = GEngine.getBean(GGraphics.class);
+        double width = graphics.getWidth();
+        double height = graphics.getHeight();
 
         setWidth(width);
         setHeight(height);

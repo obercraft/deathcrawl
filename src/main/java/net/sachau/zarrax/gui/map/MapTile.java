@@ -3,18 +3,24 @@ package net.sachau.zarrax.gui.map;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import net.sachau.zarrax.engine.*;
+import net.sachau.zarrax.engine.GameEventContainer;
+import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.image.Tile;
 import net.sachau.zarrax.gui.image.TileSet;
 import net.sachau.zarrax.map.Land;
-import net.sachau.zarrax.map.World;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GEvents;
+import net.sachau.zarrax.v2.GState;
 
 public class MapTile extends AnchorPane {
 
     private int x, y;
     private Land land;
+
+    private GEvents events = GEngine.getBean(GEvents.class);
+    private GState state = GEngine.getBean(GState.class);
+
     public MapTile(Land land, int x, int y) {
         super();
         this.x = x;
@@ -53,7 +59,7 @@ public class MapTile extends AnchorPane {
 
         setOnMouseEntered(event -> {
             GameEventContainer container = new GameEventContainer(GameEventContainer.Type.LANDINFO, land);
-            GameEvent.getInstance().send(container);
+            events.send(container);
         });
 
         setOnDragOver(event -> {
@@ -61,7 +67,7 @@ public class MapTile extends AnchorPane {
                     .hasContent(WorldMap.mapFormat)) {
                 String data = (String) event.getDragboard().getContent(WorldMap.mapFormat);
                 if (data.equals("party")) {
-                    Player player = ApplicationContext.getPlayer();
+                    Player player = state.getPlayer();
                     if (player.getMoves() >= land.getMoveCost() && Math.abs(x - player.getX()) <= 1 && Math.abs(y - player.getY()) <= 1) {
                         event.acceptTransferModes(TransferMode.ANY);
                     }
@@ -75,8 +81,8 @@ public class MapTile extends AnchorPane {
         });
 
         setOnDragDropped(event -> {
-            ApplicationContext.getPlayer().move(land, x, y);
-            GameEvent.getInstance().send(GameEventContainer.Type.PARTYMOVE);
+            state.getPlayer().move(land, x, y);
+            events.send(GameEventContainer.Type.PARTYMOVE);
             event.consume();
 
         });
