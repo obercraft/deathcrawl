@@ -6,10 +6,9 @@ import net.sachau.zarrax.card.command.Command;
 import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Horse;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
+import net.sachau.zarrax.v2.GState;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,20 +18,16 @@ import java.util.ArrayList;
 public class CardEffectTest {
 
     private Catalog catalog = new Catalog();
-    private GameEngine gameEngine = new GameEngine();
+    private GState state = new GState();
 
     Player player;
 
     @Before
     public void init() throws Exception {
-        ApplicationContext.put(GameEngine.class, gameEngine);
-        ApplicationContext.put(Catalog.class, catalog);
 
         player = new Player();
-        gameEngine
-                .setPlayer(player);
-        gameEngine
-                .setInitiativeOrder(new ArrayList<>());
+        state.setPlayer(player);
+        state.setInitiativeOrder(new ArrayList<>());
 
         catalog.initForTesting();
     }
@@ -106,7 +101,7 @@ public class CardEffectTest {
         player.addToParty(thief);
         player.addToParty(wizard);
 
-        gameEngine.setCurrentInitiative(0); // warrior
+        state.setCurrentInitiative(0); // warrior
         for (Card c : player.getParty()) {
             c.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
         }
@@ -136,8 +131,8 @@ public class CardEffectTest {
         player.addCardToHand(horse);
 
         Card paladin = catalog.copyOf("paladin");
-        gameEngine.setCurrentInitiative(0);
-        gameEngine.getInitiativeOrder().add(paladin);
+        state.setCurrentInitiative(0);
+        state.getInitiativeOrder().add(paladin);
 
         CommandResult commandResult = Command.execute(horse, null);
         Assert.assertTrue(commandResult.isSuccessful());

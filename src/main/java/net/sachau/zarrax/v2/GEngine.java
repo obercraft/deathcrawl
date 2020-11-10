@@ -14,6 +14,7 @@ import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.gui.screen.Autowired;
 import net.sachau.zarrax.map.World;
+import net.sachau.zarrax.util.DiceUtils;
 import org.reflections.Reflections;
 
 import javax.annotation.PostConstruct;
@@ -68,7 +69,8 @@ public class GEngine implements Observer {
 
         for (Class<?> dataBeanClass : dataBeanClasses) {
 
-            Object dataBean = dataBeanClass.newInstance();
+            Object dataBean = createBean(dataBeanClass);
+            beans.put(dataBeanClass, dataBean);
             postConstruct(dataBean);
 
             beans.put(dataBeanClass, dataBean);
@@ -138,39 +140,49 @@ public class GEngine implements Observer {
         }
     }
 
-    private void createBean(Class beanClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        if (beans.get(beanClass) != null) {
+    private Object createBean(Class beanClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        Object bean;
+        if (( bean = beans.get(beanClass)) != null) {
             // already created
-            return;
+            return bean;
         }
         Constructor<?>[] constructors = beanClass.getDeclaredConstructors();
-        for (Constructor constructor : constructors) {
-            Annotation annotation = constructor.getAnnotation(Autowired.class);
-            if (annotation != null) {
-                Object[] parameters = new Object[constructor.getParameterTypes().length];
-                int i = 0;
-                for (Class parameterType : constructor.getParameterTypes()) {
-                    System.out.println(beanClass + " Type : " + parameterType);
-                    Object bean = beans.get(parameterType);
-                    if (bean != null) {
-                        parameters[i] = bean;
-                    } else {
-                        createBean(parameterType);
-                        parameters[i] = beans.get(parameterType);
+        if (constructors != null && constructors.length > 0) {
+            for (Constructor constructor : constructors) {
+                Annotation annotation = constructor.getAnnotation(Autowired.class);
+                if (annotation != null) {
+                    Object[] parameters = new Object[constructor.getParameterTypes().length];
+                    int i = 0;
+                    for (Class parameterType : constructor.getParameterTypes()) {
+                        System.out.println(beanClass + " Type : " + parameterType);
+                        Object existingBean = beans.get(parameterType);
+                        if (existingBean != null) {
+                            parameters[i] = existingBean;
+                        } else {
+                            Object newBean = createBean(parameterType);
+                            parameters[i] = newBean;
+                        }
+                        i++;
                     }
-                    i++;
+                    Logger.debug("trying to create " + beanClass);
+                    bean = constructor.newInstance(parameters);
+                    beans.put(beanClass, bean);
+                    Logger.debug("bean " + beanClass + " created");
+                    return bean;
                 }
-                Logger.debug("trying to create " + beanClass);
-                beans.put(beanClass, constructor.newInstance(parameters));
-                Logger.debug("bean " + beanClass + " created");
-            } else {
-                throw new RuntimeException("bean " + beanClass + " has no @Autowired");
             }
         }
+        // default behaviour
+        bean = beanClass.newInstance();
+        beans.put(beanClass, bean);
+        beans.put(beanClass, bean);
+        return bean;
+
     }
 
     public void createGame() {
         state.setPlayer(new Player());
+        DiceUtils.createRandomParty(state.getPlayer());
         state.setWorld(new World());
     }
 
@@ -211,7 +223,7 @@ public class GEngine implements Observer {
             }
 
             case END_MOVEMENT: {
-                events.send(GameEventContainer.Type.START_ENCOUNTER);
+                events.send(GameEventContainer.Type.PREPARE_ENCOUNTER);
                 return;
             }
             case PREPARE_ENCOUNTER: {
@@ -254,11 +266,15 @@ public class GEngine implements Observer {
                     Collections.shuffle(state.getInitiativeOrder());
                     state.setCurrentInitiative(0);
 
-                    events.send(GameEventContainer.Type.START_ENCOUNTER);
+                    events.send(GameEventContainer.Type.GUI_STARTENCOUNTER);
 
                 }
 
                 return;
+            }
+
+            case GUI_STARTENCOUNTER: {
+                events.send(GameEventContainer.Type.START_ENCOUNTER);
             }
 
             case START_ENCOUNTER: {

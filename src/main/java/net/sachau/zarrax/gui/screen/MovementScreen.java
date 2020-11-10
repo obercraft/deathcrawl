@@ -22,12 +22,12 @@ public class MovementScreen extends ScreenWithSidebar {
 
 
         Button button = new Button();
-        button.setText("Start Game");
+        button.setText("MOVEMENT DONE");
 
         getSideArea().getChildren().add(button);
 
         button.setOnMouseClicked(event -> {
-            events.send(GameEventContainer.Type.START_TURN);
+            events.send(GameEventContainer.Type.END_MOVEMENT);
         });
 
     }

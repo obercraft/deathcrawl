@@ -4,11 +4,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.HBox;
 import net.sachau.zarrax.card.Card;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameEngine;
+import net.sachau.zarrax.engine.GuiComponent;
 import net.sachau.zarrax.gui.card.CardTile;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GState;
 
 public class ActiveCardPane extends HBox {
+
+    private GState state = GEngine.getBean(GState.class);
 
     CardTile current;
 
@@ -20,16 +23,14 @@ public class ActiveCardPane extends HBox {
         setHeight(CardTile.HEIGHT);
         setWidth(CardTile.WIDTH);
 
-        Card card = ApplicationContext.getGameEngine()
-                .getCurrentCard();
+        Card card = state.getCurrentCard();
 
         if (card != null) {
             current = new CardTile(card, "");
             getChildren().add(current);
         }
 
-        ApplicationContext.getGameEngine()
-                .currentInitiativeProperty()
+        state.currentInitiativeProperty()
                 .addListener(new ChangeListener<Number>() {
                                  @Override
                                  public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -37,8 +38,7 @@ public class ActiveCardPane extends HBox {
                                          getChildren().remove(current);
                                          current = null;
                                      }
-                                     current = new CardTile(ApplicationContext.getGameEngine()
-                                             .getCurrentCard(), "");
+                                     current = new CardTile(state.getCurrentCard(), "");
                                      getChildren().add(current);
                                  }
                              }

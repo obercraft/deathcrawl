@@ -4,11 +4,10 @@ import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.type.Goblin;
-import net.sachau.zarrax.card.type.Monster;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.util.DiceUtils;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GState;
 
 import java.util.List;
 
@@ -20,10 +19,12 @@ public class GoblinSpawn extends CardEffect {
     @Override
     public void start(Card targetCard) {
         Logger.debug("trigger Goblin Spawn");
-        Player player = ApplicationContext.getPlayer();
+        GState state = GEngine.getBean(GState.class);
+        Catalog catalog = GEngine.getBean(Catalog.class);
+        Player player = state.getPlayer();
         if (player != null && player.getHazards() != null) {
 
-            List<Card> goblins = ApplicationContext.getCatalog().get(Goblin.class);
+            List<Card> goblins = catalog.get(Goblin.class);
             Card card = DiceUtils.getRandomCard(goblins);
             if (card != null) {
                 card.setOwner(null);

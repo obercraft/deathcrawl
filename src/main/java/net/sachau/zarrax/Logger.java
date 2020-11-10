@@ -28,8 +28,6 @@ public class Logger {
     }
 
 
-    private static Console console;
-
     public static void info(String text) {
         log(Level.INFO, text);
     }
@@ -43,21 +41,17 @@ public class Logger {
     }
 
 
-    public static Console getConsole() {
-
-        if (console == null) {
-            console = new Console();
-        }
-        return console;
-    }
-
     private static void log(Level level, String text) {
         if (level == null) {
             return;
         }
         if (logLevel.getPriority() >= level.getPriority()) {
             if (GEngine.getInstance().initialized()) {
-                getConsole().appendText(text);
+                Console console = GEngine.getBean(Console.class);
+                if (console != null) {
+                    console.appendText(text);
+                }
+
             }
             System.out.println(text);
 

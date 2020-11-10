@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import net.sachau.zarrax.engine.GuiComponent;
 import net.sachau.zarrax.engine.MainScreen;
+import net.sachau.zarrax.gui.CardBoard;
 import net.sachau.zarrax.v2.GEngine;
 import net.sachau.zarrax.v2.GEvents;
 import net.sachau.zarrax.v2.GGraphics;
@@ -25,18 +26,21 @@ public class GameScreen extends HBox implements Observer {
 
     final private MovementScreen movementScreen;
 
+    final private CardBoard cardBoard;
+
     final private GEngine engine;
 
     final private GEvents events;
 
     @Autowired
-    public GameScreen(WelcomeScreen welcomeScreen, CreateGameScreen createScreen, MovementScreen movementScreen, GEngine engine, GEvents events, GGraphics graphics) {
+    public GameScreen(WelcomeScreen welcomeScreen, CreateGameScreen createScreen, MovementScreen movementScreen, GEngine engine, GEvents events, GGraphics graphics, CardBoard cardBoard) {
         super();
         this.welcomeScreen = welcomeScreen;
         this.createScreen = createScreen;
         this.movementScreen = movementScreen;
         this.engine = engine;
         this.events = events;
+        this.cardBoard = cardBoard;
         events.addObserver(this);
         setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         setWidth(graphics.getWidth());
@@ -61,6 +65,12 @@ public class GameScreen extends HBox implements Observer {
                 getChildren().clear();
                 getChildren().add(movementScreen);
                 movementScreen.init();
+                return;
+
+            case GUI_STARTENCOUNTER:
+                getChildren().clear();
+                getChildren().add(cardBoard);
+                cardBoard.init();
                 return;
 
             case GAMEOVER:

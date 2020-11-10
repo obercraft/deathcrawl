@@ -1,8 +1,9 @@
 package net.sachau.zarrax.encounter;
 
-import net.sachau.zarrax.gui.image.Tile;
+import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.map.*;
 import net.sachau.zarrax.util.XmlUtils;
+import net.sachau.zarrax.v2.GEngine;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Document;
@@ -18,11 +19,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class EncounterMatrixGenerator {
+
+    private Catalog catalog = GEngine.getBean(Catalog.class);
 
     private static final String typePrefix = Encounters.class.getCanonicalName()
             .replace("Encounters", "");
@@ -151,7 +152,7 @@ public class EncounterMatrixGenerator {
         for (String warningArg : warningArgs) {
             TerrainWarning terrainWarning = new TerrainWarning(terrain, Warning.valueOf(warningArg.trim().toUpperCase()));
 
-            Encounters encounters = new Encounters();
+            Encounters encounters = new Encounters(catalog);
             encounters.addEncounters(item.getTextContent().trim());
             matrix.put(terrainWarning, encounters);
         }

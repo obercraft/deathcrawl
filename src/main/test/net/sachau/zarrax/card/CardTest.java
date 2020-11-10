@@ -2,17 +2,16 @@ package net.sachau.zarrax.card;
 
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.catalog.Catalog;
+import net.sachau.zarrax.card.command.Command;
 import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.command.CommandStage;
-import net.sachau.zarrax.card.effect.*;
-import net.sachau.zarrax.card.type.*;
+import net.sachau.zarrax.card.effect.CardEffect;
+import net.sachau.zarrax.card.effect.Guard;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.card.command.Command;
 import net.sachau.zarrax.card.type.Character;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.GameEventContainer;
+import net.sachau.zarrax.card.type.*;
 import net.sachau.zarrax.engine.Player;
+import net.sachau.zarrax.v2.GState;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,20 +25,16 @@ import java.util.List;
 public class CardTest {
 
     private Catalog catalog = new Catalog();
-    private GameEngine gameEngine = new GameEngine();
+    private GState state = new GState();
 
     private Player player;
 
     @Before
     public void init() throws Exception {
-        ApplicationContext.put(GameEngine.class, gameEngine);
-        ApplicationContext.put(Catalog.class, catalog);
 
         player = new Player();
-        gameEngine
-                .setPlayer(player);
-        gameEngine
-                .setInitiativeOrder(new ArrayList<>());
+        state.setPlayer(player);
+        state.setInitiativeOrder(new ArrayList<>());
 
         catalog.initForTesting();
     }
@@ -94,7 +89,7 @@ public class CardTest {
 
         Card thief = catalog.copyOf("Thief");
         player.addToParty(thief);
-        gameEngine.getInitiativeOrder().add(thief);
+        state.getInitiativeOrder().add(thief);
 
         Assert.assertEquals(thief.getId(), player.getParty().get(0).getId());
         Assert.assertEquals(player.getParty().get(0).getName(), "Thief");
@@ -137,8 +132,8 @@ public class CardTest {
         Card shield = catalog.copyOf("Shield");
         player.addCardToHand(shield);
 
-        gameEngine.getInitiativeOrder().add(wizard);
-        gameEngine.setCurrentInitiative(1);
+        state.getInitiativeOrder().add(wizard);
+        state.setCurrentInitiative(1);
         commandResult = Command.execute(shield, wizard);
         Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertTrue(wizard.hasKeyword(Keyword.ARMOR));
@@ -175,11 +170,11 @@ public class CardTest {
 
         Card warrior = catalog.copyOf("Warrior");
         // trigger events without warrior being in party
-        gameEngine.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
+        // TODO msachau gameEngine.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
         Assert.assertFalse(warrior.hasKeyword(Keyword.ARMOR));
         // trigger again with warrior being in party, this time warrior should have guard
         player.addToParty(warrior);
-        gameEngine.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
+        // TODO msachau gameEngine.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
         Assert.assertTrue(warrior.hasEffect(Guard.class));
 
 
@@ -225,7 +220,7 @@ public class CardTest {
         player.addToHazards(goblin);
         player.addToHazards(goblinWithGuard);
 
-        gameEngine.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
+        // TODO gameEngine.triggerStartEffects(GameEventContainer.Type.START_ENCOUNTER);
 
         // warrior cannot attack guarded goblin
         warrior.reset();
@@ -291,7 +286,7 @@ public class CardTest {
         player.addToParty(limitedUsage);
 
 
-        gameEngine.setCurrentInitiative(0);
+        state.setCurrentInitiative(0);
         commandResult = Command.execute(limitedUsage, warrior);
         Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertEquals(warrior.getHits(), warrior.getMaxHits() -1);
@@ -310,7 +305,7 @@ public class CardTest {
         Command.execute(magicMissile, goblin);
 
         // check if wizard can play magic missile, this should kill the last goblin
-        gameEngine.setCurrentInitiative(1);
+        state.setCurrentInitiative(1);
         commandResult = Command.execute(magicMissile, goblin);
         Assert.assertTrue(commandResult.isSuccessful());
         Assert.assertEquals(0, player.getHazards().size());

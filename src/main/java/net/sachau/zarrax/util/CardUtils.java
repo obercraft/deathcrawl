@@ -4,8 +4,9 @@ import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.command.CommandTarget;
 import net.sachau.zarrax.card.keyword.Keyword;
-import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.engine.Player;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,15 +64,14 @@ public class CardUtils {
             return resultList;
         }
 
+        GState state = GEngine.getBean(GState.class);
         List<Card> possibleTargets;
         if (attackingCard.getOwner() instanceof Player) {
-            possibleTargets = ApplicationContext.getPlayer()
+            possibleTargets = state.getPlayer()
                     .getHazards();
 
         } else {
-            possibleTargets = ApplicationContext
-                    .getPlayer()
-                    .getParty();
+            possibleTargets = state.getPlayer().getParty();
         }
         List<Card> targets = getPossibleTargets(possibleTargets);
         if (targets == null || targets.size() == 0) {
@@ -122,9 +122,10 @@ public class CardUtils {
                 targets.add(target);
                 break;
             case ALL: {
-                List<Card> cards = (source.getOwner() instanceof Player) ? ApplicationContext
+                GState state = GEngine.getBean(GState.class);
+                List<Card> cards = (source.getOwner() instanceof Player) ? state
                         .getPlayer()
-                        .getParty() : ApplicationContext
+                        .getParty() : state
                         .getPlayer()
                         .getHazards();
                 if (cards != null) {
@@ -133,9 +134,10 @@ public class CardUtils {
             }
             break;
             case RANDOM: {
-                List<Card> cards = (source.getOwner() instanceof Player) ? ApplicationContext
+                GState state = GEngine.getBean(GState.class);
+                List<Card> cards = (source.getOwner() instanceof Player) ? state
                         .getPlayer()
-                        .getParty() : ApplicationContext
+                        .getParty() : state
                         .getPlayer()
                         .getHazards();
                 if (cards != null) {
@@ -146,9 +148,10 @@ public class CardUtils {
             }
             break;
             case ADJACENT: {
-                List<Card> cards = (source.getOwner() instanceof Player) ? ApplicationContext
+                GState state = GEngine.getBean(GState.class);
+                List<Card> cards = (source.getOwner() instanceof Player) ? state
                         .getPlayer()
-                        .getParty() : ApplicationContext
+                        .getParty() : state
                         .getPlayer()
                         .getHazards();
                 if (cards != null) {

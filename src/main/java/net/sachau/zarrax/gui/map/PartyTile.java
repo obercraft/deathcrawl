@@ -4,13 +4,8 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.gui.image.Tile;
 import net.sachau.zarrax.gui.image.TileSet;
-import net.sachau.zarrax.map.Land;
 
 import java.util.HashMap;
 import java.util.Map;

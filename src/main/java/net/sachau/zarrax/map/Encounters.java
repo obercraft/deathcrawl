@@ -3,27 +3,31 @@ package net.sachau.zarrax.map;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.card.type.Encounter;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameComponent;
+import net.sachau.zarrax.engine.GameData;
+import net.sachau.zarrax.gui.screen.Autowired;
 import net.sachau.zarrax.util.CardUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@GameData
 public class Encounters {
+
+    private final Catalog catalog;
 
     List<Card> encounters;
 
-    public Encounters() {
+    @Autowired
+    public Encounters(Catalog catalog) {
         super();
+        this.catalog = catalog;
         encounters = new LinkedList<>();
     }
 
     public void addEncounters(String encounterString) {
         String [] encounterArgs = encounterString.split(",", -1);
         for (String encounterArg : encounterArgs) {
-            Card card = ApplicationContext.getCatalog().get(encounterArg.trim());
+            Card card = catalog.get(encounterArg.trim());
             if (card != null) {
                 addEncounter(CardUtils.copyCard(card));
             } else {

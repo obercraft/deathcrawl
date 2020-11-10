@@ -1,12 +1,6 @@
 package net.sachau.zarrax;
 
 import javafx.concurrent.Task;
-import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameEngine;
-import net.sachau.zarrax.engine.GameEvent;
-import net.sachau.zarrax.engine.GameEventContainer;
-import net.sachau.zarrax.gui.Fonts;
 
 public class InitTask extends Task<String> {
 
@@ -30,9 +24,9 @@ public class InitTask extends Task<String> {
 //                .load("italic",Main.class.getResourceAsStream("/fonts/LibreBaskerville-Italic.ttf"), fontSize).progress(this, 6)
 //                .load("bold",Main.class.getResourceAsStream("/fonts/LibreBaskerville-Bold.ttf"), fontSize).progress(this, 7)
 //        ;
-        ApplicationContext.init(width, height);
-        ApplicationContext.getGameEngine().setInitialized(true);
-        this.update(10);
+        //ApplicationContext.init(width, height);
+        //ApplicationContext.getGameEngine().setInitialized(true);
+        //this.update(10);
         return null;
     }
 

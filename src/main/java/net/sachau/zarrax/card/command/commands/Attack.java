@@ -6,11 +6,11 @@ import net.sachau.zarrax.card.command.*;
 import net.sachau.zarrax.card.effect.Guard;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Illumination;
-import net.sachau.zarrax.engine.ApplicationContext;
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.util.DiceUtils;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +62,7 @@ public class Attack implements CardCommand {
 
         boolean ranged = source.hasKeyword(Keyword.RANGED);
 
+        GState state = GEngine.getBean(GState.class);
         if (ranged) {
             int rangeHitChance = 100; // percent
             if (target.hasKeyword(Keyword.SMALL)) {
@@ -75,8 +76,9 @@ public class Attack implements CardCommand {
                 rangeHitChance -= 30;
                 hasBadLight = true;
             }
+
             if (hasBadLight) {
-                Player player = ApplicationContext.getPlayer();
+                Player player = state.getPlayer();
                 if (source.getOwner() instanceof Player) {
 
                     for (Card c : player.getParty()) {
@@ -145,7 +147,7 @@ public class Attack implements CardCommand {
         Logger.debug(this + (isRetaliate ? " retaliates " : " attacks " ) + target + " for " + attackValue + " damage");
         if (target.hasKeyword(Keyword.RETALIATE)) {
 
-            Card retaliateTarget = ApplicationContext.getGameEngine().getCurrentCard();
+            Card retaliateTarget = state.getCurrentCard();
             if (retaliateTarget != null && retaliateTarget.hasKeyword(Keyword.CREATURE)) {
                 attack(target, retaliateTarget, target.getDamage(), true);
             } else {

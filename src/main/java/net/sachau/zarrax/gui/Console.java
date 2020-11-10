@@ -9,20 +9,20 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
-import net.sachau.zarrax.engine.GameComponent;
+import net.sachau.zarrax.engine.GuiComponent;
+import net.sachau.zarrax.gui.screen.Autowired;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@GameComponent
+@GuiComponent
 public class Console extends ScrollPane {
 
-    @Resource
-    private Catalog catalog;
+
+    private final Catalog catalog;
 
     private Pattern pattern = Pattern.compile("\\{Card@(\\d+):(.*?)\\}");
 
@@ -31,8 +31,10 @@ public class Console extends ScrollPane {
     private TextFlow textFlow = new TextFlow();
 
 
-    public Console() {
+    @Autowired
+    public Console(Catalog catalog) {
         super();
+        this.catalog = catalog;
         this.setFitToHeight(true);
         this.setFitToWidth(true);
         this.setContent(textFlow);

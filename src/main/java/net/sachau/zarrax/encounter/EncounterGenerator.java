@@ -7,9 +7,9 @@ import net.sachau.zarrax.card.UniqueCardList;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.type.Encounter;
 import net.sachau.zarrax.card.type.Environment;
-import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.util.DiceUtils;
+import net.sachau.zarrax.v2.GEngine;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.reflections.Reflections;
 
@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 @Deprecated
 public class EncounterGenerator {
 
+    Catalog catalog = GEngine.getBean(Catalog.class);
+
     private static final Pattern countMatcher = Pattern.compile("^\\[(\\d+)-(\\d+)\\](.+)$");
 
     private final List<Card> eventCards;
@@ -30,11 +32,9 @@ public class EncounterGenerator {
     private final UniqueCardList hazards;
 
     private EncounterGenerator(){
-        eventCards = ApplicationContext.getCatalog()
-                .get(Encounter.class);
+        eventCards = catalog.get(Encounter.class);
 
-        environments = ApplicationContext.getCatalog()
-                .get(Environment.class);
+        environments = catalog.get(Environment.class);
 
         hazards = new UniqueCardList();
 
@@ -89,7 +89,7 @@ public class EncounterGenerator {
                     if (clazz.getSimpleName()
                             .toLowerCase()
                             .matches(type.toLowerCase())) {
-                        typeSelection = ApplicationContext.getCatalog().get(clazz);
+                        typeSelection = catalog.get(clazz);
                         break;
 
                     }
@@ -103,7 +103,7 @@ public class EncounterGenerator {
                     if (typeSelection != null && typeSelection.size() > 0) {
                         c = DiceUtils.getRandomCard(typeSelection);
                     } else {
-                        c = ApplicationContext.getCatalog()
+                        c = catalog
                                 .get(cardName);
                     }
                     c.setVisible(true);

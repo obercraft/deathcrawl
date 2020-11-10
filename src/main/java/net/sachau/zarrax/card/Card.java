@@ -3,6 +3,7 @@ package net.sachau.zarrax.card;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import net.sachau.zarrax.Logger;
+import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.command.CommandResult;
 import net.sachau.zarrax.card.effect.CardEffect;
 import net.sachau.zarrax.card.effect.Guard;
@@ -10,7 +11,6 @@ import net.sachau.zarrax.card.effect.KeywordEffect;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Illumination;
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.engine.GameEventContainer;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.util.DiceUtils;
@@ -49,16 +49,19 @@ public abstract class Card {
     private Source source;
 
     private GState state = GEngine.getBean(GState.class);
+    private Catalog  catalog = GEngine.getBean(Catalog.class);
+
 
     public Card() {
         super();
         initHits(1);
-        this.id = GameEngine.createId();
+        this.id = state.createId();
         this.effects = new HashSet<>();
 
         this.hitsProperty()
                 .addListener(new HitsListener(this));
 
+        catalog.putById(this);
 //        ApplicationContext.getCatalog().putById(this);
 //        Card card = this;
 //        this.hitsProperty().addListener(new ChangeListener<Number>() {
@@ -87,7 +90,7 @@ public abstract class Card {
 
     public Card(Card card) {
         super();
-        this.id = GameEngine.createId();
+        this.id = state.createId();
 
         this.name = card.name;
         this.uniqueId = card.uniqueId;
@@ -112,15 +115,18 @@ public abstract class Card {
         this.hitsProperty()
                 .addListener(new HitsListener(this));
 
-//        ApplicationContext.getCatalog().putById(this);
+        catalog.putById(this);
+
     }
 
     public Card(int initialHits, int initialDamage) {
         super();
         initHits(initialHits);
         initDamage(initialDamage);
-        this.id = GameEngine.createId();
+        this.id = state.createId();
         this.effects = new HashSet<>();
+
+        catalog.putById(this);
 
 
     }

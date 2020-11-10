@@ -1,9 +1,10 @@
 package net.sachau.zarrax.card.effect;
 
 
-import net.sachau.zarrax.engine.GameEngine;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.gui.image.Tile;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GState;
 
 public abstract class CardEffect {
 
@@ -15,9 +16,11 @@ public abstract class CardEffect {
 	private int amount = 1;
 	private int ticks = 0;
 
+	private GState state = GEngine.getBean(GState.class);
+
 	public CardEffect() {
 		super();
-		id = GameEngine.createId();
+		id = state.createId();
 	}
 
 	public boolean tick(Card card) {

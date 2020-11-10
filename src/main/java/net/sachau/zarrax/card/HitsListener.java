@@ -5,10 +5,16 @@ import javafx.beans.value.ObservableValue;
 import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.type.Monster;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GEvents;
+import net.sachau.zarrax.v2.GState;
 
 public class HitsListener implements ChangeListener<Number> {
 
     private Card card;
+
+    private GState state = GEngine.getBean(GState.class);
+    private GEvents events = GEngine.getBean(GEvents.class);
 
     public HitsListener(Card card) {
         this.card = card;
@@ -21,7 +27,7 @@ public class HitsListener implements ChangeListener<Number> {
             Logger.debug(card + " killed");
 
             if (card instanceof Monster) {
-                Player player = ApplicationContext.getPlayer();
+                Player player = state.getPlayer();
                 Monster mc = (Monster) card;
                 int gold = mc.getGold() + player.getGold();
                 player.setGold(gold);
@@ -30,7 +36,7 @@ public class HitsListener implements ChangeListener<Number> {
 
                 Logger.debug(player + " gains " + gold + " gold & " + xp + " XP");
             }
-            GameEvent.getInstance().send(new GameEventContainer(GameEventContainer.Type.CHARACTERDEATH, card));
+            events.send(new GameEventContainer(GameEventContainer.Type.CHARACTERDEATH, card));
         }
 
     }

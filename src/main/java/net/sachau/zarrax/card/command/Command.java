@@ -5,9 +5,10 @@ import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.keyword.Keyword;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.LimitedUsage;
-import net.sachau.zarrax.engine.ApplicationContext;
 
 import net.sachau.zarrax.engine.Player;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GState;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
@@ -61,6 +62,7 @@ public class Command {
         }
 
 
+
         // a PERMANENT card has already been played, so need
         // to check if the source can play the card ...
         if (source.hasKeyword(Keyword.PERMANENT)) {
@@ -68,9 +70,9 @@ public class Command {
         }
 
         // .. otherwise check if owner can play the card
+        GState state = GEngine.getBean(GState.class);
         if (source.getOwner() instanceof Player) {
-            Card currentCard = ApplicationContext.getGameEngine()
-                    .getCurrentCard();
+            Card currentCard = state.getCurrentCard();
             if (!currentCard.hasOneKeyword(source.getKeywords())) {
                 return CommandResult.notAllowed(currentCard + " cannot play " + source);
             }
@@ -80,7 +82,8 @@ public class Command {
         CommandResult result = CommandParser.executeCommands(source, target);
         if (result.isSuccessful()) {
             if (source.getOwner() instanceof Player) {
-                ApplicationContext.getPlayer()
+
+                state.getPlayer()
                         .discard(source);
                 Logger.debug("discarding " + source);
             }

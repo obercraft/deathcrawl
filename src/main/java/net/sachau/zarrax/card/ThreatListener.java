@@ -6,10 +6,17 @@ import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.type.Environment;
 import net.sachau.zarrax.card.type.Monster;
+import net.sachau.zarrax.v2.GEngine;
+import net.sachau.zarrax.v2.GEvents;
+import net.sachau.zarrax.v2.GState;
 
 public class ThreatListener implements ChangeListener<Number> {
 
     private Card card;
+
+    private GState state = GEngine.getBean(GState.class);
+    private GEvents events = GEngine.getBean(GEvents.class);
+
 
     public ThreatListener(Card card) {
         this.card = card;
@@ -22,7 +29,7 @@ public class ThreatListener implements ChangeListener<Number> {
             Logger.debug(card + " destroyed");
 
             if (card instanceof Environment) {
-                Player player = ApplicationContext.getPlayer();
+                Player player = state.getPlayer();
                 Monster mc = (Monster) card;
                 int gold = mc.getGold() + player.getGold();
                 player.setGold(gold);
@@ -31,7 +38,7 @@ public class ThreatListener implements ChangeListener<Number> {
 
                 Logger.debug(player + " gains " + gold + " gold & " + xp + " XP");
             }
-            GameEvent.getInstance().send(new GameEventContainer(GameEventContainer.Type.ENVIROMENTDEATH, card));
+            events.send(new GameEventContainer(GameEventContainer.Type.ENVIROMENTDEATH, card));
         }
 
     }

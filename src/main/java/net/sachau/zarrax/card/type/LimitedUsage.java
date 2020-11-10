@@ -1,15 +1,15 @@
 package net.sachau.zarrax.card.type;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.command.Command;
-import net.sachau.zarrax.card.command.CommandParser;
 import net.sachau.zarrax.card.command.CommandResult;
-import net.sachau.zarrax.engine.ApplicationContext;
+import net.sachau.zarrax.v2.GEngine;
 
 public class LimitedUsage extends Card {
+
+    private Catalog catalog = GEngine.getBean(Catalog.class);
 
     private static final int UNLIMITED =  -1;
     private SimpleIntegerProperty uses = new SimpleIntegerProperty();
@@ -30,7 +30,8 @@ public class LimitedUsage extends Card {
     public CommandResult execute(Card target) {
 
         if (usageCard == null) {
-            Card card = ApplicationContext.getCatalog().copyOf(this.getUsageCardName());
+
+            Card card = catalog.copyOf(this.getUsageCardName());
             card.setOwner(this.getOwner());
             card.setVisible(true);
             this.usageCard = card;

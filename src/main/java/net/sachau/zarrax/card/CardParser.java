@@ -4,7 +4,6 @@ package net.sachau.zarrax.card;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.effect.EffectTiming;
 import net.sachau.zarrax.card.effect.KeywordEffect;
-import net.sachau.zarrax.engine.ApplicationContext;
 import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.util.XmlUtils;
 import net.sachau.zarrax.card.catalog.Catalog;

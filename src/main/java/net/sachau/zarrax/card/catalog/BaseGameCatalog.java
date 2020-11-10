@@ -1,9 +1,7 @@
 package net.sachau.zarrax.card.catalog;
 
-import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.CardParser;
-import net.sachau.zarrax.engine.ApplicationContext;
 
 import java.util.List;
 
