@@ -12,7 +12,7 @@ public class Fonts {
     static Map<String, String> fontNames = new HashMap<>();
     static {
         fontNames.put("standard", "/fonts/LibreBaskerville-Regular.ttf");
-        fontNames.put("symbol", "/fonts/LibreBaskerville-Regular.ttf");
+        fontNames.put("symbol", "/fonts/fontawesome-solid-900.otf");
     }
 
     Map<String, Font> fontMap = new HashMap<>();
