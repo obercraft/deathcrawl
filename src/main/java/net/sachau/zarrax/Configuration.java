@@ -1,30 +1,23 @@
 package net.sachau.zarrax;
 
+import net.sachau.zarrax.engine.GameData;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.IOException;
 import java.util.Properties;
 
+@GameData
 public class Configuration {
-
-    private static Configuration instance;
 
     private Properties properties;
 
-    private  Configuration() {
+    public Configuration() {
         properties = new Properties();
         try {
             properties.load(this.getClass().getResourceAsStream("/zarrax.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Configuration getInstance() {
-        if (instance == null) {
-            instance = new Configuration();
-        }
-        return instance;
     }
 
     public String getString(String key, String defaultValue) {

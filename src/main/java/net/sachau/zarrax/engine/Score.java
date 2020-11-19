@@ -1,16 +1,25 @@
 package net.sachau.zarrax.engine;
 
 import net.sachau.zarrax.Configuration;
+import net.sachau.zarrax.gui.screen.Autowired;
 
+@GameData
 public class Score {
     
-    public static int calculateScore(Player player) {
+    private final Configuration configuration;
+
+    @Autowired
+    public Score(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public int calculateScore(Player player) {
         int score = 0;
         VictoryCondition ratio = new VictoryCondition();
-        ratio.setGold(Configuration.getInstance().getInt("zarrax.score.gold-ratio"));
-        ratio.setExperience(Configuration.getInstance().getInt("zarrax.score.experience-ratio"));
-        ratio.setExploration(Configuration.getInstance().getInt("zarrax.score.exploration-ratio"));
-        ratio.setTreasure(Configuration.getInstance().getInt("zarrax.score.treasure-ratio"));
+        ratio.setGold(configuration.getInt("zarrax.score.gold-ratio"));
+        ratio.setExperience(configuration.getInt("zarrax.score.experience-ratio"));
+        ratio.setExploration(configuration.getInt("zarrax.score.exploration-ratio"));
+        ratio.setTreasure(configuration.getInt("zarrax.score.treasure-ratio"));
 
         VictoryCondition neededScore = player.getVictoryCondition();
 

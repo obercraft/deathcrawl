@@ -31,8 +31,8 @@ public class Character extends Card {
 
     public Character(Character character) {
         super(character);
-        if (character.startingCards != null) {
-            for (Card c: startingCards) {
+        if (character.getStartingCards() != null) {
+            for (Card c: character.getStartingCards()) {
                 Card copy = CardUtils.copyCard(c);
                 copy.setOwner(getPlayer());
                 copy.setVisible(true);

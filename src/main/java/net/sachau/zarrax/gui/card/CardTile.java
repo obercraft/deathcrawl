@@ -16,6 +16,7 @@ import net.sachau.zarrax.card.command.CommandParser;
 import net.sachau.zarrax.card.Creature;
 import net.sachau.zarrax.engine.Player;
 import net.sachau.zarrax.card.keyword.Keyword;
+import net.sachau.zarrax.v2.GEngine;
 
 import java.util.Observable;
 
@@ -113,9 +114,10 @@ public class CardTile extends CardView {
 //            }
 //            event.consume();
 //        });
-        setOnDragDetected(new DragEvents().dragDetected(this, card));
-        setOnDragOver(new DragEvents().dragOver());
-        setOnDragDropped(new DragEvents().dragDropped(card));
+        DragEvents dragEvents = GEngine.getBean(DragEvents.class);
+        setOnDragDetected(dragEvents.dragDetected(this, card));
+        setOnDragOver(dragEvents.dragOver());
+        setOnDragDropped(dragEvents.dragDropped(card));
 //        setOnDragDropped(event -> {
 //            Dragboard db = event.getDragboard();
 //

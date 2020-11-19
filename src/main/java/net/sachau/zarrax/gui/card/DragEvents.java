@@ -4,12 +4,16 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import net.sachau.zarrax.card.Card;
+import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.command.Command;
+import net.sachau.zarrax.engine.GuiComponent;
+import net.sachau.zarrax.v2.GEngine;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@GuiComponent
 public class DragEvents {
 
     public static final DataFormat cardFormat = new DataFormat("card");
@@ -51,8 +55,9 @@ public class DragEvents {
             Dragboard db = event.getDragboard();
 
             if (db.getContent(cardFormat) != null) {
-                CardTile sourceTile = CardTileCache.getTile((Long) db.getContent(cardFormat));
-                Card sourceCard = sourceTile.getCard();
+                long cardId = (Long) db.getContent(cardFormat);
+                Catalog catalog = GEngine.getBean(Catalog.class);
+                Card sourceCard = catalog.getById(cardId);
                 Command.execute(sourceCard instanceof Character ? ((Character)sourceCard).getSelectedCard() : sourceCard, targetCard);
             }
 // TODO msachau momentum

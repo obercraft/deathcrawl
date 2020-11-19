@@ -3,6 +3,7 @@ package net.sachau.zarrax.v2;
 import javafx.collections.FXCollections;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import net.sachau.zarrax.Configuration;
 import net.sachau.zarrax.Logger;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.UniqueCardList;
@@ -14,6 +15,7 @@ import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.engine.*;
 import net.sachau.zarrax.gui.screen.Autowired;
 import net.sachau.zarrax.map.World;
+import net.sachau.zarrax.util.CardUtils;
 import net.sachau.zarrax.util.DiceUtils;
 import org.reflections.Reflections;
 
@@ -28,6 +30,7 @@ public class GEngine implements Observer {
 
     private static GEngine engine;
 
+    private Configuration configuration;
     private GState state;
     private GGraphics graphics;
 
@@ -51,6 +54,7 @@ public class GEngine implements Observer {
 
     public void init(Stage primaryStage) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         Logger.debug("init engine");
+        configuration = new Configuration();
         graphics.init(primaryStage);
         graphics.show();
         Logger.debug("init engine done, graphics.initialized=" + initialized());
@@ -62,6 +66,7 @@ public class GEngine implements Observer {
         beans.put(GEngine.class, this);
         beans.put(GGraphics.class, graphics);
         beans.put(GEvents.class, events);
+        beans.put(Configuration.class, configuration);
 
 
         Reflections reflections = new Reflections();
@@ -142,7 +147,7 @@ public class GEngine implements Observer {
 
     private Object createBean(Class beanClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Object bean;
-        if (( bean = beans.get(beanClass)) != null) {
+        if ((bean = beans.get(beanClass)) != null) {
             // already created
             return bean;
         }
@@ -183,7 +188,27 @@ public class GEngine implements Observer {
     public void createGame() {
         state.setPlayer(new Player());
         DiceUtils.createRandomParty(state.getPlayer());
-        state.setWorld(new World());
+
+        for (Card card : state.getPlayer()
+                .getParty()) {
+            if (card instanceof Character) {
+                Character character = (Character) card;
+                if (character.getStartingCards() == null) {
+                    continue;
+                }
+                for (Card startingCard : character.getStartingCards()) {
+                    Card copy = CardUtils.copyCard(startingCard);
+                    copy.setOwner(state.getPlayer());
+                    state.getPlayer()
+                            .getDraw()
+                            .addToDrawPile(copy);
+                }
+                state.getPlayer().getDraw().shuffle();
+            }
+
+        }
+
+        state.setWorld(new World(configuration.getInt("zarrax.map.columns"), configuration.getInt("zarrax.map.rows")));
     }
 
 
@@ -308,7 +333,8 @@ public class GEngine implements Observer {
                 events.send(GameEventContainer.Type.ACTION_DONE);
                 return;
             case ACTION_DONE: {
-                if (state.getCurrentInitiative() < state.getInitiativeOrder().size() - 1) {
+                if (state.getCurrentInitiative() < state.getInitiativeOrder()
+                        .size() - 1) {
                     int ini = state.getCurrentInitiative() + 1;
                     state.setCurrentInitiative(ini);
                     events.send(GameEventContainer.Type.NEXT_ACTION);
@@ -320,17 +346,21 @@ public class GEngine implements Observer {
 
             case END_CARDPHASE:
                 triggerStartEffects(GameEventContainer.Type.END_CARDPHASE);
-                state.getPlayer().resetHand();
+                state.getPlayer()
+                        .resetHand();
 
-                for (Card card : state.getPlayer().getParty()) {
+                for (Card card : state.getPlayer()
+                        .getParty()) {
                     card.getKeywords()
                             .remove(Keyword.EXHAUSTED);
                 }
-                for (Card card : state.getPlayer().getHand()) {
+                for (Card card : state.getPlayer()
+                        .getHand()) {
                     card.getKeywords()
                             .remove(Keyword.EXHAUSTED);
                 }
-                for (Card card : state.getPlayer().getDraw()
+                for (Card card : state.getPlayer()
+                        .getDraw()
                         .getDiscardPile()) {
                     card.getKeywords()
                             .remove(Keyword.EXHAUSTED);
@@ -354,28 +384,33 @@ public class GEngine implements Observer {
                 Card deadCard = (Card) events.getData();
 
                 for (CardEffect cardEffect : deadCard.getEffects()) {
-                    for (Card card : state.getPlayer().getHazards()) {
+                    for (Card card : state.getPlayer()
+                            .getHazards()) {
                         card.removeEffect(cardEffect);
                     }
-                    for (Card card : state.getPlayer().getParty()) {
+                    for (Card card : state.getPlayer()
+                            .getParty()) {
                         card.removeEffect(cardEffect);
                     }
                 }
 
-                for (Card card : state.getPlayer().getParty()) {
+                for (Card card : state.getPlayer()
+                        .getParty()) {
                     if (card instanceof Character) {
                         totalHealth += Math.max(0, card.getHits());
                     }
                 }
                 Card hazardCard = null;
-                for (Card card : state.getPlayer().getHazards()) {
+                for (Card card : state.getPlayer()
+                        .getHazards()) {
                     if (card.getId() == deadCard.getId()) {
                         hazardCard = deadCard;
                         break;
                     }
                 }
                 if (hazardCard != null) {
-                    state.getPlayer().getHazards()
+                    state.getPlayer()
+                            .getHazards()
                             .remove(hazardCard);
                 }
 
@@ -400,11 +435,13 @@ public class GEngine implements Observer {
                     }
                 }
                 if (turnCard != null) {
-                    state.getInitiativeOrder().remove(turnCard);
+                    state.getInitiativeOrder()
+                            .remove(turnCard);
 
                 }
 
-                if (initiativeId >= state.getInitiativeOrder().size()) {
+                if (initiativeId >= state.getInitiativeOrder()
+                        .size()) {
                     events.send(GameEventContainer.Type.END_CARDPHASE);
                 }
 
@@ -417,26 +454,34 @@ public class GEngine implements Observer {
     }
 
     public void triggerStartEffects(GameEventContainer.Type eventType) {
-        state.getPlayer().setSpawnCards(new UniqueCardList());
-        for (Card card : state.getPlayer().getHazards()) {
+        state.getPlayer()
+                .setSpawnCards(new UniqueCardList());
+        for (Card card : state.getPlayer()
+                .getHazards()) {
             card.triggerStartEffects(eventType);
         }
-        for (Card card : state.getPlayer().getParty()) {
+        for (Card card : state.getPlayer()
+                .getParty()) {
             card.triggerStartEffects(eventType);
         }
-        if (state.getPlayer().getSpawnCards()
+        if (state.getPlayer()
+                .getSpawnCards()
                 .size() > 0) {
-            state.getPlayer().getHazards()
-                    .addAll(state.getPlayer().getSpawnCards());
+            state.getPlayer()
+                    .getHazards()
+                    .addAll(state.getPlayer()
+                            .getSpawnCards());
         }
     }
 
     public void triggerEndEffects(GameEventContainer.Type eventType) {
 
-        for (Card card : state.getPlayer().getHazards()) {
+        for (Card card : state.getPlayer()
+                .getHazards()) {
             card.triggerEndEffects(eventType);
         }
-        for (Card card : state.getPlayer().getParty()) {
+        for (Card card : state.getPlayer()
+                .getParty()) {
             card.triggerEndEffects(eventType);
         }
     }
@@ -449,18 +494,22 @@ public class GEngine implements Observer {
     }
 
     private boolean regenerateMonstersAndCheckDefeated() {
-        if (state.getPlayer().getHazards() == null ||state.getPlayer().getHazards().size() == 0) {
+        if (state.getPlayer()
+                .getHazards() == null || state.getPlayer()
+                .getHazards()
+                .size() == 0) {
             return true;
         }
         int monstersAlive = 0;
-        for (Card card : state.getPlayer().getHazards()) {
+        for (Card card : state.getPlayer()
+                .getHazards()) {
             if (card instanceof Monster) {
                 Monster monster = (Monster) card;
                 if (monster.isAlive()) {
                     if (monster.getRegenerate() > 0) {
                         monster.heal(monster, monster.getRegenerate());
                     }
-                    monstersAlive ++;
+                    monstersAlive++;
                 }
             }
         }

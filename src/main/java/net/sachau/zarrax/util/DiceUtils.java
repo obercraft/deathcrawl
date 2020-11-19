@@ -37,7 +37,8 @@ public class DiceUtils {
         List<Card> characters = catalog.get(Character.class);
 
         while (player.getParty().size() < Player.PARTY_SIZE) {
-            Card copy = CardUtils.copyCard(getRandomCard(characters));
+            Card c = getRandomCard(characters);
+            Card copy = CardUtils.copyCard(c);
             copy.setOwner(player);
             copy.setVisible(true);
             player.getParty()

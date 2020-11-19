@@ -18,10 +18,6 @@ public class World {
 
     private Map<Terrain, List<Land>> terrainMapping = new HashMap<>();
 
-    public World() {
-        init(Configuration.getInstance().getInt("zarrax.map.columns"), Configuration.getInstance().getInt("zarrax.map.rows"));
-    }
-
     public World(int columns, int rows) {
         init(columns, rows);
     }
