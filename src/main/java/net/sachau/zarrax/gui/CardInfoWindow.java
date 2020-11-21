@@ -47,7 +47,7 @@ public class CardInfoWindow extends Stage {
                     CardInfoView cardInfoView = cache.get(id);
                     if (cardInfoView == null) {
                         Card card = catalog.getById(id);
-                        cardInfoView = new CardInfoView(card, "card");
+                        cardInfoView = new CardInfoView(card, "card", null);
                         cache.put(id, cardInfoView);
                     }
 

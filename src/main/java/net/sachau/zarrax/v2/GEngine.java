@@ -185,9 +185,22 @@ public class GEngine implements Observer {
 
     }
 
-    public void createGame() {
+
+    public void startGameWithParty(List<Card> characters) {
+        state.setPlayer(new Player());
+        for (Card card : characters) {
+            state.getPlayer().addToParty(card);
+        }
+    }
+
+    public void startGameWithRandomParty() {
         state.setPlayer(new Player());
         DiceUtils.createRandomParty(state.getPlayer());
+        startGame();
+    }
+
+    private void startGame() {
+
 
         for (Card card : state.getPlayer()
                 .getParty()) {
@@ -290,6 +303,8 @@ public class GEngine implements Observer {
                                     .getHazards());
                     Collections.shuffle(state.getInitiativeOrder());
                     state.setCurrentInitiative(0);
+
+                    state.getPlayer().resetHand();
 
                     events.send(GameEventContainer.Type.GUI_STARTENCOUNTER);
 
