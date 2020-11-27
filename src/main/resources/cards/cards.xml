@@ -54,6 +54,16 @@ Weapon
     </card>
 
 
+    <card>
+        <name>creategame</name>
+        <type>TextCard</type>
+        <text>
+            <color name="white">
+            select a card from the top row and and it to your party (second row). Click in the second row to remove it from the party.
+            </color>
+        </text>
+    </card>
+
 
     <card>
         <name>Basic Attack</name>

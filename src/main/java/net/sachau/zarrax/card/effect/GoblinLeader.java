@@ -22,6 +22,7 @@ public class GoblinLeader extends CardEffect {
             for (Card card : player.getHazards()) {
                 if (card instanceof Goblin) {
                     int d = card.getDamage() + 1;
+                    Logger.debug(this + " increases damage of " + card + " to " + d);
                     card.setDamage(d);
                     card.getEffects()
                             .add(this);

@@ -4,7 +4,7 @@
 -->
 <cards>
     <card>
-        <name uniqueId="Thief">Thief</name>
+        <name>Thief</name>
         <type>Character</type>
         <hits>7</hits>
         <level-cards>Basic Attack</level-cards>
@@ -17,7 +17,7 @@
     </card>
 
     <card>
-        <name uniqueId="Wizard">Wizard</name>
+        <name>Wizard</name>
         <type>Character</type>
         <hits>6</hits>
         <level-cards>Basic Attack</level-cards>
@@ -28,7 +28,7 @@
 
     
     <card>
-        <name uniqueId="Cleric">Cleric</name>
+        <name>Cleric</name>
         <type>Character</type>
         <hits>7</hits>
         <level-cards>Basic Attack</level-cards>
@@ -38,7 +38,7 @@
     </card>
 
     <card>
-        <name uniqueId="Paladin">Paladin</name>
+        <name>Paladin</name>
         <type>Character</type>
         <hits>8</hits>
         <level-cards>Basic Attack</level-cards>
@@ -48,7 +48,7 @@
     </card>
 
     <card>
-        <name uniqueId="Warrior">Warrior</name>
+        <name>Warrior</name>
         <type>Character</type>
         <hits>9</hits>
         <level-cards>Basic Attack</level-cards>

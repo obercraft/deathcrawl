@@ -13,6 +13,7 @@ import net.sachau.zarrax.card.level.Levels;
 import net.sachau.zarrax.card.type.Character;
 import net.sachau.zarrax.card.type.Monster;
 import net.sachau.zarrax.engine.*;
+import net.sachau.zarrax.gui.Console;
 import net.sachau.zarrax.gui.screen.Autowired;
 import net.sachau.zarrax.map.World;
 import net.sachau.zarrax.util.CardUtils;
@@ -33,6 +34,7 @@ public class GEngine implements Observer {
     private Configuration configuration;
     private GState state;
     private GGraphics graphics;
+    private Console console;
 
     private Map<Class<?>, Object> beans = new HashMap<>();
     private GEvents events;
@@ -83,6 +85,10 @@ public class GEngine implements Observer {
         }
 
         Logger.debug("init GUI components ...");
+
+        console = new Console();
+        beans.put(Console.class, console);
+
 
         Set<Class<?>> guiClasses = reflections.getTypesAnnotatedWith(GuiComponent.class);
 
@@ -191,6 +197,7 @@ public class GEngine implements Observer {
         for (Card card : characters) {
             state.getPlayer().addToParty(card);
         }
+        startGame();
     }
 
     public void startGameWithRandomParty() {

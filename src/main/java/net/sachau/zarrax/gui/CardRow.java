@@ -1,7 +1,6 @@
 package net.sachau.zarrax.gui;
 
 import javafx.beans.property.SimpleListProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -12,17 +11,17 @@ import javafx.scene.paint.Color;
 import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.gui.card.CardInfoView;
 import net.sachau.zarrax.gui.card.CardTile;
-import net.sachau.zarrax.gui.card.CardTileCache;
 
 public class CardRow extends ScrollPane {
 
     private HBox container = new HBox();
-    private SimpleListProperty<Card> cards;
+    private SimpleListProperty<Card> sourceCards;
+    private SimpleListProperty<Card> targetCards;
 
-    public CardRow(SimpleListProperty<Card> cards, int length, String cssClass, , EventHandler<? super MouseEvent> mouseClicked) {
+    public CardRow(SimpleListProperty<Card> sourceCards, SimpleListProperty<Card> targetCards, int length, String cssClass) {
         super();
 
-        this.cards = cards;
+        this.sourceCards = sourceCards;
 
         container.setMinHeight(CardTile.HEIGHT);
         setMinHeight((cssClass.contains("small") ? CardTile.HEIGHT_SMALL : CardTile.HEIGHT) +20);
@@ -35,10 +34,24 @@ public class CardRow extends ScrollPane {
         container.setAlignment(Pos.TOP_LEFT);
         setContent(container);
 
-        for (Card card : cards) {
+        for (Card card : sourceCards) {
             try {
+                CardInfoView sourceView = new CardInfoView(card, "card", null);
+
+                sourceView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (sourceCards.contains(card)) {
+                            targetCards.add(card);
+                            sourceCards.remove(card);
+                        } else {
+
+                        }
+                    }
+                });
+
                 container.getChildren()
-                        .add(new CardInfoView(card, "card", null));
+                        .add(sourceView);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -46,11 +59,11 @@ public class CardRow extends ScrollPane {
 
     }
 
-    public ObservableList<Card> getCards() {
-        return cards.get();
+    public ObservableList<Card> getSourceCards() {
+        return sourceCards.get();
     }
 
-    public SimpleListProperty<Card> cardsProperty() {
-        return cards;
+    public SimpleListProperty<Card> sourceCardsProperty() {
+        return sourceCards;
     }
 }

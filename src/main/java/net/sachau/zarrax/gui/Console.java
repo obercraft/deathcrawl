@@ -11,6 +11,7 @@ import net.sachau.zarrax.card.Card;
 import net.sachau.zarrax.card.catalog.Catalog;
 import net.sachau.zarrax.engine.GuiComponent;
 import net.sachau.zarrax.gui.screen.Autowired;
+import net.sachau.zarrax.v2.GEngine;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
@@ -18,11 +19,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@GuiComponent
 public class Console extends ScrollPane {
 
-
-    private final Catalog catalog;
 
     private Pattern pattern = Pattern.compile("\\{Card@(\\d+):(.*?)\\}");
 
@@ -30,11 +28,7 @@ public class Console extends ScrollPane {
 
     private TextFlow textFlow = new TextFlow();
 
-
-    @Autowired
-    public Console(Catalog catalog) {
-        super();
-        this.catalog = catalog;
+    public Console() {
         this.setFitToHeight(true);
         this.setFitToWidth(true);
         this.setContent(textFlow);
@@ -68,6 +62,7 @@ public class Console extends ScrollPane {
         if (matcher.find()) {
             long cardId = Long.parseLong(matcher.group(1));
 
+            Catalog catalog = GEngine.getBean(Catalog.class);
             Card card = catalog.getById(cardId);
             System.out.println("cardId=" + cardId + " card= "+ card);
             Text cardLink = new Text();
